@@ -1,0 +1,75 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "a57a51804b30069718330ef202a6ecedd784a4ab106019addb4d8c63f9778806"
+        },
+        "host-environment-markers": {
+            "implementation_name": "cpython",
+            "implementation_version": "0",
+            "os_name": "posix",
+            "platform_machine": "x86_64",
+            "platform_python_implementation": "CPython",
+            "platform_release": "4.4.0-42-generic",
+            "platform_system": "Linux",
+            "platform_version": "#62~14.04.1-Ubuntu SMP Fri Oct 7 23:15:48 UTC 2016",
+            "python_full_version": "2.7.6",
+            "python_version": "2.7",
+            "sys_platform": "linux2"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "2.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "numpy": {
+            "hashes": [
+                "sha256:a28fae3ce1c174a5ca97ac31046034772848b31933de7fb94aadaa7d45fb7c48",
+                "sha256:b88b880e1dbbc99996bbdb90e2e8ea4800f1273025488a042e549735c7c3eb14",
+                "sha256:5c5bca330229ea1e33f9170ffee2a9aa60adf0044e9d5446679f5937767f49c6",
+                "sha256:9a9bfdd0eadc59335ac7cfc7df955e579220719c1e4751f3f0c9c91b6ab4b2f7",
+                "sha256:659c49cd031ed50caa9b3aa0eba82942f8fa183da51b50caecdd7fb93f9ca33f",
+                "sha256:a842b8a3c8384aa2f9af724c4c2db18fd4e08139cfd6f77ca8ce189025e90111",
+                "sha256:0d977fb8b9594dff18759ff901135626c82b8b4a6327ab6dce6a3723b3cb920a",
+                "sha256:556a3ba02f0484584e6b9ada7b931b3edf9f19fc114da311f88b3123f16587e2",
+                "sha256:d42a7cbddacf36c83f8ae00f8d7f110e5601ae79062fad2fcce9c8d1c17a3b26",
+                "sha256:b133ed34bd14cb3d7e533d42f03c5bd82bfe0ca60908da0d3e5d7906321ffa36",
+                "sha256:848a6496069794637f502345c7dba1309688d8d4d9264b3938df19c7f8dd51a3",
+                "sha256:420985a52f6660c94f460413b57ab52fb47c8e2e283c473de91443c0ed76ac11",
+                "sha256:2b05451d1f1c237db09990eec032990fbee43d9f65503f09b3f5edcf6fe4093d",
+                "sha256:a9ae4a0aa538c1fb64e25c9f9b2b04464a28425c1f0ebc1305ff98f62ddc7b32",
+                "sha256:29fe03fb1b68b845d493e3f905650044f2b4ea3d875b9ed36f5c568e7b18bb2f",
+                "sha256:fb409d73e35f36bb212b4b2f54e7b6783bd4e088b5593f712689b47c72af9d89",
+                "sha256:ae5385f4a3255f183ff57dd56b316e3e5294772c2ea49e132df8aaafc9639db5",
+                "sha256:04db2fbd64e2e7c68e740b14402b25af51418fc43a59d9e54172b38b906b0f69",
+                "sha256:c1ed4d1d2a795409c7df1eb4bfee65c0e3326cfc7c57875fa39e5c7414116d9a"
+            ],
+            "version": "==1.11.2"
+        },
+        "scikit-learn": {
+            "hashes": [
+                "sha256:dfca488700ea701088d217f91da17deb9c182b540cbd7b11d3e74be9f09d8d4c",
+                "sha256:22f696bbf2c2cd0126c6d7e662b935b5cd2ac8521fe439b408736b76cc957773",
+                "sha256:c27568107d79b1cea37c67270184a8b2869264e3d5d26d9d6126131627b42fc7",
+                "sha256:349fac0b25d2ec6b851e24347a9fb84cf9d15584039a65907247945ad498ba9d",
+                "sha256:93fc19d27a75f169939326caeb51b2d3197cfffc8c14aeda46dca7446b1a4edf",
+                "sha256:2322bf7c1acc790ce4806d97242c40cf540d281d91df4c1513268bc442a208f0",
+                "sha256:75867e998a7096ad0315233e3aa4915933c86533995d187df9c2e3692fbe74b1",
+                "sha256:c0721e295056c95c7002e05726f2bd271a7923e88bdeab34a2b60aac2b0ee6e4",
+                "sha256:27e12e15bba981c5e495f4a86ac1eeb4762032a325d6966805c31372ecd56eaa",
+                "sha256:01167197c34df25ac103a482adefae4acf8c93115ae3d4feaf388d7d5c3ecc33",
+                "sha256:8693b309164ce508944a92887a6aa772a551a5499005d1472f4de3b97c079b3e",
+                "sha256:32ae045d21f2b10e6401badc605b6cdfc1e97f891afcf8d2bd8fad3eb76deeda"
+            ],
+            "version": "==0.16.1"
+        }
+    },
+    "develop": {}
+}
