@@ -12,20 +12,23 @@ start = time.time()
 
 # read the train and test files
 
-train_images_filenames = cPickle.load(
-    open(path.join(DATA_PATH, 'train_images_filenames.dat'), 'r'))
-test_images_filenames = cPickle.load(
-    open(path.join(DATA_PATH, 'test_images_filenames.dat'), 'r'))
-train_labels = cPickle.load(
-    open(path.join(DATA_PATH, 'train_labels.dat'), 'r'))
-test_labels = cPickle.load(open(path.join(DATA_PATH, 'test_labels.dat'), 'r'))
+with open(path.join(DATA_PATH,
+                    'train_images_filenames.dat'), 'r') as file_train, \
+    open(path.join(DATA_PATH,
+                   'test_images_filenames.dat'), 'r') as file_test, \
+    open(path.join(DATA_PATH,
+                   'train_labels.dat'), 'r') as file_train_labels, \
+    open(path.join(DATA_PATH,
+                   'train_labels.dat'), 'r') as file_test_labels:
+    train_images_filenames = cPickle.load(file_train)
+    test_images_filenames = cPickle.load(file_test)
+    train_labels = cPickle.load(file_train_labels)
+    test_labels = cPickle.load(file_test_labels)
 
-print('Loaded ' + str(
-    len(train_images_filenames)) + ' training images filenames with classes ',
-      set(train_labels))
-print('Loaded ' + str(
-    len(test_images_filenames)) + ' testing images filenames with classes ',
-      set(test_labels))
+print('Loaded {} training images filenames with classes {}'.
+      format(len(train_images_filenames), set(train_labels)))
+print('Loaded {} testing images filenames with classes {}'.
+      format(len(test_images_filenames), set(test_labels)))
 
 # create the SIFT detector object
 
