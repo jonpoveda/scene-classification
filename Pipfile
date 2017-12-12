@@ -16,6 +16,7 @@ scikit-learn = "==0.19.1"
 pydumper = "*"
 scipy = "*"
 "cv2wrap" = "*"
+typeshed = "*"
 
 
 [requires]
