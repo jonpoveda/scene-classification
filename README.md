@@ -11,4 +11,15 @@ Place your train and test dataset using this file structure:
 - data/train/\*/\*.jpg
 - data/test/\*/\*.jpg
 
+If using [Pipenv](https://docs.pipenv.org) add a file called _.env_ with the environment var
+_PYTHONPATH_ set to the root of this project.
 
+```bash
+PYTHONPATH=[absolute_path_to_project_root]
+```
+
+if not is possible you have to set it in your environment using,
+
+```
+export PYTHONPATH=[absolute_path_to_project_root]`
+```

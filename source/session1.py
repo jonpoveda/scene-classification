@@ -1,5 +1,5 @@
 import cPickle
-from os import path
+import os
 import time
 
 import cv2
@@ -10,58 +10,97 @@ from source import DATA_PATH
 
 start = time.time()
 
+
+def load_data(data_path):
+    """ Read the train and test files """
+    with open(os.path.join(data_path,
+                           'train_images_filenames.dat'), 'r') as file_train, \
+        open(os.path.join(data_path,
+                          'test_images_filenames.dat'), 'r') as file_test, \
+        open(os.path.join(data_path,
+                          'train_labels.dat'), 'r') as file_train_labels, \
+        open(os.path.join(data_path,
+                          'train_labels.dat'), 'r') as file_test_labels:
+        train_images = cPickle.load(file_train)
+        test_images = cPickle.load(file_test)
+        train_labels = cPickle.load(file_train_labels)
+        test_labels = cPickle.load(file_test_labels)
+
+    print('Loaded {} training images filenames with classes {}'.
+          format(len(train_images), set(train_labels)))
+    print('Loaded {} testing images filenames with classes {}'.
+          format(len(test_images), set(test_labels)))
+
+    return train_images, test_images, train_labels, test_labels
+
+
+def compute_descriptors(train_images, train_labels):
+    """ Compute descriptors using SIFT
+
+    Read the just 30 train images per class.
+    Extract SIFT keypoints and descriptors.
+    Store descriptors in a python list of numpy arrays.
+    """
+    train_descriptors = []
+    train_label_per_descriptor = []
+
+    for filename, train_label in zip(train_images, train_labels):
+        filename_path = os.path.join(DATA_PATH, filename)
+        if train_label_per_descriptor.count(train_label) < 30:
+            print('Reading image ' + filename)
+            ima = cv2.imread(filename_path)
+            gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
+            kpt, des = SIFT_detector.detectAndCompute(gray, None)
+            train_descriptors.append(des)
+            train_label_per_descriptor.append(train_label)
+            print(str(len(kpt)) + ' extracted keypoints and descriptors')
+
+    # Transform everything to numpy arrays
+
+    descriptors = train_descriptors[0]
+    labels = np.array(
+        [train_label_per_descriptor[0]] * train_descriptors[0].shape[0])
+
+    for i in range(1, len(train_descriptors)):
+        descriptors = np.vstack((descriptors, train_descriptors[i]))
+        labels = np.hstack((labels, np.array(
+            [train_label_per_descriptor[i]] * train_descriptors[i].shape[0])))
+
+    return descriptors, labels
+
+
 # read the train and test files
 
-with open(path.join(DATA_PATH,
-                    'train_images_filenames.dat'), 'r') as file_train, \
-    open(path.join(DATA_PATH,
-                   'test_images_filenames.dat'), 'r') as file_test, \
-    open(path.join(DATA_PATH,
-                   'train_labels.dat'), 'r') as file_train_labels, \
-    open(path.join(DATA_PATH,
-                   'train_labels.dat'), 'r') as file_test_labels:
-    train_images_filenames = cPickle.load(file_train)
-    test_images_filenames = cPickle.load(file_test)
-    train_labels = cPickle.load(file_train_labels)
-    test_labels = cPickle.load(file_test_labels)
-
-print('Loaded {} training images filenames with classes {}'.
-      format(len(train_images_filenames), set(train_labels)))
-print('Loaded {} testing images filenames with classes {}'.
-      format(len(test_images_filenames), set(test_labels)))
+train_images, test_images, train_labels, test_labels = load_data(DATA_PATH)
 
 # create the SIFT detector object
 
 SIFT_detector = cv2.SIFT(nfeatures=100)
 
-# read the just 30 train images per class
-# extract SIFT keypoints and descriptors
-# store descriptors in a python list of numpy arrays
+# If descriptors are already computed load them
+if not os.path.isfile('descriptors.dat') or \
+    not os.path.isfile('labels.dat'):
 
-train_descriptors = []
-train_label_per_descriptor = []
-
-for i in range(len(train_images_filenames)):
-    filename = train_images_filenames[i]
-    filename_path = path.join(DATA_PATH, filename)
-    if train_label_per_descriptor.count(train_labels[i]) < 30:
-        print('Reading image ' + filename)
-        ima = cv2.imread(filename_path)
-        gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-        kpt, des = SIFT_detector.detectAndCompute(gray, None)
-        train_descriptors.append(des)
-        train_label_per_descriptor.append(train_labels[i])
-        print(str(len(kpt)) + ' extracted keypoints and descriptors')
-
-# Transform everything to numpy arrays
-
-D = train_descriptors[0]
-L = np.array([train_label_per_descriptor[0]] * train_descriptors[0].shape[0])
-
-for i in range(1, len(train_descriptors)):
-    D = np.vstack((D, train_descriptors[i]))
-    L = np.hstack((L, np.array(
-        [train_label_per_descriptor[i]] * train_descriptors[i].shape[0])))
+    print('Computing descriptors...')
+    # read the just 30 train images per class
+    # extract SIFT keypoints and descriptors
+    # store descriptors in a python list of numpy arrays
+    # Transform everything to numpy arrays
+    D, L = compute_descriptors(train_images, train_labels)
+    with open(os.path.join(DATA_PATH,
+                           'descriptors.dat'), 'w') as descriptors_file, \
+        open(os.path.join(DATA_PATH,
+                          'labels.dat'), 'w') as labels_file:
+        cPickle.dump(D, descriptors_file)
+        cPickle.dump(L, labels_file)
+else:
+    print('Loading descriptors...')
+    with open(os.path.join(DATA_PATH,
+                           'descriptors.dat'), 'r') as descriptors_file, \
+        open(os.path.join(DATA_PATH,
+                          'labels.dat'), 'r') as labels_file:
+        D = cPickle.load(descriptors_file)
+        L = cPickle.load(labels_file)
 
 # Train a k-nn classifier
 
@@ -74,9 +113,9 @@ print('Done!')
 
 num_test_images = 0
 num_correct = 0
-for i in range(len(test_images_filenames)):
-    filename = test_images_filenames[i]
-    filename_path = path.join(DATA_PATH, filename)
+for i in range(len(test_images)):
+    filename = test_images[i]
+    filename_path = os.path.join(DATA_PATH, filename)
     ima = cv2.imread(filename_path)
     gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
     kpt, des = SIFT_detector.detectAndCompute(gray, None)
