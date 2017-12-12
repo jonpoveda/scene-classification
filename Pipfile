@@ -21,3 +21,4 @@ scipy = "*"
 [requires]
 
 python_version = "2.7"
+opencv_version = "2.4.13.4"  # This line has no effect is only for reporting

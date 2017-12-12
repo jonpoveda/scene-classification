@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9b38c25a35478773b25e4763f654091e4c27d9b2ca358d1554d43d6da5b46b91"
+            "sha256": "6d0a0f285736d70cd0d3d241ef49f532d51267cf5cfa689c2568e51012763752"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -18,6 +18,7 @@
         },
         "pipfile-spec": 6,
         "requires": {
+            "opencv_version": "2.4.13.4",
             "python_version": "2.7"
         },
         "sources": [
