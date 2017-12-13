@@ -17,6 +17,7 @@ pydumper = "*"
 scipy = "*"
 "cv2wrap" = "*"
 typeshed = "*"
+typing = "*"
 
 
 [requires]
