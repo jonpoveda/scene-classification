@@ -8,11 +8,13 @@ from source import DATA_PATH
 
 
 class BaseFeatureExtractor(object):
-    def generate(self, train_images, train_labels):
+    def extract_from(self, train_images, train_labels=['no_label']):
+        """ Compute descriptors given a list of images and labels """
         # type: (List, List) -> Type[NotImplementedError]
         return NotImplementedError
 
-    def extract(self, image):
+    def _compute(self, image):
+        """ Compute an image descriptor """
         # type: (np.array) -> Type[NotImplementedError]
         return NotImplementedError
 
@@ -24,14 +26,16 @@ class SIFT(BaseFeatureExtractor):
         self.number_of_features = number_of_features
         self.detector = cv2.SIFT(nfeatures=self.number_of_features)
 
-    def extract(self, image):
+    def _compute(self, image):
         # type: (np.array) -> List
         """ Extract descriptor from an image """
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # Do not mind of descriptor key-points
         _, descriptors = self.detector.detectAndCompute(gray, None)
         return descriptors
 
-    def generate(self, train_images, train_labels):
+    def extract_from(self, train_images, train_labels=['no_label']):
         # type: (List, List) -> (np.array, np.array)
         """ Compute descriptors using SIFT
 
@@ -51,7 +55,7 @@ class SIFT(BaseFeatureExtractor):
             if train_label_per_descriptor.count(train_label) < 30:
                 print('Reading image ' + filename)
                 image = cv2.imread(filename_path)
-                descriptor = self.extract(image)
+                descriptor = self._compute(image)
                 train_descriptors.append(descriptor)
                 train_label_per_descriptor.append(train_label)
                 print(

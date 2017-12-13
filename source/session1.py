@@ -1,7 +1,6 @@
 import os
 import time
 
-import cv2
 import numpy as np
 from typing import List
 
@@ -18,11 +17,13 @@ def assess(test_images, my_knn, descriptor, test_labels):
     num_test_images = 0
     num_correct = 0
 
+    # FIXME: improve this loop
     for i in range(len(test_images)):
         filename = test_images[i]
         filename_path = os.path.join(DATA_PATH, filename)
-        ima = cv2.imread(filename_path)
-        des = descriptor.extract(ima)
+
+        # Do not mind of labels
+        des, _ = descriptor.extract_from([filename_path])
         predictions = my_knn.predict(des)
         values, counts = np.unique(predictions, return_counts=True)
         predicted_class = values[np.argmax(counts)]
@@ -54,13 +55,13 @@ def main():
         descriptors, labels = database.get_descriptors()
     else:
         print('Computing descriptors...')
-        descriptors, labels = feature_extractor.generate(train_images, train_labels)
+        descriptors, labels = feature_extractor.extract_from(train_images,
+                                                             train_labels)
         database.save_descriptors(descriptors, labels)
 
     # Train a k-nn classifier
     classifier = KNN(n_neighbours=5)
     classifier.train(descriptors, labels)
-    # train(descriptors=D, labels=L)
 
     num_correct, num_test_images = assess(test_images,
                                           classifier,
