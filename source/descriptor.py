@@ -2,39 +2,37 @@ import os
 
 import cv2
 import numpy as np
+from typing import List
 
 from source import DATA_PATH
 
 
-class BaseDescriptor(object):
+class BaseFeatureExtractor(object):
     def generate(self, train_images, train_labels):
         return NotImplementedError
 
-    def detectAndCompute(self, image):
+    def extract(self, image):
         return NotImplementedError
 
 
-class SIFT(BaseDescriptor):
+class SIFT(BaseFeatureExtractor):
     def __init__(self, number_of_features):
         # FIXME: remove number_of_features if they are not explicity needed
         self.number_of_features = number_of_features
         self.detector = cv2.SIFT(nfeatures=self.number_of_features)
 
-    def detectAndCompute(self, gray):
-        kpt, des = self.detector.detectAndCompute(gray, None)
-        return kpt, des
+    def extract(self, gray):
+        keypoints, descriptors = self.detector.detectAndCompute(gray, None)
+        return keypoints, descriptors
 
     def generate(self, train_images, train_labels):
-        ## type: (list, list) -> (np.array, np.array)
+        # type: (List, List) -> (np.array, np.array)
         """ Compute descriptors using SIFT
 
         Read the just 30 train images per class.
         Extract SIFT keypoints and descriptors.
         Store descriptors in a python list of numpy arrays.
 
-        :rtype: tuple(list, list)
-        :type train_images: list
-        :type train_labels: list
         :param train_images: list of images
         :param train_labels: list of labels of the given images
         :return: descriptors and labels
@@ -48,7 +46,7 @@ class SIFT(BaseDescriptor):
                 print('Reading image ' + filename)
                 ima = cv2.imread(filename_path)
                 gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-                kpt, des = self.detectAndCompute(gray)
+                kpt, des = self.extract(gray)
                 train_descriptors.append(des)
                 train_label_per_descriptor.append(train_label)
                 print(str(len(kpt)) + ' extracted keypoints and descriptors')
