@@ -22,8 +22,7 @@ def assess(test_images, my_knn, descriptor, test_labels):
         filename = test_images[i]
         filename_path = os.path.join(DATA_PATH, filename)
         ima = cv2.imread(filename_path)
-        gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-        kpt, des = descriptor.extract(gray)
+        des = descriptor.extract(ima)
         predictions = my_knn.predict(des)
         values, counts = np.unique(predictions, return_counts=True)
         predicted_class = values[np.argmax(counts)]
@@ -44,7 +43,7 @@ def main():
     # read the train and test files
     from database import Database
     database = Database(DATA_PATH)
-    train_images, test_images, train_labels, test_labels = database.load_data()
+    train_images, test_images, train_labels, test_labels = database.get_data()
 
     # create the SIFT detector object
     feature_extractor = SIFT(number_of_features=100)
@@ -52,15 +51,15 @@ def main():
     # If descriptors are already computed load them
     if database.data_exists():
         print('Loading descriptors...')
-        D, L = database.load_descriptors()
+        descriptors, labels = database.get_descriptors()
     else:
         print('Computing descriptors...')
-        D, L = feature_extractor.generate(train_images, train_labels)
-        database.save_descriptors(D, L)
+        descriptors, labels = feature_extractor.generate(train_images, train_labels)
+        database.save_descriptors(descriptors, labels)
 
     # Train a k-nn classifier
     classifier = KNN(n_neighbours=5)
-    classifier.train(D, L)
+    classifier.train(descriptors, labels)
     # train(descriptors=D, labels=L)
 
     num_correct, num_test_images = assess(test_images,

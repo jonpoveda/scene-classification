@@ -27,7 +27,7 @@ class Database(object):
         self.train_labels_path = os.path.join(self.path, 'train_labels.dat')
         self.test_labels_path = os.path.join(self.path, 'test_labels.dat')
 
-    def load_data(self):
+    def get_data(self):
         # type: (str) -> (List, List, List, List)
         """ Read the train and test files
 
@@ -56,7 +56,7 @@ class Database(object):
             cPickle.dump(descriptors, descriptors_file)
             cPickle.dump(labels, labels_file)
 
-    def load_descriptors(self):
+    def get_descriptors(self):
         # type: (None) -> (List, List)
         with open(self.generated_descriptors_path, 'r') as descriptors_file, \
             open(self.generated_labels_path, 'r') as labels_file:

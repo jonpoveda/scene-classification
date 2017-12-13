@@ -2,28 +2,34 @@ import os
 
 import cv2
 import numpy as np
-from typing import List
+from typing import List, Type
 
 from source import DATA_PATH
 
 
 class BaseFeatureExtractor(object):
     def generate(self, train_images, train_labels):
+        # type: (List, List) -> Type[NotImplementedError]
         return NotImplementedError
 
     def extract(self, image):
+        # type: (np.array) -> Type[NotImplementedError]
         return NotImplementedError
 
 
 class SIFT(BaseFeatureExtractor):
     def __init__(self, number_of_features):
+        # type: (int) -> None
         # FIXME: remove number_of_features if they are not explicity needed
         self.number_of_features = number_of_features
         self.detector = cv2.SIFT(nfeatures=self.number_of_features)
 
-    def extract(self, gray):
-        keypoints, descriptors = self.detector.detectAndCompute(gray, None)
-        return keypoints, descriptors
+    def extract(self, image):
+        # type: (np.array) -> List
+        """ Extract descriptor from an image """
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        _, descriptors = self.detector.detectAndCompute(gray, None)
+        return descriptors
 
     def generate(self, train_images, train_labels):
         # type: (List, List) -> (np.array, np.array)
@@ -44,12 +50,13 @@ class SIFT(BaseFeatureExtractor):
             filename_path = os.path.join(DATA_PATH, filename)
             if train_label_per_descriptor.count(train_label) < 30:
                 print('Reading image ' + filename)
-                ima = cv2.imread(filename_path)
-                gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-                kpt, des = self.extract(gray)
-                train_descriptors.append(des)
+                image = cv2.imread(filename_path)
+                descriptor = self.extract(image)
+                train_descriptors.append(descriptor)
                 train_label_per_descriptor.append(train_label)
-                print(str(len(kpt)) + ' extracted keypoints and descriptors')
+                print(
+                    str(len(
+                        descriptor)) + ' extracted keypoints and descriptors')
 
         # Transform everything to numpy arrays
 
