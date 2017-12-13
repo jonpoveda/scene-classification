@@ -39,7 +39,7 @@ def load_data(data_path):
     return train_images, test_images, train_labels, test_labels
 
 
-def compute_descriptors(SIFT_detector, train_images, train_labels):
+def compute_descriptors(detector, train_images, train_labels):
     ## type: (list, list) -> (np.array, np.array)
     """ Compute descriptors using SIFT
 
@@ -50,6 +50,7 @@ def compute_descriptors(SIFT_detector, train_images, train_labels):
     :rtype: tuple(list, list)
     :type train_images: list
     :type train_labels: list
+    :param detector: feature detector (extractor)
     :param train_images: list of images
     :param train_labels: list of labels of the given images
     :return: descriptors and labels
@@ -63,7 +64,7 @@ def compute_descriptors(SIFT_detector, train_images, train_labels):
             print('Reading image ' + filename)
             ima = cv2.imread(filename_path)
             gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-            kpt, des = SIFT_detector.detectAndCompute(gray, None)
+            kpt, des = detector.detectAndCompute(gray, None)
             train_descriptors.append(des)
             train_label_per_descriptor.append(train_label)
             print(str(len(kpt)) + ' extracted keypoints and descriptors')
@@ -82,13 +83,13 @@ def compute_descriptors(SIFT_detector, train_images, train_labels):
     return descriptors, labels
 
 
-def save_descriptors(D, L):
+def save_descriptors(descriptors, labels):
     with open(os.path.join(DATA_PATH,
                            'descriptors.dat'), 'w') as descriptors_file, \
         open(os.path.join(DATA_PATH,
                           'labels.dat'), 'w') as labels_file:
-        cPickle.dump(D, descriptors_file)
-        cPickle.dump(L, labels_file)
+        cPickle.dump(descriptors, descriptors_file)
+        cPickle.dump(labels, labels_file)
 
 
 def load_descriptors():
@@ -96,9 +97,9 @@ def load_descriptors():
                            'descriptors.dat'), 'r') as descriptors_file, \
         open(os.path.join(DATA_PATH,
                           'labels.dat'), 'r') as labels_file:
-        D = cPickle.load(descriptors_file)
-        L = cPickle.load(labels_file)
-    return D, L
+        descriptors = cPickle.load(descriptors_file)
+        labels = cPickle.load(labels_file)
+    return descriptors, labels
 
 
 def assess(test_images, my_knn, detector, test_labels):
