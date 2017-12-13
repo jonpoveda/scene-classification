@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
+from descriptor_factory import SIFT
 from source import DATA_PATH
 
 
@@ -39,50 +40,6 @@ def load_data(data_path):
     return train_images, test_images, train_labels, test_labels
 
 
-def compute_descriptors(detector, train_images, train_labels):
-    ## type: (list, list) -> (np.array, np.array)
-    """ Compute descriptors using SIFT
-
-    Read the just 30 train images per class.
-    Extract SIFT keypoints and descriptors.
-    Store descriptors in a python list of numpy arrays.
-
-    :rtype: tuple(list, list)
-    :type train_images: list
-    :type train_labels: list
-    :param detector: feature detector (extractor)
-    :param train_images: list of images
-    :param train_labels: list of labels of the given images
-    :return: descriptors and labels
-    """
-    train_descriptors = []
-    train_label_per_descriptor = []
-
-    for filename, train_label in zip(train_images, train_labels):
-        filename_path = os.path.join(DATA_PATH, filename)
-        if train_label_per_descriptor.count(train_label) < 30:
-            print('Reading image ' + filename)
-            ima = cv2.imread(filename_path)
-            gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-            kpt, des = detector.detectAndCompute(gray, None)
-            train_descriptors.append(des)
-            train_label_per_descriptor.append(train_label)
-            print(str(len(kpt)) + ' extracted keypoints and descriptors')
-
-    # Transform everything to numpy arrays
-
-    descriptors = train_descriptors[0]
-    labels = np.array(
-        [train_label_per_descriptor[0]] * train_descriptors[0].shape[0])
-
-    for i in range(1, len(train_descriptors)):
-        descriptors = np.vstack((descriptors, train_descriptors[i]))
-        labels = np.hstack((labels, np.array(
-            [train_label_per_descriptor[i]] * train_descriptors[i].shape[0])))
-
-    return descriptors, labels
-
-
 def save_descriptors(descriptors, labels):
     with open(os.path.join(DATA_PATH,
                            'descriptors.dat'), 'w') as descriptors_file, \
@@ -102,16 +59,17 @@ def load_descriptors():
     return descriptors, labels
 
 
-def assess(test_images, my_knn, detector, test_labels):
+def assess(test_images, my_knn, descriptor_generator, test_labels):
     # get all the test data and predict their labels
     num_test_images = 0
     num_correct = 0
+
     for i in range(len(test_images)):
         filename = test_images[i]
         filename_path = os.path.join(DATA_PATH, filename)
         ima = cv2.imread(filename_path)
         gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-        kpt, des = detector.detectAndCompute(gray, None)
+        kpt, des = descriptor_generator.detectAndCompute(gray)
         predictions = my_knn.predict(des)
         values, counts = np.unique(predictions, return_counts=True)
         predicted_class = values[np.argmax(counts)]
@@ -129,7 +87,7 @@ def main():
     train_images, test_images, train_labels, test_labels = load_data(DATA_PATH)
 
     # create the SIFT detector object
-    detector = cv2.SIFT(nfeatures=100)
+    descriptor_generator = SIFT(number_of_features=100)
 
     # If descriptors are already computed load them
     if os.path.isfile('descriptors.dat') and os.path.isfile('labels.dat'):
@@ -137,7 +95,7 @@ def main():
         D, L = load_descriptors()
     else:
         print('Computing descriptors...')
-        D, L = compute_descriptors(detector, train_images, train_labels)
+        D, L = descriptor_generator.generate(train_images, train_labels)
         save_descriptors(D, L)
 
     # Train a k-nn classifier
@@ -146,7 +104,9 @@ def main():
     my_knn.fit(D, L)
     print('Done!')
 
-    num_correct, num_test_images = assess(test_images, my_knn, detector,
+    num_correct, num_test_images = assess(test_images,
+                                          my_knn,
+                                          descriptor_generator,
                                           test_labels)
     print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
     ## 30.48% in 302 secs.
