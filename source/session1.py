@@ -115,10 +115,6 @@ def main():
         not os.path.isfile('labels.dat'):
 
         print('Computing descriptors...')
-        # read the just 30 train images per class
-        # extract SIFT keypoints and descriptors
-        # store descriptors in a python list of numpy arrays
-        # Transform everything to numpy arrays
         D, L = compute_descriptors(SIFT_detector, train_images, train_labels)
         save_descriptors(D, L)
     else:
