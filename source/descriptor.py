@@ -6,11 +6,15 @@ import numpy as np
 from source import DATA_PATH
 
 
-class Descriptor(object):
-    pass
+class BaseDescriptor(object):
+    def generate(self, train_images, train_labels):
+        return NotImplementedError
+
+    def detectAndCompute(self, image):
+        return NotImplementedError
 
 
-class SIFT(Descriptor):
+class SIFT(BaseDescriptor):
     def __init__(self, number_of_features):
         # FIXME: remove number_of_features if they are not explicity needed
         self.number_of_features = number_of_features
