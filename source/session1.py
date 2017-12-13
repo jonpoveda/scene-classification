@@ -101,35 +101,8 @@ def load_descriptors():
     return D, L
 
 
-def main():
-    # read the train and test files
-
-    train_images, test_images, train_labels, test_labels = load_data(DATA_PATH)
-
-    # create the SIFT detector object
-
-    SIFT_detector = cv2.SIFT(nfeatures=100)
-
-    # If descriptors are already computed load them
-    if not os.path.isfile('descriptors.dat') or \
-        not os.path.isfile('labels.dat'):
-
-        print('Computing descriptors...')
-        D, L = compute_descriptors(SIFT_detector, train_images, train_labels)
-        save_descriptors(D, L)
-    else:
-        print('Loading descriptors...')
-        D, L = load_descriptors()
-
-    # Train a k-nn classifier
-
-    print('Training the knn classifier...')
-    my_knn = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
-    my_knn.fit(D, L)
-    print('Done!')
-
-    # get all the test- data and predict their labels
-
+def assess(test_images, my_knn, detector, test_labels):
+    # get all the test data and predict their labels
     num_test_images = 0
     num_correct = 0
     for i in range(len(test_images)):
@@ -137,7 +110,7 @@ def main():
         filename_path = os.path.join(DATA_PATH, filename)
         ima = cv2.imread(filename_path)
         gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-        kpt, des = SIFT_detector.detectAndCompute(gray, None)
+        kpt, des = detector.detectAndCompute(gray, None)
         predictions = my_knn.predict(des)
         values, counts = np.unique(predictions, return_counts=True)
         predicted_class = values[np.argmax(counts)]
@@ -147,9 +120,34 @@ def main():
         if predicted_class == test_labels[i]:
             num_correct += 1
 
+    return num_correct, num_test_images
+
+
+def main():
+    # read the train and test files
+    train_images, test_images, train_labels, test_labels = load_data(DATA_PATH)
+
+    # create the SIFT detector object
+    detector = cv2.SIFT(nfeatures=100)
+
+    # If descriptors are already computed load them
+    if os.path.isfile('descriptors.dat') and os.path.isfile('labels.dat'):
+        print('Loading descriptors...')
+        D, L = load_descriptors()
+    else:
+        print('Computing descriptors...')
+        D, L = compute_descriptors(detector, train_images, train_labels)
+        save_descriptors(D, L)
+
+    # Train a k-nn classifier
+    print('Training the knn classifier...')
+    my_knn = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
+    my_knn.fit(D, L)
+    print('Done!')
+
+    num_correct, num_test_images = assess(test_images, my_knn, detector,
+                                          test_labels)
     print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
-
-
     ## 30.48% in 302 secs.
 
 
