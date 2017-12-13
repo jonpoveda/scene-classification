@@ -12,7 +12,14 @@ start = time.time()
 
 
 def load_data(data_path):
-    """ Read the train and test files """
+    ## type: (str) -> tuple(list, list, list, list)
+    """ Read the train and test files
+
+    :rtype: tuple(list, list, list, list)
+    :type data_path: str
+    :param data_path: where to get the .dat files
+    :return: lists containing the train and test images and their labels
+    """
     with open(os.path.join(data_path,
                            'train_images_filenames.dat'), 'r') as file_train, \
         open(os.path.join(data_path,
@@ -35,11 +42,19 @@ def load_data(data_path):
 
 
 def compute_descriptors(train_images, train_labels):
+    ## type: (list, list) -> (np.array, np.array)
     """ Compute descriptors using SIFT
 
     Read the just 30 train images per class.
     Extract SIFT keypoints and descriptors.
     Store descriptors in a python list of numpy arrays.
+
+    :rtype: tuple(list, list)
+    :type train_images: list
+    :type train_labels: list
+    :param train_images: list of images
+    :param train_labels: list of labels of the given images
+    :return: descriptors and labels
     """
     train_descriptors = []
     train_label_per_descriptor = []
