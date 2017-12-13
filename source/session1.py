@@ -8,8 +8,6 @@ from sklearn.neighbors import KNeighborsClassifier
 
 from source import DATA_PATH
 
-start = time.time()
-
 
 def load_data(data_path):
     ## type: (str) -> tuple(list, list, list, list)
@@ -41,7 +39,7 @@ def load_data(data_path):
     return train_images, test_images, train_labels, test_labels
 
 
-def compute_descriptors(train_images, train_labels):
+def compute_descriptors(SIFT_detector, train_images, train_labels):
     ## type: (list, list) -> (np.array, np.array)
     """ Compute descriptors using SIFT
 
@@ -84,68 +82,83 @@ def compute_descriptors(train_images, train_labels):
     return descriptors, labels
 
 
-# read the train and test files
-
-train_images, test_images, train_labels, test_labels = load_data(DATA_PATH)
-
-# create the SIFT detector object
-
-SIFT_detector = cv2.SIFT(nfeatures=100)
-
-# If descriptors are already computed load them
-if not os.path.isfile('descriptors.dat') or \
-    not os.path.isfile('labels.dat'):
-
-    print('Computing descriptors...')
-    # read the just 30 train images per class
-    # extract SIFT keypoints and descriptors
-    # store descriptors in a python list of numpy arrays
-    # Transform everything to numpy arrays
-    D, L = compute_descriptors(train_images, train_labels)
+def save_descriptors(D, L):
     with open(os.path.join(DATA_PATH,
                            'descriptors.dat'), 'w') as descriptors_file, \
         open(os.path.join(DATA_PATH,
                           'labels.dat'), 'w') as labels_file:
         cPickle.dump(D, descriptors_file)
         cPickle.dump(L, labels_file)
-else:
-    print('Loading descriptors...')
+
+
+def load_descriptors():
     with open(os.path.join(DATA_PATH,
                            'descriptors.dat'), 'r') as descriptors_file, \
         open(os.path.join(DATA_PATH,
                           'labels.dat'), 'r') as labels_file:
         D = cPickle.load(descriptors_file)
         L = cPickle.load(labels_file)
+    return D, L
 
-# Train a k-nn classifier
 
-print('Training the knn classifier...')
-my_knn = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
-my_knn.fit(D, L)
-print('Done!')
+def main():
+    # read the train and test files
 
-# get all the test data and predict their labels
+    train_images, test_images, train_labels, test_labels = load_data(DATA_PATH)
 
-num_test_images = 0
-num_correct = 0
-for i in range(len(test_images)):
-    filename = test_images[i]
-    filename_path = os.path.join(DATA_PATH, filename)
-    ima = cv2.imread(filename_path)
-    gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-    kpt, des = SIFT_detector.detectAndCompute(gray, None)
-    predictions = my_knn.predict(des)
-    values, counts = np.unique(predictions, return_counts=True)
-    predicted_class = values[np.argmax(counts)]
-    print('image ' + filename + ' was from class ' +
-          test_labels[i] + ' and was predicted ' + predicted_class)
-    num_test_images += 1
-    if predicted_class == test_labels[i]:
-        num_correct += 1
+    # create the SIFT detector object
 
-print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
+    SIFT_detector = cv2.SIFT(nfeatures=100)
 
-end = time.time()
-print('Done in ' + str(end - start) + ' secs.')
+    # If descriptors are already computed load them
+    if not os.path.isfile('descriptors.dat') or \
+        not os.path.isfile('labels.dat'):
 
-## 30.48% in 302 secs.
+        print('Computing descriptors...')
+        # read the just 30 train images per class
+        # extract SIFT keypoints and descriptors
+        # store descriptors in a python list of numpy arrays
+        # Transform everything to numpy arrays
+        D, L = compute_descriptors(SIFT_detector, train_images, train_labels)
+        save_descriptors(D, L)
+    else:
+        print('Loading descriptors...')
+        D, L = load_descriptors()
+
+    # Train a k-nn classifier
+
+    print('Training the knn classifier...')
+    my_knn = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
+    my_knn.fit(D, L)
+    print('Done!')
+
+    # get all the test- data and predict their labels
+
+    num_test_images = 0
+    num_correct = 0
+    for i in range(len(test_images)):
+        filename = test_images[i]
+        filename_path = os.path.join(DATA_PATH, filename)
+        ima = cv2.imread(filename_path)
+        gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
+        kpt, des = SIFT_detector.detectAndCompute(gray, None)
+        predictions = my_knn.predict(des)
+        values, counts = np.unique(predictions, return_counts=True)
+        predicted_class = values[np.argmax(counts)]
+        print('image ' + filename + ' was from class ' +
+              test_labels[i] + ' and was predicted ' + predicted_class)
+        num_test_images += 1
+        if predicted_class == test_labels[i]:
+            num_correct += 1
+
+    print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
+
+
+    ## 30.48% in 302 secs.
+
+
+if __name__ == '__main__':
+    start = time.time()
+    main()
+    end = time.time()
+    print('Done in ' + str(end - start) + ' secs.')
