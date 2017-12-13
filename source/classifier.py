@@ -1,7 +1,7 @@
 from sklearn.neighbors import KNeighborsClassifier
 
 
-class Classifier(object):
+class BaseClassifier(object):
     model = None
 
     def train(self, descriptors, labels):
@@ -11,7 +11,7 @@ class Classifier(object):
         return NotImplementedError
 
 
-class KNN(Classifier):
+class KNN(BaseClassifier):
     def __init__(self, n_neighbours):
         self.model = KNeighborsClassifier(n_neighbors=n_neighbours, n_jobs=-1)
 
