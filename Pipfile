@@ -18,6 +18,7 @@ scipy = "*"
 "cv2wrap" = "*"
 typeshed = "*"
 typing = "*"
+pathos = "*"
 
 
 [requires]

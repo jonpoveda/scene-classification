@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8c4a94e91fc860d7bed8ff9cf32bab7466bc85c6d0cb9601554a62221ee79161"
+            "sha256": "bfd5c080e3aad09ec0e84afb3680d89ee02349de5ab00a577ff71aa7200eea0d"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -36,6 +36,18 @@
             ],
             "version": "==1.0"
         },
+        "dill": {
+            "hashes": [
+                "sha256:97fd758f5fe742d42b11ec8318ecfcff8776bccacbfcec05dfd6276f5d450f73"
+            ],
+            "version": "==0.2.7.1"
+        },
+        "multiprocess": {
+            "hashes": [
+                "sha256:c4c196f3c4561dc1d78139c3e73709906a222d2fc166ef3eef895d8623df7267"
+            ],
+            "version": "==0.70.5"
+        },
         "numpy": {
             "hashes": [
                 "sha256:910e7ae5eeee8d322775187692c5c66719cd58d230fbfd57245ea3cf75716910",
@@ -63,6 +75,24 @@
                 "sha256:36ee86d5adbabc4fa2643a073f93d5504bdfed37a149a3a49f4dde259f35a750"
             ],
             "version": "==1.13.3"
+        },
+        "pathos": {
+            "hashes": [
+                "sha256:a153a0a9d093220688ba7972e4a9a95996a6a5caece2feb3576b22e6d474c6a0"
+            ],
+            "version": "==0.2.1"
+        },
+        "pox": {
+            "hashes": [
+                "sha256:d3e8167a1ebe08ae56262a0b9359118d90bc4648cd284b5d10ae240343100a75"
+            ],
+            "version": "==0.2.3"
+        },
+        "ppft": {
+            "hashes": [
+                "sha256:f94b26491b4a36adc975fc51dba7568089a24756007a3a4ef3414a98d7337651"
+            ],
+            "version": "==1.6.4.7.1"
         },
         "pydumper": {
             "hashes": [
