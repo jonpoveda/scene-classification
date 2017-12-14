@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import os
 
 import cv2
@@ -53,14 +55,14 @@ class SIFT(BaseFeatureExtractor):
         for filename, train_label in zip(train_images, train_labels):
             filename_path = os.path.join(DATA_PATH, filename)
             if train_label_per_descriptor.count(train_label) < 30:
-                print('Reading image ' + filename)
+                print('Reading image {}'.format(os.path.basename(filename)),
+                      end=' ')
                 image = cv2.imread(filename_path)
                 descriptor = self._compute(image)
                 train_descriptors.append(descriptor)
                 train_label_per_descriptor.append(train_label)
-                print(
-                    str(len(
-                        descriptor)) + ' extracted keypoints and descriptors')
+                print('{} extracted keypoints and descriptors'.format(
+                    len(descriptor)))
 
         # Transform everything to numpy arrays
 
