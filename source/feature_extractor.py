@@ -33,45 +33,66 @@ class SIFT(BaseFeatureExtractor):
         """ Extract descriptor from an image """
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        # Do not mind of descriptor key-points
+        # Do not mind descriptor key-points
         _, descriptors = self.detector.detectAndCompute(gray, None)
         return descriptors
+
+    def extract(self, filename, label):
+        descriptors = list()
+        label_per_descriptor = list()
+        filename_path = os.path.join(DATA_PATH, filename)
+
+        image = cv2.imread(filename_path)
+        descriptor = self._compute(image)
+        descriptors.append(descriptor)
+        label_per_descriptor.append(label)
+        print('{} extracted keypoints and descriptors'.format(
+            len(descriptor)))
+        # Transform everything to numpy arrays
+        descriptors = descriptors[0]
+        labels = np.array(
+            [label_per_descriptor[0]] * descriptors[0].shape[0])
+
+        return descriptor, labels
 
     def extract_from(self, train_images, train_labels=['no_label']):
         # type: (List, List) -> (np.array, np.array)
         """ Compute descriptors using SIFT
+
         Read the just 30 train images per class.
         Extract SIFT keypoints and descriptors.
-        Store descriptors in a python list of numpy arrays.
+        Store descriptors and labels in a python list of numpy arrays.
+
+        Note the labels from the input are expanded to the output in a way that
+        each descriptor has its label.
+
         :param train_images: list of images
         :param train_labels: list of labels of the given images
         :return: descriptors and labels
         """
-        train_descriptors = []
-        train_label_per_descriptor = []
+        descriptors = []
+        label_per_descriptor = []
 
         for filename, train_label in zip(train_images, train_labels):
             filename_path = os.path.join(DATA_PATH, filename)
-            if train_label_per_descriptor.count(train_label) < 30:
+            if label_per_descriptor.count(train_label) < 30:
                 print('Reading image {}'.format(os.path.basename(filename)),
                       end=' ')
                 image = cv2.imread(filename_path)
                 descriptor = self._compute(image)
-                train_descriptors.append(descriptor)
-                train_label_per_descriptor.append(train_label)
+                descriptors.append(descriptor)
+                label_per_descriptor.append(train_label)
                 print('{} extracted keypoints and descriptors'.format(
                     len(descriptor)))
 
         # Transform everything to numpy arrays
-
-        descriptors = train_descriptors[0]
+        descriptors = descriptors[0]
         labels = np.array(
-            [train_label_per_descriptor[0]] * train_descriptors[0].shape[0])
+            [label_per_descriptor[0]] * descriptors[0].shape[0])
 
-        for i in range(1, len(train_descriptors)):
-            descriptors = np.vstack((descriptors, train_descriptors[i]))
+        for i in range(1, len(descriptors)):
+            descriptors = np.vstack((descriptors, descriptors[i]))
             labels = np.hstack((labels, np.array(
-                [train_label_per_descriptor[i]] * train_descriptors[i].shape[
-                    0])))
+                [label_per_descriptor[i]] * descriptors[i].shape[0])))
 
         return descriptors, labels

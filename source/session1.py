@@ -1,94 +1,22 @@
-from multiprocessing import Pool
-import os
 import time
 
-import cv2
 import numpy as np
-from typing import List
 
-from classifier import BaseClassifier
 from classifier import KNN
-from descriptor import BaseFeatureExtractor
-from descriptor import SIFT
+from feature_extractor import SIFT
 from source import DATA_PATH
 
 
-def predict_class(filename):
-    global feature_extractor
-    global classifier
-
-    filename_path = os.path.join(DATA_PATH, filename)
-    print(filename_path)
-    ima = cv2.imread(filename_path)
-    #    gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-    des = feature_extractor._compute(ima)
-    predictions = classifier.predict(des)
-    values, counts = np.unique(predictions, return_counts=True)
-    predicted_class = values[np.argmax(counts)]
-    # predicted_class = "pool"
-    return predicted_class
-
-
-def assess(test_images, my_knn, descriptor, test_labels):
-    # type: (List, BaseClassifier, BaseFeatureExtractor, List) -> (int, int)
-    # get all the test data and predict their labels
-    num_test_images = 0
-    num_correct = 0
-
-    # FIXME: improve this loop
-    #    for i in range(len(test_images)):
-    #        filename = test_images[i]
-    #        filename_path = os.path.join(DATA_PATH, filename)
-    #
-    #        # Do not mind of labels
-    #        des, _ = descriptor.extract_from([filename_path])
-    #        predictions = my_knn.predict(des)
-    #        values, counts = np.unique(predictions, return_counts=True)
-    #        predicted_class = values[np.argmax(counts)]
-    #        print(
-    #            'image {} '
-    #            'was from class {} '
-    #            'and was predicted {}'.format(filename,
-    #                                          test_labels[i],
-    #                                          predicted_class))
-    #        num_test_images += 1
-    #        if predicted_class == test_labels[i]:
-    #            num_correct += 1
-
-
-    # images = list(range(4))
-    # for i in range(len(images)):
-    # for i in range(len(test_images)):
-    #     images[i] = test_images[i]
-    images= test_images
-    pool = Pool(processes=4)
-
-    predicted_class = pool.map(predict_class, images)
-
-    #    for i in range(len(test_images)):
-    #        predict_class(test_images[i])
-
-    for i in range(len(images)):
-        print('image ' + test_images[i] + ' was from class ' + test_labels[
-            i] + ' and was predicted ' + predicted_class[i])
-        num_test_images += 1
-        if predicted_class[i] == test_labels[i]:
-            num_correct += 1
-    return num_correct, num_test_images
-
-
 def main():
-    global feature_extractor
-    global classifier
-    # read the train and test files
+    # Read the train and test files
     from database import Database
     database = Database(DATA_PATH)
     train_images, test_images, train_labels, test_labels = database.get_data()
 
-    # create the SIFT detector object
+    # Create the SIFT detector object
     feature_extractor = SIFT(number_of_features=100)
 
-    # If descriptors are already computed load them
+    # Load or compute descriptors
     if database.data_exists():
         print('Loading descriptors...')
         descriptors, labels = database.get_descriptors()
@@ -98,19 +26,38 @@ def main():
                                                              train_labels)
         database.save_descriptors(descriptors, labels)
 
-    # Train a k-nn classifier
+    # Train a k-nn classifier with train dataset
     classifier = KNN(n_neighbours=5)
     classifier.train(descriptors, labels)
 
-    num_correct, num_test_images = assess(test_images,
-                                          classifier,
-                                          feature_extractor,
-                                          test_labels)
-    print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
-    ## 30.48% in 302 secs.
+    # Assess classifier with test dataset
+    num_test_images = 0
+    num_correct = 0
+    for i, image in enumerate(test_images):
+        test_descriptor, test_labels = \
+            feature_extractor.extract(test_images[i], test_labels[i])
+        predictions = classifier.predict(test_descriptor)
 
-    # pool of 4 threads:  Accuracy: 36.3073110285 Done in 129.081433058 secs
-    # no pool          :  Accuracy: 36.3073110285 Done in 237.651692867 secs
+        num_test_images += 1
+        is_a_match, predicted_class = \
+            assess_a_prediction(predictions, test_images[i], test_labels[i])
+        if is_a_match:
+            num_correct += 1
+        print('{} image {} was from class {} and was predicted {}'.format(
+            int(is_a_match), test_images[i], test_labels[i], predicted_class))
+
+    print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
+
+    # original  : 30.48% in 302 secs
+    # no pool   : 36.31% in 238 secs
+    # 4-pool    : 36.31% in 129 secs
+
+
+def assess_a_prediction(predictions_per_descriptor, test_image, test_label):
+    # FIXME: test_image is only for printing, remove it
+    values, counts = np.unique(predictions_per_descriptor, return_counts=True)
+    predicted_class = values[np.argmax(counts)]
+    return predicted_class == test_label, predicted_class
 
 
 if __name__ == '__main__':
