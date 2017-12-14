@@ -30,7 +30,6 @@ class Database(object):
     def get_data(self):
         # type: (str) -> (List, List, List, List)
         """ Read the train and test files
-
         :return: lists containing the train and test images and their labels
         """
         with open(self.train_images_path, 'r') as file_train, \

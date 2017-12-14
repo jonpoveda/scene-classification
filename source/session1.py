@@ -1,6 +1,8 @@
+from multiprocessing import Pool
 import os
 import time
 
+import cv2
 import numpy as np
 from typing import List
 
@@ -11,6 +13,22 @@ from descriptor import SIFT
 from source import DATA_PATH
 
 
+def predict_class(filename):
+    global feature_extractor
+    global classifier
+
+    filename_path = os.path.join(DATA_PATH, filename)
+    print(filename_path)
+    ima = cv2.imread(filename_path)
+    #    gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
+    des = feature_extractor._compute(ima)
+    predictions = classifier.predict(des)
+    values, counts = np.unique(predictions, return_counts=True)
+    predicted_class = values[np.argmax(counts)]
+    # predicted_class = "pool"
+    return predicted_class
+
+
 def assess(test_images, my_knn, descriptor, test_labels):
     # type: (List, BaseClassifier, BaseFeatureExtractor, List) -> (int, int)
     # get all the test data and predict their labels
@@ -18,29 +36,50 @@ def assess(test_images, my_knn, descriptor, test_labels):
     num_correct = 0
 
     # FIXME: improve this loop
-    for i in range(len(test_images)):
-        filename = test_images[i]
-        filename_path = os.path.join(DATA_PATH, filename)
+    #    for i in range(len(test_images)):
+    #        filename = test_images[i]
+    #        filename_path = os.path.join(DATA_PATH, filename)
+    #
+    #        # Do not mind of labels
+    #        des, _ = descriptor.extract_from([filename_path])
+    #        predictions = my_knn.predict(des)
+    #        values, counts = np.unique(predictions, return_counts=True)
+    #        predicted_class = values[np.argmax(counts)]
+    #        print(
+    #            'image {} '
+    #            'was from class {} '
+    #            'and was predicted {}'.format(filename,
+    #                                          test_labels[i],
+    #                                          predicted_class))
+    #        num_test_images += 1
+    #        if predicted_class == test_labels[i]:
+    #            num_correct += 1
 
-        # Do not mind of labels
-        des, _ = descriptor.extract_from([filename_path])
-        predictions = my_knn.predict(des)
-        values, counts = np.unique(predictions, return_counts=True)
-        predicted_class = values[np.argmax(counts)]
-        print(
-            'image {} '
-            'was from class {} '
-            'and was predicted {}'.format(filename,
-                                          test_labels[i],
-                                          predicted_class))
+
+    # images = list(range(4))
+    # for i in range(len(images)):
+    # for i in range(len(test_images)):
+    #     images[i] = test_images[i]
+    images= test_images
+    pool = Pool(processes=4)
+
+    predicted_class = pool.map(predict_class, images)
+
+    #    for i in range(len(test_images)):
+    #        predict_class(test_images[i])
+
+    for i in range(len(images)):
+        print('image ' + test_images[i] + ' was from class ' + test_labels[
+            i] + ' and was predicted ' + predicted_class[i])
         num_test_images += 1
-        if predicted_class == test_labels[i]:
+        if predicted_class[i] == test_labels[i]:
             num_correct += 1
-
     return num_correct, num_test_images
 
 
 def main():
+    global feature_extractor
+    global classifier
     # read the train and test files
     from database import Database
     database = Database(DATA_PATH)
@@ -75,4 +114,4 @@ if __name__ == '__main__':
     start = time.time()
     main()
     end = time.time()
-    print('Done in ' + str(end - start) + ' secs.')
+print('Done in ' + str(end - start) + ' secs.')

@@ -15,7 +15,7 @@ class BaseFeatureExtractor(object):
 
     def _compute(self, image):
         """ Compute an image descriptor """
-        # type: (np.array) -> Type[NotImplementedError]
+        # type: np.array -> Type[NotImplementedError]
         return NotImplementedError
 
 
@@ -38,11 +38,9 @@ class SIFT(BaseFeatureExtractor):
     def extract_from(self, train_images, train_labels=['no_label']):
         # type: (List, List) -> (np.array, np.array)
         """ Compute descriptors using SIFT
-
         Read the just 30 train images per class.
         Extract SIFT keypoints and descriptors.
         Store descriptors in a python list of numpy arrays.
-
         :param train_images: list of images
         :param train_labels: list of labels of the given images
         :return: descriptors and labels
