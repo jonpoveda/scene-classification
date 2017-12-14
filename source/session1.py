@@ -6,6 +6,7 @@ from classifier import KNN
 from feature_extractor import SIFT
 from source import DATA_PATH
 from multiprocessing import Pool
+from evaluator import performance_evaluator
 
 
 def main():
@@ -49,7 +50,7 @@ def main():
 #        print('{} image {} was from class {} and was predicted {}'.format(
 #            int(is_a_match), test_images[i], test_labels[i], predicted_class))
 
-    images = list(range(40))
+    images = list(range(807))
     for i in range(len(images)):
         images[i] = test_images[i]
         
@@ -64,6 +65,14 @@ def main():
         if predicted_class[i] == test_labels[i]:
             num_correct += 1 
     print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
+    
+    evaluator = performance_evaluator(test_labels, predicted_class)
+    
+    print('Evaluator accuracy: ' + str(evaluator.accuracy))
+    print('Evaluator precision: ' + str(evaluator.precision))
+    print('Evaluator recall: ' + str(evaluator.recall))
+    print('Evaluator Fscore: ' + str(evaluator.Fscore))
+    evaluator.confusion_matrix()
 
     # original  : 30.48% in 302 secs
     # no pool   : 36.31% in 238 secs
