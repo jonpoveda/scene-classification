@@ -70,6 +70,9 @@ def main():
     print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
     ## 30.48% in 302 secs.
 
+    # pool of 4 threads:  Accuracy: 36.3073110285 Done in 129.081433058 secs
+    # no pool          :  Accuracy: 36.3073110285 Done in 237.651692867 secs
+
 
 if __name__ == '__main__':
     start = time.time()
