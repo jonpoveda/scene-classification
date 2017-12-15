@@ -4,7 +4,8 @@ import os
 
 import cv2
 import numpy as np
-from typing import List, Type
+from typing import List
+from typing import Type
 
 from source import DATA_PATH
 
@@ -54,16 +55,13 @@ class SIFT(BaseFeatureExtractor):
             [label_per_descriptor[0]] * descriptors[0].shape[0])
 
         return descriptor, labels
-    
+
     def extract_pool(self, filename):
         filename_path = os.path.join(DATA_PATH, filename)
 
         image = cv2.imread(filename_path)
         descriptors = self._compute(image)
 
-
-        print('{} extracted keypoints and descriptors'.format(
-            len(descriptors)))
         # Transform everything to numpy arrays
 
         return descriptors
