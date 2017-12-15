@@ -19,6 +19,7 @@ scipy = "*"
 typeshed = "*"
 typing = "*"
 pathos = "*"
+matplotlib = "*"
 
 
 [requires]
