@@ -101,7 +101,7 @@ class SIFT(BaseFeatureExtractor):
         labels = np.array(
             [label_per_descriptor[0]] * descriptors_list[0].shape[0])
 
-        for i in range(1, len(descriptors)):
+        for i in range(1, len(descriptors_list)):
             descriptors = np.vstack((descriptors, descriptors_list[i]))
             labels = np.hstack((labels, np.array(
                 [label_per_descriptor[i]] * descriptors_list[i].shape[0])))
