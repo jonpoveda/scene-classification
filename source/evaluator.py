@@ -13,6 +13,10 @@ class performance_evaluator(object):
         self.labels = labels
         self.label_list = list(['mountain', 'inside_city', 'Opencountry', 'coast', 'street', 'forest', 'tallbuilding', 'highway'])
         self.__compute()
+        print('Evaluator accuracy: ' + str(self.accuracy))
+        print('Evaluator precision: ' + str(self.precision))
+        print('Evaluator recall: ' + str(self.recall))
+        print('Evaluator Fscore: ' + str(self.Fscore))
         
     
     def __compute(self):

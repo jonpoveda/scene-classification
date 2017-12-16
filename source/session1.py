@@ -3,13 +3,18 @@ import time
 import numpy as np
 
 from classifier import KNN
+from classifier import random_forest
+from classifier import gaussian_bayes
+from classifier import berounilli_bayes
+from classifier import SVM
+from classifier import logistic_regression
 from feature_extractor import SIFT
 from source import DATA_PATH
 from multiprocessing import Pool
 from evaluator import performance_evaluator
 
 
-def main():
+def main(classifierType = 'k-nn',threading = 'multi'):
     global feature_extractor
     global classifier
     # Read the train and test files
@@ -30,36 +35,37 @@ def main():
                                                              train_labels)
         database.save_descriptors(descriptors, labels)
 
-    # Train a k-nn classifier with train dataset
-    classifier = KNN(n_neighbours=5)
+    
+    # Select classification model
+    print('Trainning model...')
+    if classifierType == 'k-nn':
+        classifier = KNN(n_neighbours=5)
+    elif classifierType == 'rForest':
+        classifier = random_forest()
+    elif classifierType == 'logReg':
+        classifier = logistic_regression()
+    elif classifierType == 'gBayes':
+        classifier = gaussian_bayes()
+    elif classifierType == 'bBayes':
+        classifier = berounilli_bayes()
+    elif classifierType == 'SVM':
+        classifier = SVM()
+    
+    # Train a classifier with train dataset
+    print('Trainning model...')
     classifier.train(descriptors, labels)
 
     # Assess classifier with test dataset
+    print('Assessing images...')
+    if threading == 'multi':
+        predicted_class = predict_images_pool(test_images)
+    elif threading == 'single':
+        predicted_class = predict_images(test_images, test_labels)
+        
+    # Evaluate performance metrics
     num_test_images = 0
     num_correct = 0
-#    for i in range(len(test_images)):
-#        test_descriptor, _ = \
-#            feature_extractor.extract(test_images[i], test_labels[i])
-#        predictions = classifier.predict(test_descriptor)
-#    
-#        num_test_images += 1
-#        is_a_match, predicted_class = \
-#            assess_a_prediction(predictions, test_images[i], test_labels[i])
-#        if is_a_match:
-#            num_correct += 1
-#        print('{} image {} was from class {} and was predicted {}'.format(
-#            int(is_a_match), test_images[i], test_labels[i], predicted_class))
-
-    images = list(range(807))
-    for i in range(len(images)):
-        images[i] = test_images[i]
-        
-        
-    pool = Pool(processes=4)
-
-    predicted_class = pool.map(predict_image, images )
-    
-    for i in range(len(images)):
+    for i in range(len(test_images)):
         print('image ' + test_images[i] + ' was from class ' +test_labels[i] + ' and was predicted ' + predicted_class[i])
         num_test_images += 1
         if predicted_class[i] == test_labels[i]:
@@ -67,17 +73,36 @@ def main():
     print('Final accuracy: ' + str(num_correct * 100.0 / num_test_images))
     
     evaluator = performance_evaluator(test_labels, predicted_class)
-    
-    print('Evaluator accuracy: ' + str(evaluator.accuracy))
-    print('Evaluator precision: ' + str(evaluator.precision))
-    print('Evaluator recall: ' + str(evaluator.recall))
-    print('Evaluator Fscore: ' + str(evaluator.Fscore))
+
     evaluator.confusion_matrix()
 
     # original  : 30.48% in 302 secs
     # no pool   : 36.31% in 238 secs
     # 4-pool    : 36.31% in 129 secs
 
+def predict_images(test_images, test_labels):
+    prediction_list = list()
+    for i in range(len(test_images)):
+        test_descriptor, _ = \
+            feature_extractor.extract(test_images[i], test_labels[i])
+        predictions = classifier.predict(test_descriptor)
+    
+        is_a_match, predicted_class = \
+            assess_a_prediction(predictions, test_images[i], test_labels[i])
+        prediction_list.append(predicted_class)
+    return prediction_list
+
+
+def predict_images_pool(test_images):
+
+#    images = list(range(807))
+#    for i in range(len(images)):
+#        images[i] = test_images[i]
+     
+    pool = Pool(processes=4)
+#    predicted_class = pool.map(predict_image, images )
+    predicted_class = pool.map(predict_image, test_images )
+    return predicted_class
 
 
 def predict_image (image):
@@ -99,6 +124,6 @@ def assess_a_prediction(predictions_per_descriptor, test_image, test_label):
 
 if __name__ == '__main__':
     start = time.time()
-    main()
+    main(classifierType = 'rForest',threading = 'multi')
     end = time.time()
 print('Done in ' + str(end - start) + ' secs.')
