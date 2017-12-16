@@ -81,7 +81,7 @@ class SIFT(BaseFeatureExtractor):
         :param train_labels: list of labels of the given images
         :return: descriptors and labels
         """
-        descriptors = []
+        descriptors_list = []
         label_per_descriptor = []
 
         for filename, train_label in zip(train_images, train_labels):
@@ -91,19 +91,19 @@ class SIFT(BaseFeatureExtractor):
                       end=' ')
                 image = cv2.imread(filename_path)
                 descriptor = self._compute(image)
-                descriptors.append(descriptor)
+                descriptors_list.append(descriptor)
                 label_per_descriptor.append(train_label)
                 print('{} extracted keypoints and descriptors'.format(
                     len(descriptor)))
 
         # Transform everything to numpy arrays
-        descriptors = descriptors[0]
+        descriptors = descriptors_list[0]
         labels = np.array(
-            [label_per_descriptor[0]] * descriptors[0].shape[0])
+            [label_per_descriptor[0]] * descriptors_list[0].shape[0])
 
         for i in range(1, len(descriptors)):
-            descriptors = np.vstack((descriptors, descriptors[i]))
+            descriptors = np.vstack((descriptors, descriptors_list[i]))
             labels = np.hstack((labels, np.array(
-                [label_per_descriptor[i]] * descriptors[i].shape[0])))
+                [label_per_descriptor[i]] * descriptors_list[i].shape[0])))
 
         return descriptors, labels

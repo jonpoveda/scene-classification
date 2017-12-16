@@ -33,7 +33,6 @@ def main(classifier_type=ClassifierFactory.KNN, threading='multi',
         database.save_descriptors(descriptors, labels)
 
     # Select classification model
-    print('Trainning model...')
     classifier = ClassifierFactory.build(classifier_type, **classifier_kwargs)
 
     # Train a classifier with train dataset
@@ -51,15 +50,7 @@ def main(classifier_type=ClassifierFactory.KNN, threading='multi',
     num_test_images = 0
     num_correct = 0
 
-    images = list(range(10))
-    for i in range(len(images)):
-        images[i] = test_images[i]
-
-    pool = Pool(processes=4)
-
-    predicted_class = pool.map(predict_image, images)
-
-    for i in range(len(images)):
+    for i in range(len(test_images)):
         print('image {} was from class {} and was predicted {}'.format(
             test_images[i], test_labels[i], predicted_class[i]))
         num_test_images += 1
@@ -106,13 +97,13 @@ def predict_images(test_images, test_labels):
 
 
 def predict_images_pool(test_images):
-    images = list(range(10))
-    for i in range(len(images)):
-        images[i] = test_images[i]
-
+#    images = list(range(10))
+#    for i in range(len(images)):
+#        images[i] = test_images[i]
+#
     pool = Pool(processes=4)
-    predicted_class = pool.map(predict_image, images)
-    # predicted_class = pool.map(predict_image, test_images)
+#    predicted_class = pool.map(predict_image, images)
+    predicted_class = pool.map(predict_image, test_images)
     return predicted_class
 
 
