@@ -128,8 +128,8 @@ def assess_a_prediction(predictions_per_descriptor, test_image, test_label):
 
 if __name__ == '__main__':
     start = time.time()
-    main(classifier_type=ClassifierFactory.RANDOMFOREST, threading='multi')
-    # main(classifier_type=ClassifierFactory.KNN, threading='multi',
+    #main(classifier_type=ClassifierFactory.KNN, threading='multi',n_neighbors=5,n_jobs=-1)
+    main(classifier_type=ClassifierFactory.KNN, threading='multi',n_neighbors=5)
     #      n_neighbours=5)
     end = time.time()
     print('Done in {} secs.'.format(end - start))
