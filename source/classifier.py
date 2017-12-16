@@ -160,11 +160,11 @@ class SVM(BaseClassifier):
 
 
 class LogisticRegression(BaseClassifier):
-    def __init__(self, max_iterations=2500, alpha=0.1, lambdaValue=0.1):
+    def __init__(self, max_iterations=2500, alpha=0.1, lambda_value=0.1):
         # type: (int) -> None
         self.max_iterations = max_iterations
         self.alpha = alpha
-        self.lambdaValue = lambdaValue
+        self.lambdaValue = lambda_value
         self.label_list = list(
             ['mountain', 'inside_city', 'Opencountry', 'coast', 'street',
              'forest', 'tallbuilding', 'highway'])
@@ -178,7 +178,7 @@ class LogisticRegression(BaseClassifier):
             new_labels = [label == labels[x] for x in range(len(labels))]
             new_labels = 1 * np.array(new_labels)
             self.model_list.append(
-                self.RegularizedGradientDescent(descriptors, new_labels))
+                self.regularized_gradient_descent(descriptors, new_labels))
 
     def predict(self, descriptors):
         # type: (np.array) -> np.array
@@ -206,13 +206,13 @@ class LogisticRegression(BaseClassifier):
             predictions.append(prediction)
         return predictions
 
-    def sigmoid(self, X):
+    def sigmoid(self, x):
         """
-        Computes the Sigmoid function of the input argument X.
+        Computes the Sigmoid function of the input argument x.
         """
-        return 1.0 / (1 + np.exp(-X))
+        return 1.0 / (1 + np.exp(-x))
 
-    def RegularizedGradientDescent(self, x, y):
+    def regularized_gradient_descent(self, x, y):
 
         m, n = x.shape  # number of samples, number of features
 
@@ -228,17 +228,17 @@ class LogisticRegression(BaseClassifier):
             error = (h - y)
             gradient = np.dot(x.T, error) / m + self.lambdaValue / m * theta
 
-            if (np.array_equal(theta, theta - self.alpha * gradient)):
+            if np.array_equal(theta, theta - self.alpha * gradient):
                 break
             theta = theta - self.alpha * gradient
         return theta
 
-    def classifyVector(self, X, theta):
+    def classify_vector(self, x, theta):
         """
         Evaluate the Logistic Regression model h(x) with theta parameters,
         and returns the predicted label of x.
         """
-        prob = self.sigmoid(sum(np.dot(X, theta)))
+        prob = self.sigmoid(sum(np.dot(x, theta)))
         if prob > 0.5:
             return 1.0
         else:
