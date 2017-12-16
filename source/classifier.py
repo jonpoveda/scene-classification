@@ -7,6 +7,28 @@ from sklearn.svm import LinearSVC
 from typing import List
 
 
+class ClassifierFactory(object):
+    KNN = 'knn'
+    RANDOMFOREST = 'random_forest'
+    GAUSSIANBAYES = 'gaussian_bayes'
+    BERNOULLIBAYES = 'bernouilli_bayes',
+    SVM = 'svm'
+    LOGISTICREGRESSION = 'logistic_regression'
+
+    @staticmethod
+    def build(name, **kwargs):
+        """ Gets a classifier with that name """
+        classifiers = {
+            'knn': KNN,
+            'random_forest': RandomForest,
+            'gaussian_bayes': GaussianBayes,
+            'bernouilli_bayes': BernoulliBayes,
+            'svm': SVM,
+            'logistic_regression': LogisticRegression
+        }
+        return classifiers.get(name, None)(**kwargs)
+
+
 class BaseClassifier(object):
     model = None
 
@@ -20,7 +42,7 @@ class BaseClassifier(object):
 class KNN(BaseClassifier):
     def __init__(self, n_neighbours):
         # type: (int) -> None
-        self.model = KNeighborsClassifier(n_neighbors=n_neighbours, n_jobs=-1)
+        self.model = KNeighborsClassifier(n_neighbours=n_neighbours, n_jobs=-1)
 
     def train(self, descriptors, labels):
         # type: (List, List) -> None

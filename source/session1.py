@@ -4,18 +4,14 @@ import time
 from matplotlib import pyplot as plt
 import numpy as np
 
-from classifier import KNN
-from classifier import SVM
-from classifier import BernoulliBayes
-from classifier import GaussianBayes
-from classifier import LogisticRegression
-from classifier import RandomForest
+from classifier import ClassifierFactory
 from evaluator import Evaluator
 from feature_extractor import SIFT
 from source import DATA_PATH
 
 
-def main(classifierType='k-nn', threading='multi'):
+def main(classifier_type=ClassifierFactory.KNN, threading='multi',
+         **classifier_kwargs):
     global feature_extractor
     global classifier
     # Read the train and test files
@@ -38,18 +34,7 @@ def main(classifierType='k-nn', threading='multi'):
 
     # Select classification model
     print('Trainning model...')
-    if classifierType == 'k-nn':
-        classifier = KNN(n_neighbours=5)
-    elif classifierType == 'rForest':
-        classifier = RandomForest()
-    elif classifierType == 'logReg':
-        classifier = LogisticRegression()
-    elif classifierType == 'gBayes':
-        classifier = GaussianBayes()
-    elif classifierType == 'bBayes':
-        classifier = BernoulliBayes()
-    elif classifierType == 'SVM':
-        classifier = SVM()
+    classifier = ClassifierFactory.build(classifier_type, **classifier_kwargs)
 
     # Train a classifier with train dataset
     print('Trainning model...')
@@ -121,13 +106,13 @@ def predict_images(test_images, test_labels):
 
 
 def predict_images_pool(test_images):
-    #    images = list(range(807))
-    #    for i in range(len(images)):
-    #        images[i] = test_images[i]
+    images = list(range(10))
+    for i in range(len(images)):
+        images[i] = test_images[i]
 
     pool = Pool(processes=4)
-    #    predicted_class = pool.map(predict_image, images )
-    predicted_class = pool.map(predict_image, test_images)
+    predicted_class = pool.map(predict_image, images)
+    # predicted_class = pool.map(predict_image, test_images)
     return predicted_class
 
 
@@ -140,7 +125,6 @@ def predict_image(image):
     predictions = classifier.predict(test_descriptor)
     values, counts = np.unique(predictions, return_counts=True)
     predicted_class = values[np.argmax(counts)]
-    # predicted_class = "pool"
     return predicted_class
 
 
@@ -153,6 +137,8 @@ def assess_a_prediction(predictions_per_descriptor, test_image, test_label):
 
 if __name__ == '__main__':
     start = time.time()
-    main(classifierType='rForest', threading='multi')
+    main(classifier_type=ClassifierFactory.RANDOMFOREST, threading='multi')
+    # main(classifier_type=ClassifierFactory.KNN, threading='multi',
+    #      n_neighbours=5)
     end = time.time()
     print('Done in {} secs.'.format(end - start))
