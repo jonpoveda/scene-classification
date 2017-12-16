@@ -5,6 +5,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
 from typing import List
+from typing import Any
 
 
 class ClassifierFactory(object):
@@ -32,17 +33,11 @@ class ClassifierFactory(object):
 class BaseClassifier(object):
     model = None
 
-    def train(self, descriptors, labels):
-        return NotImplementedError
-
-    def predict(self, descriptor):
-        return NotImplementedError
-
-
-class KNN(BaseClassifier):
-    def __init__(self, n_neighbours):
-        # type: (int) -> None
-        self.model = KNeighborsClassifier(n_neighbours=n_neighbours, n_jobs=-1)
+    # def train(self, descriptors, labels):
+    #     return NotImplementedError
+    #
+    # def predict(self, descriptor):
+    #     return NotImplementedError
 
     def train(self, descriptors, labels):
         # type: (List, List) -> None
@@ -60,6 +55,12 @@ class KNN(BaseClassifier):
             prediction = self.predict(descriptor)
             predictions.append(prediction)
         return predictions
+
+
+class KNN(BaseClassifier):
+    def __init__(self, n_neighbours):
+        # type: (int) -> None
+        self.model = KNeighborsClassifier(n_neighbours=n_neighbours, n_jobs=-1)
 
 
 class RandomForest(BaseClassifier):
@@ -68,45 +69,11 @@ class RandomForest(BaseClassifier):
         self.model = RandomForestClassifier(n_estimators=n_estimators,
                                             max_depth=max_depth)
 
-    def train(self, descriptors, labels):
-        # type: (List, List) -> None
-        self.model.fit(descriptors, labels)
-
-    def predict(self, descriptor):
-        # type: (np.array) -> np.array
-        predictions = self.model.predict(descriptor)
-        return predictions
-
-    def predict_list(self, descriptors):
-        # type: (List) -> List
-        predictions = list()
-        for descriptor in descriptors:
-            prediction = self.predict(descriptor)
-            predictions.append(prediction)
-        return predictions
-
 
 class GaussianBayes(BaseClassifier):
     def __init__(self, priors=None):
         # type: (int) -> None
         self.model = GaussianNB(priors=priors)
-
-    def train(self, descriptors, labels):
-        # type: (List, List) -> None
-        self.model.fit(descriptors, labels)
-
-    def predict(self, descriptor):
-        # type: (np.array) -> np.array
-        predictions = self.model.predict(descriptor)
-        return predictions
-
-    def predict_list(self, descriptors):
-        # type: (List) -> List
-        predictions = list()
-        for descriptor in descriptors:
-            prediction = self.predict(descriptor)
-            predictions.append(prediction)
-        return predictions
 
 
 class BernoulliBayes(BaseClassifier):
@@ -118,45 +85,11 @@ class BernoulliBayes(BaseClassifier):
                                  fit_prior=fit_prior,
                                  class_prior=class_prior)
 
-    def train(self, descriptors, labels):
-        # type: (List, List) -> None
-        self.model.fit(descriptors, labels)
-
-    def predict(self, descriptor):
-        # type: (np.array) -> np.array
-        predictions = self.model.predict(descriptor)
-        return predictions
-
-    def predict_list(self, descriptors):
-        # type: (List) -> List
-        predictions = list()
-        for descriptor in descriptors:
-            prediction = self.predict(descriptor)
-            predictions.append(prediction)
-        return predictions
-
 
 class SVM(BaseClassifier):
     def __init__(self, penalty='l2'):
         # type: (int) -> None
         self.model = LinearSVC(penalty=penalty)
-
-    def train(self, descriptors, labels):
-        # type: (List, List) -> None
-        self.model.fit(descriptors, labels)
-
-    def predict(self, descriptor):
-        # type: (np.array) -> np.array
-        predictions = self.model.predict(descriptor)
-        return predictions
-
-    def predict_list(self, descriptors):
-        # type: (List) -> List
-        predictions = list()
-        for descriptor in descriptors:
-            prediction = self.predict(descriptor)
-            predictions.append(prediction)
-        return predictions
 
 
 class LogisticRegression(BaseClassifier):
@@ -171,7 +104,7 @@ class LogisticRegression(BaseClassifier):
         self.model_list = list()
 
     def train(self, descriptors, labels):
-        # type: (List, List) -> None
+        # type: (Any, List) -> None
         # Train one model for each type of label (one vs all) 
         for i in range(len(self.label_list)):
             label = self.label_list[i]
