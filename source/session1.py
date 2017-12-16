@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 from classifier import ClassifierFactory
+# from classifier import predict_image
+# from classifier import predict_images_pool
 from evaluator import Evaluator
 from feature_extractor import SIFT
 from source import DATA_PATH
@@ -83,7 +85,29 @@ def main(classifier_type=ClassifierFactory.KNN, threading='multi',
     # 4-pool    : 36.31% in 129 secs
 
 
+def predict_images_pool(test_images):
+    pool = Pool(processes=4)
+    predicted_class = pool.map(predict_image, test_images)
+    return predicted_class
+
+
+def predict_image(image):
+    # def predict_image(image, feature_extractor, classifier):
+    global feature_extractor
+    global classifier
+    test_descriptor = feature_extractor.extract_pool(image)
+    print('{} extracted keypoints and descriptors'.format(
+        len(test_descriptor)))
+    predictions = classifier.predict(test_descriptor)
+    values, counts = np.unique(predictions, return_counts=True)
+    predicted_class = values[np.argmax(counts)]
+    return predicted_class
+
+
 def predict_images(test_images, test_labels):
+    global feature_extractor
+    global classifier
+
     prediction_list = list()
     for i in range(len(test_images)):
         test_descriptor, _ = \
@@ -94,29 +118,6 @@ def predict_images(test_images, test_labels):
             assess_a_prediction(predictions, test_images[i], test_labels[i])
         prediction_list.append(predicted_class)
     return prediction_list
-
-
-def predict_images_pool(test_images):
-#    images = list(range(10))
-#    for i in range(len(images)):
-#        images[i] = test_images[i]
-#
-    pool = Pool(processes=4)
-#    predicted_class = pool.map(predict_image, images)
-    predicted_class = pool.map(predict_image, test_images)
-    return predicted_class
-
-
-def predict_image(image):
-    global feature_extractor
-    global classifier
-    test_descriptor = feature_extractor.extract_pool(image)
-    print('{} extracted keypoints and descriptors'.format(
-        len(test_descriptor)))
-    predictions = classifier.predict(test_descriptor)
-    values, counts = np.unique(predictions, return_counts=True)
-    predicted_class = values[np.argmax(counts)]
-    return predicted_class
 
 
 def assess_a_prediction(predictions_per_descriptor, test_image, test_label):
