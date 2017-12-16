@@ -38,20 +38,8 @@ def main():
     # Assess classifier with test dataset
     num_test_images = 0
     num_correct = 0
-    #    for i in range(len(test_images)):
-    #        test_descriptor, _ = \
-    #            feature_extractor.extract(test_images[i], test_labels[i])
-    #        predictions = classifier.predict(test_descriptor)
-    #
-    #        num_test_images += 1
-    #        is_a_match, predicted_class = \
-    #            assess_a_prediction(predictions, test_images[i], test_labels[i])
-    #        if is_a_match:
-    #            num_correct += 1
-    #        print('{} image {} was from class {} and was predicted {}'.format(
-    #            int(is_a_match), test_images[i], test_labels[i], predicted_class))
 
-    images = list(range(807))
+    images = list(range(10))
     for i in range(len(images)):
         images[i] = test_images[i]
 
@@ -60,8 +48,8 @@ def main():
     predicted_class = pool.map(predict_image, images)
 
     for i in range(len(images)):
-        print('image ' + test_images[i] + ' was from class ' + test_labels[
-            i] + ' and was predicted ' + predicted_class[i])
+        print('image {} was from class {} and was predicted {}'.format(
+            test_images[i], test_labels[i], predicted_class[i]))
         num_test_images += 1
         if predicted_class[i] == test_labels[i]:
             num_correct += 1
@@ -69,10 +57,10 @@ def main():
 
     evaluator = Evaluator(test_labels, predicted_class)
 
-    print('Evaluator accuracy: ' + str(evaluator.accuracy))
-    print('Evaluator precision: ' + str(evaluator.precision))
-    print('Evaluator recall: ' + str(evaluator.recall))
-    print('Evaluator Fscore: ' + str(evaluator.fscore))
+    print('Evaluator accuracy: {}'.format(evaluator.accuracy))
+    print('Evaluator precision: {}'.format(evaluator.precision))
+    print('Evaluator recall: {}'.format(evaluator.recall))
+    print('Evaluator Fscore: {}'.format(evaluator.fscore))
 
     cm = evaluator.confusion_matrix()
 
@@ -115,4 +103,4 @@ if __name__ == '__main__':
     start = time.time()
     main()
     end = time.time()
-print('Done in ' + str(end - start) + ' secs.')
+    print('Done in {} secs.'.format(end - start))
