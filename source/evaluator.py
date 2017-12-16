@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score
@@ -29,4 +30,9 @@ class Evaluator(object):
             2 * (self.precision * self.recall) / (self.precision + self.recall)
 
     def confusion_matrix(self):
+        # type: (None) -> np.array
+        """
+        Gets the confusion matrix of the evaluation
+        :return: an array of shape  = [n_classes, n_classes]
+        """
         return confusion_matrix(self.ground_truth, self.labels)
