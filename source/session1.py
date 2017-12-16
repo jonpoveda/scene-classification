@@ -7,6 +7,7 @@ import numpy as np
 from classifier import ClassifierFactory
 from evaluator import Evaluator
 from feature_extractor import SIFT
+from color_hist import color_hist
 from source import DATA_PATH
 
 
@@ -21,6 +22,7 @@ def main(classifier_type=ClassifierFactory.KNN, threading='multi',
 
     # Create the SIFT detector object
     feature_extractor = SIFT(number_of_features=100)
+    #feature_extractor = color_hist(bins=10)
 
     # Load or compute descriptors
     if database.data_exists():
@@ -129,7 +131,7 @@ def assess_a_prediction(predictions_per_descriptor, test_image, test_label):
 if __name__ == '__main__':
     start = time.time()
     #main(classifier_type=ClassifierFactory.KNN, threading='multi',n_neighbors=5,n_jobs=-1)
-    main(classifier_type=ClassifierFactory.KNN, threading='multi',n_neighbors=5)
+    main(classifier_type=ClassifierFactory.KNN, threading='single',n_neighbors=5)
     #      n_neighbours=5)
     end = time.time()
     print('Done in {} secs.'.format(end - start))
