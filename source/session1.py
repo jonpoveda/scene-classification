@@ -6,10 +6,10 @@ import numpy as np
 
 from classifier import KNN
 from classifier import SVM
-from classifier import berounilli_bayes
-from classifier import gaussian_bayes
-from classifier import logistic_regression
-from classifier import random_forest
+from classifier import BernoulliBayes
+from classifier import GaussianBayes
+from classifier import LogisticRegression
+from classifier import RandomForest
 from evaluator import Evaluator
 from feature_extractor import SIFT
 from source import DATA_PATH
@@ -41,13 +41,13 @@ def main(classifierType='k-nn', threading='multi'):
     if classifierType == 'k-nn':
         classifier = KNN(n_neighbours=5)
     elif classifierType == 'rForest':
-        classifier = random_forest()
+        classifier = RandomForest()
     elif classifierType == 'logReg':
-        classifier = logistic_regression()
+        classifier = LogisticRegression()
     elif classifierType == 'gBayes':
-        classifier = gaussian_bayes()
+        classifier = GaussianBayes()
     elif classifierType == 'bBayes':
-        classifier = berounilli_bayes()
+        classifier = BernoulliBayes()
     elif classifierType == 'SVM':
         classifier = SVM()
 
