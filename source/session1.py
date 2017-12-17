@@ -9,7 +9,7 @@ from typing import List
 from classifier import ClassifierFactory
 from database import Database
 from evaluator import Evaluator
-from feature_extractor import SIFT, ColourHistogram
+from feature_extractor import ColourHistogram
 from source import DATA_PATH
 
 
@@ -199,8 +199,26 @@ if __name__ == '__main__':
     end = time.time()
     print('Done in {} secs.'.format(end - start))
 
+
 # Results
 # SIFT 100 + 5-NN
 #   original  : 30.48% in 302 secs
 #   no pool   : 36.31% in 238 secs
 #   4-pool    : 36.31% in 129 secs
+
+def plot_cm():
+    cm = np.array([[93, 12, 13, 0, 0, 0, 0, 0],
+                   [56, 51, 0, 8, 0, 0, 0, 1],
+                   [52, 1, 48, 0, 0, 0, 0, 0],
+                   [49, 10, 0, 11, 3, 0, 0, 3],
+                   [22, 4, 5, 2, 59, 0, 0, 2],
+                   [72, 16, 23, 2, 0, 1, 0, 0],
+                   [47, 5, 4, 4, 14, 1, 2, 3],
+                   [37, 4, 11, 7, 20, 0, 1, 28]])
+    cm = np.log10(cm+1)
+    plt.matshow(cm)
+    plt.title('Confusion matrix')
+    plt.colorbar()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.show()
