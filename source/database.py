@@ -11,12 +11,12 @@ class Database(object):
         # type: (str) -> None
         """ Define a database with an specific folder to load and save data """
         self.path = path
+        self.temp_path = os.path.join(self.path, 'tmp')
 
-        self.generated_descriptors_path = os.path.join(
-            self.path, 'generated', 'descriptors.dat')
-
-        self.generated_labels_path = os.path.join(
-            self.path, 'generated', 'labels.dat')
+        try:
+            os.makedirs(self.temp_path)
+        except OSError as expected:
+            pass
 
         self.train_images_path = os.path.join(
             self.path, 'train_images_filenames.dat')
@@ -48,25 +48,43 @@ class Database(object):
 
         return train_images, test_images, train_labels, test_labels
 
-    def save_descriptors(self, descriptors, labels):
-        # type: (str, str) -> None
-        with open(self.generated_descriptors_path, 'w') as descriptors_file, \
-            open(self.generated_labels_path, 'w') as labels_file:
+    def save_descriptors(self, descriptors, labels, dataset_name):
+        # type: (str, str, str) -> None
+        if not self.data_exists(dataset_name):
+            os.makedirs(os.path.join(self.temp_path, dataset_name))
+
+        descriptors_path, labels_path = self.get_paths(dataset_name)
+
+        with open(descriptors_path, 'w') as descriptors_file, \
+            open(labels_path, 'w') as labels_file:
             cPickle.dump(descriptors, descriptors_file)
             cPickle.dump(labels, labels_file)
 
-    def get_descriptors(self):
-        # type: (None) -> (List, List)
-        with open(self.generated_descriptors_path, 'r') as descriptors_file, \
-            open(self.generated_labels_path, 'r') as labels_file:
+    def get_descriptors(self, dataset_name):
+        # type: (str) -> (List, List)
+        descriptors_path, labels_path = self.get_paths(dataset_name)
+
+        with open(descriptors_path, 'r') as descriptors_file, \
+            open(labels_path, 'r') as labels_file:
             descriptors = cPickle.load(descriptors_file)
             labels = cPickle.load(labels_file)
         return descriptors, labels
 
-    def data_exists(self):
+    def data_exists(self, dataset_name):
+        # type: (str) -> bool
         """ Checks if there are descriptors """
+        descriptors_path, labels_path = self.get_paths(dataset_name)
+
         # If descriptors are already computed load them
-        if os.path.isfile(self.generated_descriptors_path) and \
-            os.path.isfile(self.generated_labels_path):
+        if os.path.isfile(descriptors_path) and \
+            os.path.isfile(labels_path):
             return True
         return False
+
+    def get_paths(self, dataset_name):
+        """ Returns the paths of the temporal data
+
+        Returns the paths for descriptors and labels given a dataset name.
+        """
+        return os.path.join(self.temp_path, dataset_name, 'descriptors.dat'), \
+               os.path.join(self.temp_path, dataset_name, 'labels.dat')

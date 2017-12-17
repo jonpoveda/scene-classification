@@ -4,17 +4,17 @@ from sklearn.naive_bayes import BernoulliNB
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
-from typing import List
 from typing import Any
+from typing import List
 
 
 class ClassifierFactory(object):
     KNN = 'knn'
-    RANDOMFOREST = 'random_forest'
-    GAUSSIANBAYES = 'gaussian_bayes'
-    BERNOULLIBAYES = 'bernouilli_bayes',
+    RANDOM_FOREST = 'random_forest'
+    GAUSSIAN_BAYES = 'gaussian_bayes'
+    BERNOULLI_BAYES = 'bernoulli_bayes',
     SVM = 'svm'
-    LOGISTICREGRESSION = 'logistic_regression'
+    LOGISTIC_REGRESSION = 'logistic_regression'
 
     @staticmethod
     def build(name, **kwargs):
@@ -23,7 +23,7 @@ class ClassifierFactory(object):
             'knn': KNN,
             'random_forest': RandomForest,
             'gaussian_bayes': GaussianBayes,
-            'bernouilli_bayes': BernoulliBayes,
+            'bernoulli_bayes': BernoulliBayes,
             'svm': SVM,
             'logistic_regression': LogisticRegression
         }
@@ -32,12 +32,6 @@ class ClassifierFactory(object):
 
 class BaseClassifier(object):
     model = None
-
-    # def train(self, descriptors, labels):
-    #     return NotImplementedError
-    #
-    # def predict(self, descriptor):
-    #     return NotImplementedError
 
     def train(self, descriptors, labels):
         # type: (List, List) -> None
@@ -58,7 +52,7 @@ class BaseClassifier(object):
 
 
 class KNN(BaseClassifier):
-    def __init__(self, n_neighbours):
+    def __init__(self, n_neighbours=5):
         # type: (int) -> None
         self.model = KNeighborsClassifier(n_neighbours=n_neighbours, n_jobs=-1)
 

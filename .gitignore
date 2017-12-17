@@ -1,6 +1,7 @@
 # Dataset
 data/train/
 data/test/
+data/tmp/
 
 # IntelliJ project temp files
 .idea/
@@ -106,3 +107,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+/data/tmp/
+data/tmp/
