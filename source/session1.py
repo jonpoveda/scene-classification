@@ -11,9 +11,10 @@ from database import Database
 from evaluator import Evaluator
 from feature_extractor import SIFT
 from source import DATA_PATH
+from color_hist import color_hist
 
 
-def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
+def main(feature_type = 'ColorHist', classifier_type=ClassifierFactory.KNN, n_threads=1,
          **classifier_kwargs):
     # FIXME: remove this globals
     global feature_extractor
@@ -24,9 +25,11 @@ def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
     database = Database(DATA_PATH)
     train_images, test_images, train_labels, test_labels = database.get_data()
 
+    if feature_type == 'SIFT':
     # Create the SIFT detector object
-    feature_extractor = SIFT(number_of_features=100)
-    # feature_extractor = color_hist(bins=10)
+        feature_extractor = SIFT(number_of_features=100)
+    elif feature_type == 'ColorHist':
+        feature_extractor = color_hist(bins=10)
 
     # Load or compute descriptors for training
     descriptors, labels = load_in_memory(database, 'train',
@@ -167,7 +170,7 @@ if __name__ == '__main__':
     # main(classifier_type=ClassifierFactory.RANDOM_FOREST, threading='multi')
 
     # Using KNN
-    main(classifier_type=ClassifierFactory.KNN, n_threads=0, n_neighbors=5)
+    main(feature_type = 'ColorHist', classifier_type=ClassifierFactory.KNN, n_threads=1, n_neighbors=5)
     # original  : 30.48% in 302 secs
     # no pool   : 36.31% in 238 secs
     # 4-pool    : 36.31% in 129 secs
