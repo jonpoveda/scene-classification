@@ -23,3 +23,10 @@ if not is possible you have to set it in your environment using,
 ```
 export PYTHONPATH=[absolute_path_to_project_root]`
 ```
+
+# Report
+
+The generated report and resources can be found in the folder 
+[results](results) of this repository.
+
+
