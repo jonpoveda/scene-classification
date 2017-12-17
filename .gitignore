@@ -3,6 +3,9 @@ data/train/
 data/test/
 data/tmp/
 
+# deliverable
+*.tar.gz
+
 # IntelliJ project temp files
 .idea/
 
