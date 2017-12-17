@@ -81,9 +81,9 @@ class BernoulliBayes(BaseClassifier):
 
 
 class SVM(BaseClassifier):
-    def __init__(self, penalty='l2'):
+    def __init__(self, cparam):
         # type: (int) -> None
-        self.model = LinearSVC(penalty=penalty)
+        self.model = LinearSVC(penalty='l2', C=cparam)
 
 
 class LogisticRegression(BaseClassifier):

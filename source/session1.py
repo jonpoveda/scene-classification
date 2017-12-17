@@ -190,7 +190,9 @@ if __name__ == '__main__':
     # classifier = ClassifierFactory.build(ClassifierFactory.GAUSSIAN_BAYES)
     # classifier = ClassifierFactory.build(ClassifierFactory.BERNOULLI_BAYES)
     # classifier = ClassifierFactory.build(ClassifierFactory.SVM)
-    classifier = ClassifierFactory.build(ClassifierFactory.LOGISTIC_REGRESSION)
+    # classifier = ClassifierFactory.build(ClassifierFactory.LOGISTIC_REGRESSION)
+
+    classifier = ClassifierFactory.build(ClassifierFactory.SVM, cparam=1000.0)
 
     start = time.time()
     main(feature_extractor, classifier, n_threads=0)
