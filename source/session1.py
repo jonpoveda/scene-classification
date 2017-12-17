@@ -182,12 +182,15 @@ if __name__ == '__main__':
 
     # Create the SIFT detector object
     # feature_extractor = SIFT(number_of_features=200)
-    feature_extractor = ColourHistogram(bins=8)
+    feature_extractor = ColourHistogram(bins=32)
 
     # Select classification model
     # classifier = ClassifierFactory.build(ClassifierFactory.KNN, n_neighbors=5)
-    classifier = ClassifierFactory.build(ClassifierFactory.SVM)
     # classifier = ClassifierFactory.build(ClassifierFactory.RANDOM_FOREST)
+    # classifier = ClassifierFactory.build(ClassifierFactory.GAUSSIAN_BAYES)
+    # classifier = ClassifierFactory.build(ClassifierFactory.BERNOULLI_BAYES)
+    # classifier = ClassifierFactory.build(ClassifierFactory.SVM)
+    classifier = ClassifierFactory.build(ClassifierFactory.LOGISTIC_REGRESSION)
 
     start = time.time()
     main(feature_extractor, classifier, n_threads=0)

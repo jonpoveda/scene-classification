@@ -205,36 +205,122 @@ Done in 2.4412419796 secs.
 ```
 
 
-### Best escriptor:
+### Best escriptor: Colour Histogram with 32 bins
 
-#### [BEST_DESCRIPTOR] + KNN
+#### [BEST_DESCRIPTOR] + KNN 5
 ```
-
+Evaluator
+Accuracy: 0.195786864932
+Precision: 0.2344837194
+Recall: 0.192255962154
+Fscore: 0.211280530175
+Confusion matrix:
+[[46 32  8  4 15  0  2 11]
+ [19 27 14 15 20  0  9 12]
+ [14 41 24  1 19  0  2  0]
+ [15  8 11  6 20  0  2 14]
+ [25 21 19  3 14  1  9  2]
+ [39 17 17 10 11  2  4 14]
+ [16 12  6  4 18  1 22  1]
+ [23 15 17 13 21  1  1 17]]
+Done in 17.8198068142 secs.
 ```
 
 #### [BEST_DESCRIPTOR] + RandomForest
 ```
+Evaluator
+Accuracy: 0.220570012392
+Precision: 0.22398942925
+Recall: 0.223529886629
+Fscore: 0.223759421995
+Confusion matrix:
+[[23 21 19  7 10 14  9 15]
+ [24 21 20  6  8 18  5 14]
+ [17  6 41  8  9  3  6 11]
+ [16 14  5 15  5  3 10  8]
+ [21  8 15  7 11  6 21  5]
+ [28 19 12  7  6 26  1 15]
+ [16  7  7 10  9  2 26  3]
+ [20 19  9 14 10  8 13 15]]
+Done in 1.25663304329 secs.
 
 ```
 
 #### [BEST_DESCRIPTOR] + GaussianBayes
 ```
-
+Evaluator
+Accuracy: 0.246592317224
+Precision: 0.250558141859
+Recall: 0.245034679465
+Fscore: 0.24776563072
+Confusion matrix:
+[[28 18 11 19 13 14  4 11]
+ [11 31  4 21 11 23  1 14]
+ [12  6 39  2 12  7 10 13]
+ [ 9 14  8 13  0 12  8 12]
+ [23  7 11  9  8 14 12 10]
+ [17 22  5 10  9 37  1 13]
+ [15  1  7 15  3  9 28  2]
+ [20 15  1 30  4 12 11 15]]
+Done in 1.2053668499 secs.
 ```
 
 #### [BEST_DESCRIPTOR] + BernoulliBayes
 ```
+Evaluator
+Accuracy: 0.251548946716
+Precision: 0.21270465026
+Recall: 0.247445765284
+Fscore: 0.228763739791
+Confusion matrix:
+[[19 27 19  4  2 18 14 15]
+ [ 9 36 14  0  7 33  7 10]
+ [ 7  8 55  1  1  4 18  7]
+ [15 18  8  2  2  9 19  3]
+ [19 12  9  4  2  9 30  9]
+ [ 8 38 10  2  1 44  3  8]
+ [12  5  2 10  3  7 35  6]
+ [13 34  3  6  4 22 16 10]]
+Done in 1.19816017151 secs.
 
 ```
 
 #### [BEST_DESCRIPTOR] + SVM
 ```
-
+Evaluator
+Accuracy: 0.263940520446
+Precision: 0.27084657817
+Recall: 0.265390879005
+Fscore: 0.268090975348
+Confusion matrix:
+[[49  2  3  2  9 12 24 17]
+ [29  5  5  3 10 25 33  6]
+ [15  1 32  1  8  6 31  7]
+ [11  0  8  6  7 17 20  7]
+ [21  0  9  5  9  8 38  4]
+ [24  3  3  2  5 53 13 11]
+ [11  0  8  3  3  5 50  0]
+ [19  1 12  9  2 21 35  9]]
+Done in 2.47506904602 secs.
 ```
 
 #### [BEST_DESCRIPTOR] + LogisticRegression
 ```
-
+Evaluator
+Accuracy: 0.161090458488
+Precision: 0.167387600448
+Recall: 0.149596518182
+Fscore: 0.157992787286
+Confusion matrix:
+[[  0  10   3   0   0 102   3   0]
+ [  0   4   1   0   0 110   0   1]
+ [  0  12   7   0   0  78   4   0]
+ [  1   7   3   1   0  61   2   1]
+ [  0   3   9   0   0  76   5   1]
+ [  0   7   0   0   0 106   1   0]
+ [  0   8   6   1   1  52  12   0]
+ [  0   7   6   0   0  93   2   0]]
+Done in 3.05640506744 secs.
 ```
 
 

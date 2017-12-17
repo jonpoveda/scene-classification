@@ -12,7 +12,7 @@ class ClassifierFactory(object):
     KNN = 'knn'
     RANDOM_FOREST = 'random_forest'
     GAUSSIAN_BAYES = 'gaussian_bayes'
-    BERNOULLI_BAYES = 'bernoulli_bayes',
+    BERNOULLI_BAYES = 'bernoulli_bayes'
     SVM = 'svm'
     LOGISTIC_REGRESSION = 'logistic_regression'
 
@@ -73,7 +73,7 @@ class GaussianBayes(BaseClassifier):
 class BernoulliBayes(BaseClassifier):
     def __init__(self, alpha=1.0, binarize=0.0, fit_prior=True,
                  class_prior=None):
-        # type: (int) -> None
+        # type: (int, int, bool, Any) -> None
         self.model = BernoulliNB(alpha=alpha,
                                  binarize=binarize,
                                  fit_prior=fit_prior,
