@@ -13,35 +13,29 @@ from feature_extractor import SIFT
 from source import DATA_PATH
 
 
-def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
-         **classifier_kwargs):
-    # FIXME: remove this globals
-    global feature_extractor
-    global classifier
-
+def main(feature_extractor, classifier, n_threads=1):
     # Read the train and test files
-    from database import Database
     database = Database(DATA_PATH)
     train_images, test_images, train_labels, test_labels = database.get_data()
-
-    # Create the SIFT detector object
-    feature_extractor = SIFT(number_of_features=100)
-    # feature_extractor = color_hist(bins=10)
 
     # Load or compute descriptors for training
     descriptors, labels = load_in_memory(database, 'train',
                                          train_images, train_labels)
 
-    # Select classification model
-    classifier = ClassifierFactory.build(classifier_type, **classifier_kwargs)
-
     # Train a classifier with train dataset
     print('Trainning model...')
     classifier.train(descriptors, labels)
 
+    # BUG: the test descriptors cannot be saved the same way as the train ones
+    # cause these have to be checked by-image not by-blob. A try is using the
+    # function predict_images_pool_2 but is not finished and needs a change in
+    # the Database implenentation. Idea: always saving one descriptor file per
+    # image and then group them in the case of training and keep them
+    # separated for prediction
+
     # Load or compute descriptors for testing
-    descriptors, labels = load_in_memory(database, 'test',
-                                         test_images, test_labels)
+    # descriptors, labels = load_in_memory(database, 'test',
+    #                                      test_images, test_labels)
 
     # FIXME: do something with descriptors and labels
     # Assess classifier with test dataset
@@ -49,20 +43,22 @@ def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
     if n_threads == 1:
         predicted_class = predict_images(test_images, test_labels)
     else:
+        print('Predicting test images')
         predicted_class = predict_images_pool(test_images, n_threads)
+        # predicted_class = predict_images_pool_2(descriptors.tolist(), n_threads)
 
     # Evaluate performance metrics
     num_test_images = 0
     num_correct = 0
 
     for i in range(len(test_images)):
-        print('image {} was from class {} and was predicted {}'.format(
-            test_images[i], test_labels[i], predicted_class[i]))
+        # print('image {} was from class {} and was predicted {}'.format(
+        #     test_images[i], test_labels[i], predicted_class[i]))
         num_test_images += 1
         if predicted_class[i] == test_labels[i]:
             num_correct += 1
 
-    print('Final accuracy: {}'.format(num_correct * 100.0 / num_test_images))
+    # print('Final accuracy: {}'.format(num_correct * 100.0 / num_test_images))
 
     evaluator = Evaluator(test_labels, predicted_class)
 
@@ -73,14 +69,14 @@ def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
     cm = evaluator.confusion_matrix()
 
     # Plot the confusion matrix on test data
-    print('Confusion matrix:')
-    print(cm)
-    plt.matshow(cm)
-    plt.title('Confusion matrix')
-    plt.colorbar()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
-    plt.show()
+    # print('Confusion matrix:')
+    # print(cm)
+    # plt.matshow(cm)
+    # plt.title('Confusion matrix')
+    # plt.colorbar()
+    # plt.ylabel('True label')
+    # plt.xlabel('Predicted label')
+    # plt.show()
 
 
 def predict_images_pool(test_images, n_threads=0):
@@ -95,6 +91,21 @@ def predict_images_pool(test_images, n_threads=0):
               format(n_threads))
     pool = Pool(processes=n_threads)
     predicted_class = pool.map(predict_image, test_images)
+    return predicted_class
+
+
+def predict_images_pool_2(test_descriptors, n_threads=0):
+    """ Predict images using a pool of threads
+
+    Use the number of threads specified in ``n_threads`` in case it is not
+    zero. Otherwise detect how many cores are and set it to this number.
+    """
+    if n_threads == 0:
+        n_threads = multiprocessing.cpu_count()
+        print('Detected {0} number of CPUs, running {0} number of threads'.
+              format(n_threads))
+    pool = Pool(processes=n_threads)
+    predicted_class = pool.map(predict_image_2, test_descriptors)
     return predicted_class
 
 
@@ -113,8 +124,8 @@ def predict_image(image):
     global feature_extractor
     global classifier
     test_descriptor = feature_extractor.extract_pool(image)
-    print('{} extracted keypoints and descriptors'.format(
-        len(test_descriptor)))
+    # print('{} extracted keypoints and descriptors'.format(
+    #     len(test_descriptor)))
     predictions = classifier.predict(test_descriptor)
     values, counts = np.unique(predictions, return_counts=True)
     predicted_class = values[np.argmax(counts)]
@@ -152,25 +163,38 @@ def load_in_memory(database, name, images, labels):
     """
     # type: (Database, str, List, List) -> (List, List)
     if database.data_exists(name):
-        print('Loading descriptors...')
+        print('Loading descriptors: {}'.format(name))
         descriptors, labels = database.get_descriptors(name)
     else:
-        print('Computing descriptors...')
+        print('Computing descriptors: {}'.format(name))
         descriptors, labels = feature_extractor.extract_from(images, labels)
         database.save_descriptors(descriptors, labels, name)
+
+    print('Loaded {} descriptors and {} labels'.format(len(descriptors),
+                                                       len(labels)))
     return descriptors, labels
 
 
 if __name__ == '__main__':
+    # FIXME: remove this globals when well implemented
+    global feature_extractor
+    global classifier
+
+    # Create the SIFT detector object
+    feature_extractor = SIFT(number_of_features=100)
+    # feature_extractor = ColourHistogram(bins=10)
+
+    # Select classification model
+    classifier = ClassifierFactory.build(ClassifierFactory.KNN, n_neighbors=5)
+    # classifier = ClassifierFactory.build(ClassifierFactory.RANDOM_FOREST)
+
     start = time.time()
-    # Using RANDOM FOREST
-    # main(classifier_type=ClassifierFactory.RANDOM_FOREST, threading='multi')
-
-    # Using KNN
-    main(classifier_type=ClassifierFactory.KNN, n_threads=0, n_neighbors=5)
-    # original  : 30.48% in 302 secs
-    # no pool   : 36.31% in 238 secs
-    # 4-pool    : 36.31% in 129 secs
-
+    main(feature_extractor, classifier, n_threads=0)
     end = time.time()
     print('Done in {} secs.'.format(end - start))
+
+# Results
+# SIFT 100 + 5-NN
+#   original  : 30.48% in 302 secs
+#   no pool   : 36.31% in 238 secs
+#   4-pool    : 36.31% in 129 secs
