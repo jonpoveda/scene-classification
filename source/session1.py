@@ -10,6 +10,7 @@ from classifier import ClassifierFactory
 from database import Database
 from evaluator import Evaluator
 from feature_extractor import SIFT
+from color_hist import color_hist
 from source import DATA_PATH
 
 
@@ -26,6 +27,7 @@ def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
 
     # Create the SIFT detector object
     feature_extractor = SIFT(number_of_features=100)
+    #feature_extractor = color_hist(bins=10)
 
     # Load or compute descriptors for training
     descriptors, labels = load_in_memory(database, 'train',
