@@ -86,8 +86,8 @@ class SIFT(BaseFeatureExtractor):
         for filename, train_label in zip(train_images, train_labels):
             filename_path = os.path.join(DATA_PATH, filename)
             if label_per_descriptor.count(train_label) < 30:
-                print('Reading image {}'.format(os.path.basename(filename)),
-                      end=' ')
+                # print('Reading image {}'.format(os.path.basename(filename)),
+                #       end=' ')
                 image = cv2.imread(filename_path)
                 descriptor = self._compute(image)
                 descriptors_list.append(descriptor)
@@ -178,8 +178,8 @@ class ColourHistogram(BaseFeatureExtractor):
         for filename, train_label in zip(train_images, train_labels):
             filename_path = os.path.join(DATA_PATH, filename)
             if label_per_descriptor.count(train_label) < 30:
-                print('Reading image {}'.format(os.path.basename(filename)),
-                      end=' ')
+                # print('Reading image {}'.format(os.path.basename(filename)),
+                #       end=' ')
                 image = cv2.imread(filename_path)
                 descriptor = self._compute(image)
                 descriptors.append(descriptor)

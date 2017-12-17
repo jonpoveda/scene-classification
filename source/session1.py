@@ -9,7 +9,7 @@ from typing import List
 from classifier import ClassifierFactory
 from database import Database
 from evaluator import Evaluator
-from feature_extractor import SIFT
+from feature_extractor import SIFT, ColourHistogram
 from source import DATA_PATH
 
 
@@ -69,8 +69,8 @@ def main(feature_extractor, classifier, n_threads=1):
     cm = evaluator.confusion_matrix()
 
     # Plot the confusion matrix on test data
-    # print('Confusion matrix:')
-    # print(cm)
+    print('Confusion matrix:')
+    print(cm)
     # plt.matshow(cm)
     # plt.title('Confusion matrix')
     # plt.colorbar()
@@ -181,11 +181,12 @@ if __name__ == '__main__':
     global classifier
 
     # Create the SIFT detector object
-    feature_extractor = SIFT(number_of_features=100)
-    # feature_extractor = ColourHistogram(bins=10)
+    # feature_extractor = SIFT(number_of_features=200)
+    feature_extractor = ColourHistogram(bins=8)
 
     # Select classification model
-    classifier = ClassifierFactory.build(ClassifierFactory.KNN, n_neighbors=5)
+    # classifier = ClassifierFactory.build(ClassifierFactory.KNN, n_neighbors=5)
+    classifier = ClassifierFactory.build(ClassifierFactory.SVM)
     # classifier = ClassifierFactory.build(ClassifierFactory.RANDOM_FOREST)
 
     start = time.time()
