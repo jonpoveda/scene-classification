@@ -10,7 +10,6 @@ from classifier import ClassifierFactory
 from database import Database
 from evaluator import Evaluator
 from feature_extractor import SIFT
-from color_hist import color_hist
 from source import DATA_PATH
 
 
@@ -27,7 +26,7 @@ def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
 
     # Create the SIFT detector object
     feature_extractor = SIFT(number_of_features=100)
-    #feature_extractor = color_hist(bins=10)
+    # feature_extractor = color_hist(bins=10)
 
     # Load or compute descriptors for training
     descriptors, labels = load_in_memory(database, 'train',
@@ -46,7 +45,7 @@ def main(classifier_type=ClassifierFactory.KNN, n_threads=1,
 
     # FIXME: do something with descriptors and labels
     # Assess classifier with test dataset
-    print('Assessing images...')
+    print('Testing classifier...')
     if n_threads == 1:
         predicted_class = predict_images(test_images, test_labels)
     else:
@@ -99,9 +98,18 @@ def predict_images_pool(test_images, n_threads=0):
     return predicted_class
 
 
-def predict_image(image):
-    # def predict_image(image, feature_extractor, classifier):
+def predict_image_2(test_descriptor):
     # FIXME: remove this globals
+    global feature_extractor
+    global classifier
+    predictions = classifier.predict(test_descriptor)
+    values, counts = np.unique(predictions, return_counts=True)
+    predicted_class = values[np.argmax(counts)]
+    return predicted_class
+
+
+# FIXME: remove this method and use ``predict_image_2`` instead
+def predict_image(image):
     global feature_extractor
     global classifier
     test_descriptor = feature_extractor.extract_pool(image)
@@ -159,7 +167,7 @@ if __name__ == '__main__':
     # main(classifier_type=ClassifierFactory.RANDOM_FOREST, threading='multi')
 
     # Using KNN
-    main(classifier_type=ClassifierFactory.KNN, n_threads=0, n_neighbours=5)
+    main(classifier_type=ClassifierFactory.KNN, n_threads=0, n_neighbors=5)
     # original  : 30.48% in 302 secs
     # no pool   : 36.31% in 238 secs
     # 4-pool    : 36.31% in 129 secs

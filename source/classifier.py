@@ -52,9 +52,9 @@ class BaseClassifier(object):
 
 
 class KNN(BaseClassifier):
-    def __init__(self, n_neighbours=5):
+    def __init__(self, n_neighbors=5):
         # type: (int) -> None
-        self.model = KNeighborsClassifier(n_neighbours=n_neighbours, n_jobs=-1)
+        self.model = KNeighborsClassifier(n_neighbors=n_neighbors, n_jobs=-1)
 
 
 class RandomForest(BaseClassifier):
