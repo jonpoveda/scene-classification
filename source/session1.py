@@ -21,7 +21,7 @@ def main(feature_extractor, classifier, n_threads=1):
     # Load or compute descriptors for training
     descriptors, labels = load_in_memory(database, 'train',
                                          train_images, train_labels)
-
+    die()
     # Train a classifier with train dataset
     print('Trainning model...')
     classifier.train(descriptors, labels)
@@ -168,7 +168,8 @@ def load_in_memory(database, name, images, labels):
     else:
         print('Computing descriptors: {}'.format(name))
         descriptors, labels = feature_extractor.extract_from(images, labels)
-        database.save_descriptors(descriptors, labels, name)
+        # database.save_descriptors(descriptors, labels, name)
+        database.save_descriptors_as_files(images, descriptors, labels, name)
 
     print('Loaded {} descriptors and {} labels'.format(len(descriptors),
                                                        len(labels)))

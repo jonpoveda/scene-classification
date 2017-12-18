@@ -48,6 +48,7 @@ class Database(object):
 
         return train_images, test_images, train_labels, test_labels
 
+    # NOTE: deprecated
     def save_descriptors(self, descriptors, labels, dataset_name):
         # type: (str, str, str) -> None
         if not self.data_exists(dataset_name):
@@ -59,6 +60,27 @@ class Database(object):
             open(labels_path, 'w') as labels_file:
             cPickle.dump(descriptors, descriptors_file)
             cPickle.dump(labels, labels_file)
+
+    def save_descriptors_as_files(self, names, descriptors, labels,
+                                  dataset_name):
+        # type: (List, str, str, str) -> None
+        if not self.data_exists(dataset_name):
+            os.makedirs(os.path.join(self.temp_path, dataset_name))
+
+        descriptors_path, labels_path = self.get_paths(dataset_name)
+
+        for descriptor, name in zip(descriptors, names):
+            des_path = os.path.join(descriptors_path, '{}.des'.format(name))
+            try:
+                os.makedirs(des_path)
+            except IOError as expected:
+                pass
+            label_path = os.path.join(descriptors_path, name, '.lab')
+            # print('Saving {} in {}'.format(name, file_path))
+            with open(des_path, 'w') as descriptor_file, \
+                open(label_path, 'w') as label_file:
+                cPickle.dump(descriptors, descriptor_file)
+                cPickle.dump(labels, label_file)
 
     def get_descriptors(self, dataset_name):
         # type: (str) -> (List, List)
@@ -81,10 +103,12 @@ class Database(object):
             return True
         return False
 
+    # NOTE: replace by calling self.temp_path
     def get_paths(self, dataset_name):
         """ Returns the paths of the temporal data
 
         Returns the paths for descriptors and labels given a dataset name.
         """
-        return os.path.join(self.temp_path, dataset_name, 'descriptors.dat'), \
-               os.path.join(self.temp_path, dataset_name, 'labels.dat')
+        # return os.path.join(self.temp_path, dataset_name, 'descriptors.dat'), \
+        #        os.path.join(self.temp_path, dataset_name, 'labels.dat')
+        return self.temp_path, self.temp_path
