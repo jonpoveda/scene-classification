@@ -48,8 +48,8 @@ class Database(object):
 
         return train_images, test_images, train_labels, test_labels
 
-    # NOTE: deprecated
     def save_descriptors(self, descriptors, labels, dataset_name):
+        """ Save all descriptors in one file and all labels in another """
         # type: (str, str, str) -> None
         if not self.data_exists(dataset_name):
             os.makedirs(os.path.join(self.temp_path, dataset_name))
@@ -61,8 +61,10 @@ class Database(object):
             cPickle.dump(descriptors, descriptors_file)
             cPickle.dump(labels, labels_file)
 
+    # NOTE: not in use
     def save_descriptors_as_files(self, names, descriptors, labels,
                                   dataset_name):
+        """ Saves each descriptor and label to a different file """
         # type: (List, str, str, str) -> None
         if not self.data_exists(dataset_name):
             os.makedirs(os.path.join(self.temp_path, dataset_name))
@@ -103,7 +105,6 @@ class Database(object):
             return True
         return False
 
-    # NOTE: replace by calling self.temp_path
     def get_paths(self, dataset_name):
         """ Returns the paths of the temporal data
 
@@ -111,7 +112,15 @@ class Database(object):
         """
         return os.path.join(self.temp_path, dataset_name, 'descriptors.dat'), \
                os.path.join(self.temp_path, dataset_name, 'labels.dat')
-        # return self.temp_path, self.temp_path
+
+    # NOTE: replace by calling self.temp_path
+    # NOTE: not in use
+    def get_paths_2(self, dataset_name):
+        """ Returns the paths of the temporal data
+
+        Returns the paths for descriptors and labels given a dataset name.
+        """
+        return self.temp_path, self.temp_path
 
     def load_in_memory(self, dataset_name, feature_extractor, images, labels):
         """ Loads in memory the available descriptors.
@@ -124,8 +133,8 @@ class Database(object):
             descriptors, labels = self.get_descriptors(dataset_name)
         else:
             print('Computing descriptors: {}'.format(dataset_name))
-            descriptors, labels = feature_extractor.extract_from(images,
-                                                                 labels)
+            descriptors, labels = feature_extractor.extract_from_a_list(images,
+                                                                        labels)
             self.save_descriptors(descriptors, labels, dataset_name)
             # self.save_descriptors_as_files(images, descriptors, labels,
             #                                dataset_name)

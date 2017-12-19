@@ -11,7 +11,7 @@ from source import DATA_PATH
 
 
 class BaseFeatureExtractor(object):
-    def extract_from(self, train_images, train_labels=['no_label']):
+    def extract_from_a_list(self, train_images, train_labels=['no_label']):
         """ Compute descriptors given a list of images and labels """
         # type: (List, List) -> Type[NotImplementedError]
         return NotImplementedError
@@ -65,7 +65,7 @@ class SIFT(BaseFeatureExtractor):
 
         return descriptors
 
-    def extract_from(self, train_images, train_labels=['no_label']):
+    def extract_from_a_list(self, train_images, train_labels=['no_label']):
         # type: (List, List) -> (np.array, np.array)
         """ Compute descriptors using SIFT
 
@@ -107,6 +107,7 @@ class SIFT(BaseFeatureExtractor):
 
         return descriptors, labels
 
+
 class ColourHistogram(BaseFeatureExtractor):
     def __init__(self, bins=10, range=None, weights=None):
         # type: (int) -> None
@@ -129,6 +130,7 @@ class ColourHistogram(BaseFeatureExtractor):
         descriptors = values.reshape(1, -1)
         return descriptors
 
+    # NOTE: not in use
     def extract(self, filename, label):
         descriptors = list()
         label_per_descriptor = list()
@@ -157,7 +159,7 @@ class ColourHistogram(BaseFeatureExtractor):
 
         return descriptors
 
-    def extract_from(self, train_images, train_labels=['no_label']):
+    def extract_from_a_list(self, train_images, train_labels=['no_label']):
         # type: (List, List) -> (np.array, np.array)
         """ Compute descriptors using SIFT
 
@@ -196,3 +198,39 @@ class ColourHistogram(BaseFeatureExtractor):
                 [label_per_descriptor[i]])))
 
         return descriptors_array, label_per_descriptor
+
+
+class SIFT2(SIFT):
+    def __init__(self, number_of_features):
+        # type: (int) -> None
+        # FIXME: remove number_of_features atribute if they are not explicity needed
+        self.number_of_features = number_of_features
+        self.detector = cv2.SIFT(nfeatures=self.number_of_features)
+
+    # NOTE: not in use
+    def extract(self, train_images_filenames, train_labels):
+        # extract SIFT keypoints and descriptors
+        # store descriptors in a python list of numpy arrays
+        Train_descriptors = []
+        Train_label_per_descriptor = []
+        for i in range(len(train_images_filenames)):
+            filename = train_images_filenames[i]
+            print('Reading image ' + filename)
+            ima = cv2.imread(filename)
+            gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
+            kpt, descriptors = self.detector.detectAndCompute(gray, None)
+            Train_descriptors.append(descriptors)
+            Train_label_per_descriptor.append(train_labels[i])
+            print(str(len(kpt)) + ' extracted keypoints and descriptors')
+
+        # Transform everything to numpy arrays
+        size_descriptors = Train_descriptors[0].shape[1]
+        D = np.zeros(
+            (np.sum([len(p) for p in Train_descriptors]), size_descriptors),
+            dtype=np.uint8)
+        startingpoint = 0
+        for i in range(len(Train_descriptors)):
+            D[startingpoint:startingpoint + len(Train_descriptors[i])] = \
+                Train_descriptors[i]
+            startingpoint += len(Train_descriptors[i])
+        return None

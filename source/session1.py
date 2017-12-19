@@ -8,11 +8,13 @@ import numpy as np
 from classifier import ClassifierFactory
 from database import Database
 from evaluator import Evaluator
-from feature_extractor import ColourHistogram
+from feature_extractor import ColourHistogram, SIFT
 from source import DATA_PATH
 
 
 def main(feature_extractor, classifier, n_threads=1):
+    do_plotting = False
+
     # Read the train and test files
     database = Database(DATA_PATH)
     train_images, test_images, train_labels, test_labels = database.get_data()
@@ -46,18 +48,6 @@ def main(feature_extractor, classifier, n_threads=1):
         # predicted_class = predict_images_pool_2(descriptors.tolist(), n_threads)
 
     # Evaluate performance metrics
-    num_test_images = 0
-    num_correct = 0
-
-    for i in range(len(test_images)):
-        # print('image {} was from class {} and was predicted {}'.format(
-        #     test_images[i], test_labels[i], predicted_class[i]))
-        num_test_images += 1
-        if predicted_class[i] == test_labels[i]:
-            num_correct += 1
-
-    # print('Final accuracy: {}'.format(num_correct * 100.0 / num_test_images))
-
     evaluator = Evaluator(test_labels, predicted_class)
 
     print('Evaluator \nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
@@ -69,12 +59,13 @@ def main(feature_extractor, classifier, n_threads=1):
     # Plot the confusion matrix on test data
     print('Confusion matrix:')
     print(cm)
-    # plt.matshow(cm)
-    # plt.title('Confusion matrix')
-    # plt.colorbar()
-    # plt.ylabel('True label')
-    # plt.xlabel('Predicted label')
-    # plt.show()
+    if do_plotting:
+        plt.matshow(cm)
+        plt.title('Confusion matrix')
+        plt.colorbar()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        plt.show()
 
 
 def predict_images_pool(test_images, n_threads=0):
@@ -92,6 +83,7 @@ def predict_images_pool(test_images, n_threads=0):
     return predicted_class
 
 
+# NOTE: not in use
 def predict_images_pool_2(test_descriptors, n_threads=0):
     """ Predict images using a pool of threads
 
@@ -107,6 +99,7 @@ def predict_images_pool_2(test_descriptors, n_threads=0):
     return predicted_class
 
 
+# NOTE: not in use
 def predict_image_2(test_descriptor):
     # FIXME: remove this globals
     global feature_extractor
@@ -160,7 +153,7 @@ if __name__ == '__main__':
     global classifier
 
     # Create the SIFT detector object
-    # feature_extractor = SIFT(number_of_features=200)
+    feature_extractor = SIFT(number_of_features=200)
     feature_extractor = ColourHistogram(bins=32)
 
     # Select classification model

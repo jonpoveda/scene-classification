@@ -125,6 +125,7 @@ class LogisticRegression(BaseClassifier):
 
         return predictions
 
+    # NOTE: not in use
     def predict_list(self, descriptors):
         # type: (List) -> List
         predictions = list()
