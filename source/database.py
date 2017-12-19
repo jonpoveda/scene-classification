@@ -1,4 +1,5 @@
 import cPickle
+import glob
 import os
 
 from typing import List
@@ -51,7 +52,7 @@ class Database(object):
     def save_descriptors(self, descriptors, labels, dataset_name):
         """ Save all descriptors in one file and all labels in another """
         # type: (str, str, str) -> None
-        if not self.data_exists(dataset_name):
+        if not self.dataset_exists(dataset_name):
             os.makedirs(os.path.join(self.temp_path, dataset_name))
 
         descriptors_path, labels_path = self.get_paths(dataset_name)
@@ -66,7 +67,7 @@ class Database(object):
                                   dataset_name):
         """ Saves each descriptor and label to a different file """
         # type: (List, str, str, str) -> None
-        if not self.data_exists(dataset_name):
+        if not self.dataset_exists(dataset_name):
             os.makedirs(os.path.join(self.temp_path, dataset_name))
 
         descriptors_path, labels_path = self.get_paths(dataset_name)
@@ -94,10 +95,10 @@ class Database(object):
             labels = cPickle.load(labels_file)
         return descriptors, labels
 
-    def data_exists(self, dataset_name):
+    def dataset_exists(self, name):
         # type: (str) -> bool
         """ Checks if there are descriptors """
-        descriptors_path, labels_path = self.get_paths(dataset_name)
+        descriptors_path, labels_path = self.get_paths(name)
 
         # If descriptors are already computed load them
         if os.path.isfile(descriptors_path) and \
@@ -128,7 +129,7 @@ class Database(object):
         It computes them if they do not exists yet.
         """
         # type: (Database, str, List, List) -> (List, List)
-        if self.data_exists(dataset_name):
+        if self.dataset_exists(dataset_name):
             print('Loading descriptors: {}'.format(dataset_name))
             descriptors, labels = self.get_descriptors(dataset_name)
         else:
@@ -142,3 +143,76 @@ class Database(object):
         print('Loaded {} descriptors and {} labels'.format(len(descriptors),
                                                            len(labels)))
         return descriptors, labels
+
+
+class DatabaseFiles(Database):
+    def load_descriptor(self, image_relative_path):
+        base_path = os.path.join(self.temp_path, image_relative_path)
+        filename_without_extension = base_path.rsplit('.', 1)[0]
+        descriptor_path = filename_without_extension + '.des'
+        label_path = filename_without_extension + '.lab'
+
+        with open(descriptor_path, 'r') as descriptor_file, \
+            open(label_path, 'r') as label_file:
+            descriptor = cPickle.load(descriptor_file)
+            label = cPickle.load(label_file)
+
+        return descriptor, label
+
+    def save_descriptor(self, image_relative_path, descriptor, label):
+        # type: (str, List, List) -> None
+        """
+        :param image_relative_path: to retrieve the name
+        """
+        base_path = os.path.join(self.temp_path, image_relative_path)
+        filename_without_extension = base_path.rsplit('.', 1)[0]
+        descriptor_path = filename_without_extension + '.des'
+        label_path = filename_without_extension + '.lab'
+
+        with open(descriptor_path, 'w') as descriptor_file, \
+            open(label_path, 'w') as label_file:
+            cPickle.dump(descriptor, descriptor_file)
+            cPickle.dump(label, label_file)
+
+    def load_in_memory(self, image_list):
+        """ Loads in memory the available descriptors.
+
+        It computes them if they do not exists yet.
+        """
+        # type: (str, List, List) -> (List, List)
+        descriptors, labels = list(), list()
+
+        # print('Loading descriptors: {}'.format(dataset))
+        print('Loading descriptors...')
+        if not self.dataset_exists(os.path.pardir(image_list[0])):
+            print('Nothing loaded')
+            return (), ()
+
+        for image in image_list:
+            descriptor, label = self.load_descriptor(image)
+            descriptors.append(descriptor)
+            labels.append(label)
+
+        print('Loaded {} descriptors and {} labels'.format(len(descriptors),
+                                                           len(labels)))
+        return descriptors, labels
+
+    def dataset_exists(self, name):
+        # type: (str) -> bool
+        """ Checks folder existance and if is not empty """
+        base_path = os.path.join(self.temp_path, name)
+        return os.path.exists(base_path) and not self.dataset_is_empty(name)
+
+    def dataset_is_empty(self, name):
+        # type (str) -> bool
+        base_path = os.path.join(self.temp_path, name)
+        list_of_descriptors = glob.glob('{}/*.des'.format(base_path))
+        list_of_labels = glob.glob('{}/*.lab'.format(base_path))
+        if list_of_descriptors.__len__() != list_of_labels.__len__():
+            raise FilesMissing(
+                'It should be the same number of descriptors than labels')
+        return not list_of_descriptors
+
+
+class FilesMissing(Exception):
+    pass
