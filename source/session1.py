@@ -4,7 +4,6 @@ import time
 
 from matplotlib import pyplot as plt
 import numpy as np
-from typing import List
 
 from classifier import ClassifierFactory
 from database import Database
@@ -19,9 +18,8 @@ def main(feature_extractor, classifier, n_threads=1):
     train_images, test_images, train_labels, test_labels = database.get_data()
 
     # Load or compute descriptors for training
-    descriptors, labels = load_in_memory(database, 'train',
-                                         train_images, train_labels)
-    die()
+    descriptors, labels = database.load_in_memory('train', feature_extractor,
+                                                  train_images, train_labels)
     # Train a classifier with train dataset
     print('Trainning model...')
     classifier.train(descriptors, labels)
@@ -156,26 +154,6 @@ def assess_a_prediction(predictions_per_descriptor, test_image, test_label):
     return predicted_class == test_label, predicted_class
 
 
-def load_in_memory(database, name, images, labels):
-    """ Loads in memory the available descriptors.
-
-    It computes them if they do not exists yet.
-    """
-    # type: (Database, str, List, List) -> (List, List)
-    if database.data_exists(name):
-        print('Loading descriptors: {}'.format(name))
-        descriptors, labels = database.get_descriptors(name)
-    else:
-        print('Computing descriptors: {}'.format(name))
-        descriptors, labels = feature_extractor.extract_from(images, labels)
-        # database.save_descriptors(descriptors, labels, name)
-        database.save_descriptors_as_files(images, descriptors, labels, name)
-
-    print('Loaded {} descriptors and {} labels'.format(len(descriptors),
-                                                       len(labels)))
-    return descriptors, labels
-
-
 if __name__ == '__main__':
     # FIXME: remove this globals when well implemented
     global feature_extractor
@@ -216,7 +194,7 @@ def plot_cm():
                    [72, 16, 23, 2, 0, 1, 0, 0],
                    [47, 5, 4, 4, 14, 1, 2, 3],
                    [37, 4, 11, 7, 20, 0, 1, 28]])
-    cm = np.log10(cm+1)
+    cm = np.log10(cm + 1)
     plt.matshow(cm)
     plt.title('Confusion matrix')
     plt.colorbar()

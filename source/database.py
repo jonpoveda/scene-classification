@@ -109,6 +109,27 @@ class Database(object):
 
         Returns the paths for descriptors and labels given a dataset name.
         """
-        # return os.path.join(self.temp_path, dataset_name, 'descriptors.dat'), \
-        #        os.path.join(self.temp_path, dataset_name, 'labels.dat')
-        return self.temp_path, self.temp_path
+        return os.path.join(self.temp_path, dataset_name, 'descriptors.dat'), \
+               os.path.join(self.temp_path, dataset_name, 'labels.dat')
+        # return self.temp_path, self.temp_path
+
+    def load_in_memory(self, dataset_name, feature_extractor, images, labels):
+        """ Loads in memory the available descriptors.
+
+        It computes them if they do not exists yet.
+        """
+        # type: (Database, str, List, List) -> (List, List)
+        if self.data_exists(dataset_name):
+            print('Loading descriptors: {}'.format(dataset_name))
+            descriptors, labels = self.get_descriptors(dataset_name)
+        else:
+            print('Computing descriptors: {}'.format(dataset_name))
+            descriptors, labels = feature_extractor.extract_from(images,
+                                                                 labels)
+            self.save_descriptors(descriptors, labels, dataset_name)
+            # self.save_descriptors_as_files(images, descriptors, labels,
+            #                                dataset_name)
+
+        print('Loaded {} descriptors and {} labels'.format(len(descriptors),
+                                                           len(labels)))
+        return descriptors, labels
