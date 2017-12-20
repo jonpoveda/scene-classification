@@ -7,7 +7,8 @@ from sklearn import cluster
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler
 
-from database import Database
+from database import DatabaseFiles
+from database import Dataset
 from feature_extractor import SIFT2
 from source import DATA_PATH
 
@@ -16,14 +17,22 @@ start = time.time()
 
 def main(feature_extractor):
     # Read the train and test files
-    database = Database(DATA_PATH)
+    database = DatabaseFiles(DATA_PATH)
     train_images_filenames, test_images_filenames, train_labels, test_labels = \
         database.get_data()
 
     # Load or compute descriptors for training
-    descriptors, labels = database.load_in_memory('train', feature_extractor,
-                                                  train_images_filenames,
-                                                  train_labels)
+    train_dataset = database.get_dataset('train')
+    if train_dataset is None:
+        database.create_dataset('train')
+        dataset = database.get_dataset('train')  # type: Dataset
+        for image, label in zip(train_images_filenames, train_labels):
+            descriptor = feature_extractor.extract(DATA_PATH+'/train', [image], [label])
+            dataset.save_descriptor(image, descriptor, label)
+        # FIXME: add a command to generate descriptors into this dataset
+        NeedToGenerate()
+
+    descriptors, labels = train_dataset.load_in_memory(train_images_filenames)
     die()
     # create the SIFT detector object
     # SIFTdetector = cv2.SIFT(nfeatures=300)

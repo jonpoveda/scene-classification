@@ -207,30 +207,33 @@ class SIFT2(SIFT):
         self.number_of_features = number_of_features
         self.detector = cv2.SIFT(nfeatures=self.number_of_features)
 
-    # NOTE: not in use
-    def extract(self, train_images_filenames, train_labels):
+    def extract(self, data_path, image_filenames, train_labels):
+        from database import Dataset
+        # type: (Dataset, List, List) -> (np.array, np.array)
         # extract SIFT keypoints and descriptors
         # store descriptors in a python list of numpy arrays
-        Train_descriptors = []
-        Train_label_per_descriptor = []
-        for i in range(len(train_images_filenames)):
-            filename = train_images_filenames[i]
-            print('Reading image ' + filename)
-            ima = cv2.imread(filename)
+        train_descriptors = []
+        train_label_per_desc = []
+        # for i in range(len(image_filenames)):
+        for filename, label in zip(image_filenames, train_labels):
+            path = os.path.join(data_path, filename)
+            print('Reading image ' + path)
+            ima = cv2.imread(path)
             gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-            kpt, descriptors = self.detector.detectAndCompute(gray, None)
-            Train_descriptors.append(descriptors)
-            Train_label_per_descriptor.append(train_labels[i])
-            print(str(len(kpt)) + ' extracted keypoints and descriptors')
+            kpt, local_descriptors = self.detector.detectAndCompute(gray, None)
+            train_descriptors.append(local_descriptors)
+            # train_label_per_desc.append(train_labels[i])
+            train_label_per_desc.append(label)
+            print(str(len(kpt)) + ' extracted keylabpoints and descriptors')
 
         # Transform everything to numpy arrays
-        size_descriptors = Train_descriptors[0].shape[1]
+        size_descriptors = train_descriptors[0].shape[1]
         D = np.zeros(
-            (np.sum([len(p) for p in Train_descriptors]), size_descriptors),
+            (np.sum([len(p) for p in train_descriptors]), size_descriptors),
             dtype=np.uint8)
         startingpoint = 0
-        for i in range(len(Train_descriptors)):
-            D[startingpoint:startingpoint + len(Train_descriptors[i])] = \
-                Train_descriptors[i]
-            startingpoint += len(Train_descriptors[i])
+        for i in range(len(train_descriptors)):
+            D[startingpoint:startingpoint + len(train_descriptors[i])] = \
+                train_descriptors[i]
+            startingpoint += len(train_descriptors[i])
         return None
