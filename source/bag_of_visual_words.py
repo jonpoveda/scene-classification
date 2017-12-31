@@ -10,6 +10,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import GridSearchCV
 
+from matplotlib import pyplot as plt
+
+from evaluator import Evaluator
 from source import DATA_PATH
 
 
@@ -52,27 +55,27 @@ class BoVW(object):
         return D,Train_descriptors
 
     def compute_codebook(self,D, Train_descriptors):
-            # compute the codebook
+        # compute the codebook
+    
+        print('Computing kmeans with ' + str(self.k) + ' centroids')
+        init = time.time()
+    
+        self.codebook.fit(D)
+        cPickle.dump(self.codebook, open("codebook.dat", "wb"))
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
         
-            print('Computing kmeans with ' + str(self.k) + ' centroids')
-            init = time.time()
         
-            self.codebook.fit(D)
-            cPickle.dump(self.codebook, open("codebook.dat", "wb"))
-            end = time.time()
-            print('Done in ' + str(end - init) + ' secs.')
-            
-            
-            # get train visual word encoding
-            print('Getting Train BoVW representation')
-            init = time.time()
-            visual_words = np.zeros((len(Train_descriptors), self.k), dtype=np.float32)
-            for i in xrange(len(Train_descriptors)):
-                words = self.codebook.predict(Train_descriptors[i])
-                visual_words[i, :] = np.bincount(words, minlength=self.k)
-            end = time.time()
-            print('Done in ' + str(end - init) + ' secs.')
-            return visual_words
+        # get train visual word encoding
+        print('Getting Train BoVW representation')
+        init = time.time()
+        visual_words = np.zeros((len(Train_descriptors), self.k), dtype=np.float32)
+        for i in xrange(len(Train_descriptors)):
+            words = self.codebook.predict(Train_descriptors[i])
+            visual_words[i, :] = np.bincount(words, minlength=self.k)
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+        return visual_words
     
     def cross_validate(self, visual_words, train_labels):
         """ cross_validate classifier with k stratified folds """
@@ -88,5 +91,62 @@ class BoVW(object):
         end = time.time()
         print('Done in ' + str(end - init) + ' secs.')
         print("Best parameters: %s Accuracy: %0.2f" % (grid.best_params_, grid.best_score_))
+   
+    def train_classifier(self, visual_words, train_labels):     
+        # Train an SVM classifier with RBF kernel
+        print('Training the SVM classifier...')
+        init = time.time()
+        self.stdSlr = StandardScaler().fit(visual_words)
+        D_scaled = self.stdSlr.transform(visual_words)
+        self.clf = svm.SVC(kernel='rbf', C=10, gamma=.002).fit(D_scaled, train_labels)
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
 
+    def predict_images(self, test_images_filenames,feature_extractor): 
+        # get all the test data
+        print('Getting Test BoVW representation')
+        init = time.time()
+        visual_words_test = np.zeros((len(test_images_filenames), self.k),
+                                     dtype=np.float32)
+        for i in range(len(test_images_filenames)):
+            filename = test_images_filenames[i]
+            filename_path = os.path.join(DATA_PATH, filename)
+            print('Reading image ' + filename_path)
+            ima = cv2.imread(filename_path)
+            kpt, des = feature_extractor.detectAndCompute(ima)
+            words = self.codebook.predict(des)
+            visual_words_test[i, :] = np.bincount(words, minlength=self.k)
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+        return visual_words_test
 
+    def evaluate_performance(self, visual_words_test,test_labels, do_plotting):
+        # Test the classification accuracy
+        print('Testing the SVM classifier...')
+        init = time.time()
+        accuracy = 100 * self.clf.score(self.stdSlr.transform(visual_words_test),
+                                   test_labels)
+        
+        
+        predictions = self.clf.predict(self.stdSlr.transform(visual_words_test))
+        evaluator = Evaluator(test_labels, predictions)
+        print('Evaluator \nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
+          format(evaluator.accuracy, evaluator.precision, evaluator.recall,
+                 evaluator.fscore))
+
+        cm = evaluator.confusion_matrix()
+    
+        # Plot the confusion matrix on test data
+        print('Confusion matrix:')
+        print(cm)
+        if do_plotting:
+            plt.matshow(cm)
+            plt.title('Confusion matrix')
+            plt.colorbar()
+            plt.ylabel('True label')
+            plt.xlabel('Predicted label')
+            plt.show()
+            
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+        print('Final accuracy: ' + str(accuracy))
