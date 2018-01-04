@@ -19,7 +19,13 @@ scipy = "*"
 typeshed = "*"
 typing = "*"
 pathos = "*"
+pip = "*"
+wheel = "*"
+setuptools = "*"
+
+# Install matplotlib the last
 matplotlib = "*"
+
 
 
 [requires]

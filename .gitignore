@@ -3,6 +3,9 @@ data/train/
 data/test/
 data/tmp/
 
+# Generated files
+source/codebook.dat
+
 # deliverable
 *.tar.gz
 

@@ -1,130 +1,81 @@
-import cPickle
 import time
 
-import cv2
-import numpy as np
-from sklearn import cluster
-from sklearn import svm
-from sklearn.preprocessing import StandardScaler
-
+from bag_of_visual_words import BoVW
+from database import Database
 from database import DatabaseFiles
-from database import Dataset
-from feature_extractor import SIFT2
+from feature_extractor import denseSIFT
 from source import DATA_PATH
 
-start = time.time()
 
+def main(feature_extractor, spatial_pyramid=False,
+         histogram_intersection=False):
+    do_plotting = True
 
-def main(feature_extractor):
+    start = time.time()
+
     # Read the train and test files
     database = DatabaseFiles(DATA_PATH)
     train_images_filenames, test_images_filenames, train_labels, test_labels = \
         database.get_data()
 
-    # Load or compute descriptors for training
-    train_dataset = database.get_dataset('train')
-    if train_dataset is None:
-        database.create_dataset('train')
-        dataset = database.get_dataset('train')  # type: Dataset
-        for image, label in zip(train_images_filenames, train_labels):
-            descriptor = feature_extractor.extract(DATA_PATH+'/train', [image], [label])
-            dataset.save_descriptor(image, descriptor, label)
-        # FIXME: add a command to generate descriptors into this dataset
-        NeedToGenerate()
+    # Create BoVW classifier
+    BoVW_classifier = BoVW(spatial_pyramid=spatial_pyramid,
+                           histogram_intersection=histogram_intersection)
 
-    descriptors, labels = train_dataset.load_in_memory(train_images_filenames)
-    die()
-    # create the SIFT detector object
-    # SIFTdetector = cv2.SIFT(nfeatures=300)
+    # Extract image descriptors
+    D, Train_descriptors, Keypoints = BoVW_classifier.extract_descriptors(
+        feature_extractor, train_images_filenames, train_labels)
 
-    # extract SIFT keypoints and descriptors
-    # store descriptors in a python list of numpy arrays
-    # Train_descriptors = []
-    # Train_label_per_descriptor = []
-    # for i in range(len(train_images_filenames)):
-    #     filename = train_images_filenames[i]
-    #     print('Reading image ' + filename)
-    #     ima = cv2.imread(filename)
-    #     gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-    #     kpt, des = SIFTdetector.detectAndCompute(gray, None)
-    #     Train_descriptors.append(des)
-    #     Train_label_per_descriptor.append(train_labels[i])
-    #     print(str(len(kpt)) + ' extracted keypoints and descriptors')
-
-    # Transform everything to numpy arrays
-    # size_descriptors = Train_descriptors[0].shape[1]
-    # D = np.zeros(
-    #     (np.sum([len(p) for p in Train_descriptors]), size_descriptors),
-    #     dtype=np.uint8)
-    # startingpoint = 0
-    # for i in range(len(Train_descriptors)):
-    #     D[startingpoint:startingpoint + len(Train_descriptors[i])] = \
-    #         Train_descriptors[i]
-    #     startingpoint += len(Train_descriptors[i])
-
-    # compute the codebook
-    k = 512
-    print('Computing kmeans with ' + str(k) + ' centroids')
-    init = time.time()
-    codebook = cluster.MiniBatchKMeans(n_clusters=k, verbose=False,
-                                       batch_size=k * 20, compute_labels=False,
-                                       reassignment_ratio=10 ** -4,
-                                       random_state=42)
-    codebook.fit(D)
-    cPickle.dump(codebook, open("codebook.dat", "wb"))
-    end = time.time()
-    print('Done in ' + str(end - init) + ' secs.')
+    # Compute Codebook
+    BoVW_classifier.compute_codebook(D)
 
     # get train visual word encoding
-    print('Getting Train BoVW representation')
-    init = time.time()
-    visual_words = np.zeros((len(Train_descriptors), k), dtype=np.float32)
-    for i in xrange(len(Train_descriptors)):
-        words = codebook.predict(Train_descriptors[i])
-        visual_words[i, :] = np.bincount(words, minlength=k)
-    end = time.time()
-    print('Done in ' + str(end - init) + ' secs.')
+    visual_words = BoVW_classifier.get_train_encoding(Train_descriptors,
+                                                      Keypoints)
 
-    # Train an SVM classifier with RBF kernel
-    print('Training the SVM classifier...')
-    init = time.time()
-    stdSlr = StandardScaler().fit(visual_words)
-    D_scaled = stdSlr.transform(visual_words)
-    clf = svm.SVC(kernel='rbf', C=1, gamma=.002).fit(D_scaled, train_labels)
-    end = time.time()
-    print('Done in ' + str(end - init) + ' secs.')
+    # Train an SVM classifier 
+    train_data = BoVW_classifier.train_classifier(visual_words, train_labels)
 
     # get all the test data
-    print('Getting Test BoVW representation')
-    init = time.time()
-    visual_words_test = np.zeros((len(test_images_filenames), k),
-                                 dtype=np.float32)
-    for i in range(len(test_images_filenames)):
-        filename = test_images_filenames[i]
-        print('Reading image ' + filename)
-        ima = cv2.imread(filename)
-        gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-        kpt, des = SIFTdetector.detectAndCompute(gray, None)
-        words = codebook.predict(des)
-        visual_words_test[i, :] = np.bincount(words, minlength=k)
-    end = time.time()
-    print('Done in ' + str(end - init) + ' secs.')
+    visual_words_test = BoVW_classifier.predict_images(test_images_filenames,
+                                                       feature_extractor)
 
     # Test the classification accuracy
-    print('Testing the SVM classifier...')
-    init = time.time()
-    accuracy = 100 * clf.score(stdSlr.transform(visual_words_test),
-                               test_labels)
-    end = time.time()
-    print('Done in ' + str(end - init) + ' secs.')
-    print('Final accuracy: ' + str(accuracy))
+    BoVW_classifier.evaluate_performance(visual_words_test, test_labels,
+                                         do_plotting, train_data)
 
     end = time.time()
     print('Everything done in ' + str(end - start) + ' secs.')
     ### 69.02%
 
 
+def cross_validate(feature_extractor, spatial_pyramid=False,
+                   histogram_intersection=False):
+    # Read the train and test files
+    database = Database(DATA_PATH)
+    train_images_filenames, test_images_filenames, train_labels, test_labels = \
+        database.get_data()
+
+    # Create BoVW classifier
+    BoVW_classifier = BoVW(spatial_pyramid=spatial_pyramid,
+                           histogram_intersection=histogram_intersection)
+
+    # Extract image descriptors
+    D, Train_descriptors, Keypoints = BoVW_classifier.extract_descriptors(
+        feature_extractor, train_images_filenames, train_labels)
+
+    # Compute Codebook
+    BoVW_classifier.compute_codebook(D)
+
+    # get train visual word encoding
+    visual_words = BoVW_classifier.get_train_encoding(Train_descriptors,
+                                                      Keypoints)
+
+    # Cross validate classifier
+    BoVW_classifier.cross_validate(visual_words, train_labels)
+
+
 if __name__ == "__main__":
     # FIXME: use 300 n features
-    feature_extractor = SIFT2(number_of_features=30)
-    main(feature_extractor)
+    feature_extractor = denseSIFT()
+    main(feature_extractor, spatial_pyramid=True, histogram_intersection=True)
