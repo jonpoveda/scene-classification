@@ -1,6 +1,6 @@
 import time
 
-from bag_of_visual_words import BoVW
+from bag_of_visual_words import BoVW, ExtendedBoVW
 from database import Database
 from database import DatabaseFiles
 from feature_extractor import denseSIFT
@@ -19,8 +19,14 @@ def main(feature_extractor, spatial_pyramid=False,
         database.get_data()
 
     # Create BoVW classifier
-    BoVW_classifier = BoVW(spatial_pyramid=spatial_pyramid,
-                           histogram_intersection=histogram_intersection)
+    # BoVW_classifier = BoVW(k=512,
+    #                        spatial_pyramid=spatial_pyramid,
+    #                        histogram_intersection=histogram_intersection)
+
+    # Create BoVW classifier with GMM's
+    BoVW_classifier = ExtendedBoVW(k=64,
+                                   spatial_pyramid=spatial_pyramid,
+                                   histogram_intersection=histogram_intersection)
 
     # Extract image descriptors
     D, Train_descriptors, Keypoints = BoVW_classifier.extract_descriptors(
@@ -33,7 +39,7 @@ def main(feature_extractor, spatial_pyramid=False,
     visual_words = BoVW_classifier.get_train_encoding(Train_descriptors,
                                                       Keypoints)
 
-    # Train an SVM classifier 
+    # Train an SVM classifier
     train_data = BoVW_classifier.train_classifier(visual_words, train_labels)
 
     # get all the test data

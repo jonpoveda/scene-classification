@@ -2,6 +2,7 @@
 data/train/
 data/test/
 data/tmp/
+data-mini/
 
 # Generated files
 source/codebook.dat

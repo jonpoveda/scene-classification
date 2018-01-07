@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 from sklearn import cluster
 from sklearn import svm
+from sklearn.mixture import gaussian_mixture
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
@@ -34,14 +35,17 @@ class BoVW(object):
         # type: (int) -> None
         # FIXME: remove number_of_features if they are not explicity needed
         self.k = k
-        self.codebook = cluster.MiniBatchKMeans(n_clusters=k, verbose=False,
-                                                batch_size=k * 20,
-                                                compute_labels=False,
-                                                reassignment_ratio=10 ** -4,
-                                                random_state=42)
+        self.codebook = self.build_codebook(k)
 
         self.spatial_pyramid = spatial_pyramid
         self.histogram_intersection = histogram_intersection
+
+    def build_codebook(self, k):
+        return cluster.MiniBatchKMeans(n_clusters=k, verbose=False,
+                                       batch_size=k * 20,
+                                       compute_labels=False,
+                                       reassignment_ratio=10 ** -4,
+                                       random_state=42)
 
     def spatial_pyramid_histogram(self, descriptors, keypoints, w=256, h=256):
         # compute spatial pyramid histogram
@@ -117,6 +121,9 @@ class BoVW(object):
 
     def get_train_encoding(self, Train_descriptors, Keypoints):
         # get train visual word encoding
+        """
+        :return: visual words
+        """
         print('Getting Train BoVW representation')
         init = time.time()
         # no spatial pyramid algorithm
@@ -243,3 +250,110 @@ class BoVW(object):
         end = time.time()
         print('Done in ' + str(end - init) + ' secs.')
         print('Final accuracy: ' + str(accuracy))
+
+
+class ExtendedBoVW(BoVW):
+    """ Implements BoVW with GMMs and Fisher Vectors """
+
+    # NOTE: this methdod is not needed in execution but it seems the only way
+    # PyCharm has reference to a GMM for the codebook (without this method it
+    # thinks is a kminibatch
+    def __init__(self, k, spatial_pyramid=False,
+                 histogram_intersection=False):
+        # type: (int) -> None
+        # FIXME: remove number_of_features if they are not explicity needed
+        self.k = k
+        self.codebook = self.build_codebook(k)
+
+        self.spatial_pyramid = spatial_pyramid
+        self.histogram_intersection = histogram_intersection
+
+    def build_codebook(self, k):
+        print('Building a GMM of {} components as a codebook'.format(k))
+        return gaussian_mixture.GaussianMixture(n_components=k,
+                                                verbose=False,
+                                                covariance_type='diag',
+                                                tol=1e-3,
+                                                reg_covar=1e-6,
+                                                max_iter=100)
+
+    def compute_codebook(self, D):
+        # compute the codebook
+        print('Computing GMM with ' + str(self.k) + ' centroids')
+        init = time.time()
+        self.codebook.fit(D)
+        # fv = fisher_vector(D, self.codebook)
+        cPickle.dump(self.codebook, open("codebook.dat", "wb"))
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+
+    def get_train_encoding(self, Train_descriptors, Keypoints):
+        # get train visual word encoding
+        """
+        :return: visual words
+        """
+        print('Getting Train BoVW representation')
+        init = time.time()
+        # no spatial pyramid algorithm
+        if self.spatial_pyramid is False:
+            visual_words = np.zeros((len(Train_descriptors), self.k),
+                                    dtype=np.float32)
+            for i in xrange(len(Train_descriptors)):
+                # words = self.codebook.predict(Train_descriptors[i])
+                visual_words[i, :] = self.codebook.predict_proba(Train_descriptors[i])
+                # visual_words[i, :] = np.bincount(words, minlength=self.k)
+                # spatial pyramid algorithm
+        else:
+            visual_words = np.zeros((len(Train_descriptors), self.k * 21),
+                                    dtype=np.float32)
+            for i in xrange(len(Train_descriptors)):
+                visual_words[i, :] = self.spatial_pyramid_histogram(
+                    Train_descriptors[i], Keypoints[i])
+
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+        return visual_words
+
+
+def fisher_vector(xx, gmm):
+    """Computes the Fisher vector on a set of descriptors.
+    Parameters
+    ----------
+    xx: array_like, shape (N, D) or (D, )
+        The set of descriptors
+    gmm: instance of sklearn mixture.GMM object
+        Gauassian mixture model of the descriptors.
+    Returns
+    -------
+    fv: array_like, shape (K + 2 * D * K, )
+        Fisher vector (derivatives with respect to the mixing weights, means
+        and variances) of the given descriptors.
+    Reference
+    ---------
+    J. Krapac, J. Verbeek, F. Jurie.  Modeling Spatial Layout with Fisher
+    Vectors for Image Categorization.  In ICCV, 2011.
+    http://hal.inria.fr/docs/00/61/94/03/PDF/final.r1.pdf
+    """
+    xx = np.atleast_2d(xx)
+    N = xx.shape[0]
+
+    # Compute posterior probabilities.
+    Q = gmm.predict_proba(xx)  # NxK
+
+    # Compute the sufficient statistics of descriptors.
+    Q_sum = np.sum(Q, 0)[:, np.newaxis] / N
+    Q_xx = np.dot(Q.T, xx) / N
+    Q_xx_2 = np.dot(Q.T, xx ** 2) / N
+
+    # Compute derivatives with respect to mixing weights, means and variances.
+    d_pi = Q_sum.squeeze() - gmm.weights_
+    d_mu = Q_xx - Q_sum * gmm.means_
+    d_sigma = (
+        - Q_xx_2
+        - Q_sum * gmm.means_ ** 2
+        # + Q_sum * gmm.covars_
+        + Q_sum * gmm.covariances_
+        + 2 * Q_xx * gmm.means_)
+
+    # Merge derivatives into a vector.
+    return np.hstack((d_pi, d_mu.flatten(), d_sigma.flatten()))
