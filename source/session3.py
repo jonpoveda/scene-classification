@@ -37,7 +37,8 @@ if __name__ == "__main__":
                 neural_network.train_classifier_SVM(features, labels)
                 features, labels = neural_network.get_layer_output(
                     layer='last', image_set='test')
-                neural_network.evaluate_performance_SVM(features, labels)
+                neural_network.evaluate_performance_SVM(features, labels,
+                                                        do_plotting=True)
             else:
                 neural_network.cross_validate_SVM(features, labels)
 

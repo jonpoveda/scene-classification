@@ -72,7 +72,7 @@ def fisher_vector_means(s0, s1, s2, means, sigma, w, T):
 def fisher_vector_sigma(s0, s1, s2, means, sigma, w, T):
     return np.float32([(s2[k] - 2 * means[k] * s1[k] + (
         means[k] * means[k] - sigma[k]) * s0[k]) / (
-                       np.sqrt(2 * w[k]) * sigma[k])
+                           np.sqrt(2 * w[k]) * sigma[k])
                        for k in range(0, len(w))])
 
 

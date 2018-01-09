@@ -300,7 +300,8 @@ class ExtendedBoVW(BoVW):
                                     dtype=np.float32)
             for i in xrange(len(Train_descriptors)):
                 # words = self.codebook.predict(Train_descriptors[i])
-                visual_words[i, :] = self.codebook.predict_proba(Train_descriptors[i])
+                visual_words[i, :] = self.codebook.predict_proba(
+                    Train_descriptors[i])
                 # visual_words[i, :] = np.bincount(words, minlength=self.k)
                 # spatial pyramid algorithm
         else:
