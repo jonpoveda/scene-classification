@@ -7,7 +7,7 @@ from utils import colorprint
 
 SVM = False
 cross_validate = False
-load_model = True
+load_model = False
 
 if __name__ == "__main__":
 
@@ -26,21 +26,21 @@ if __name__ == "__main__":
     else:
         neural_network.load_MLP_model()
 
-        if not SVM:
-            neural_network.plot_results()
+    if not SVM:
+        neural_network.plot_results()
 
+    else:
+        # feature extraction with MLP + SVM classification
+        features, labels = neural_network.get_layer_output(layer='last',
+                                                           image_set='train')
+        if not cross_validate:
+            neural_network.train_classifier_SVM(features, labels)
+            features, labels = neural_network.get_layer_output(
+                layer='last', image_set='test')
+            neural_network.evaluate_performance_SVM(features, labels,
+                                                    do_plotting=True)
         else:
-            # feature extraction with MLP + SVM classification
-            features, labels = neural_network.get_layer_output(layer='last',
-                                                               image_set='train')
-            if not cross_validate:
-                neural_network.train_classifier_SVM(features, labels)
-                features, labels = neural_network.get_layer_output(
-                    layer='last', image_set='test')
-                neural_network.evaluate_performance_SVM(features, labels,
-                                                        do_plotting=True)
-            else:
-                neural_network.cross_validate_SVM(features, labels)
+            neural_network.cross_validate_SVM(features, labels)
 
     end = time.time()
     colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')

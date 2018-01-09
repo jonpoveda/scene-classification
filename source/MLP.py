@@ -30,7 +30,6 @@ class multi_layer_perceptron(object):
         if not os.path.exists(self.DATASET_DIR):
             colorprint(Color.RED,
                        'ERROR: dataset directory ' + self.DATASET_DIR + ' do not exists!\n')
-            quit()
 
     def build_MLP_model(self):
         # Build MLP model
@@ -132,7 +131,6 @@ class multi_layer_perceptron(object):
         if not os.path.exists(self.MODEL_FNAME):
             colorprint(Color.YELLOW,
                        'Error: model file ' + self.MODEL_FNAME + ' exists and will be overwritten!\n')
-            quit()
 
         colorprint(Color.BLUE,
                    'Loading the model from ' + self.MODEL_FNAME + ' \n')
