@@ -25,6 +25,8 @@ setuptools = "*"
 matplotlib = "*"
 keras = "*"
 tensorflow = "*"
+pillow = "*"
+pydot = "*"
 
 
 [requires]

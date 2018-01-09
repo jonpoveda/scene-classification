@@ -2,7 +2,8 @@ import time
 
 from MLP import multi_layer_perceptron
 from source import DATA_PATH
-from utils import Color, colorprint
+from utils import Color
+from utils import colorprint
 
 SVM = False
 cross_validate = False
