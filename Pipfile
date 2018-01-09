@@ -22,10 +22,9 @@ pathos = "*"
 pip = "*"
 wheel = "*"
 setuptools = "*"
-
-# Install matplotlib the last
 matplotlib = "*"
-
+keras = "*"
+tensorflow = "*"
 
 
 [requires]
