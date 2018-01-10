@@ -1,3 +1,8 @@
+# Config for an specific GPU
+import os
+import getpass
+os.environ["CUDA_VISIBLE_DEVICES"]=getpass.getuser()[-1]
+
 import time
 
 from MLP import multi_layer_perceptron
@@ -10,7 +15,7 @@ SVM = False
 # Do cross-validation to find best parameters ?
 cross_validate = False
 # Load pre-trained model or generate from scratch?
-load_model = True
+load_model = False
 
 MODEL_PATH = '../results/session3/my_first_mlp.h5'
 
