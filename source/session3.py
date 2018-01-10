@@ -5,18 +5,23 @@ from source import DATA_PATH
 from utils import Color
 from utils import colorprint
 
+# Compute SVM ?
 SVM = False
+# Do cross-validation to find best parameters ?
 cross_validate = False
+# Load pre-trained model or generate from scratch?
 load_model = True
 
-if __name__ == "__main__":
+MODEL_PATH = '../results/session3/my_first_mlp.h5'
 
+if __name__ == "__main__":
     init = time.time()
 
     # end to end MLP implementation
-    neural_network = multi_layer_perceptron(img_size=32, batch_size=16,
+    neural_network = multi_layer_perceptron(img_size=32,
+                                            batch_size=16,
                                             dataset_dir=DATA_PATH,
-                                            model_fname='my_first_mlp.h5')
+                                            model_fname=MODEL_PATH)
     neural_network.build_MLP_model()
 
     # Train or load model
