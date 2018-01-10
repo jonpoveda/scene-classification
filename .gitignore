@@ -5,7 +5,7 @@ data/tmp/
 data-mini/
 
 # Generated files
-source/codebook.dat
+results/session2/codebook.dat
 
 # deliverable
 *.tar.gz
@@ -117,4 +117,4 @@ ENV/
 /data/tmp/
 data/tmp/
 M3 Project CNN Week3.pdf
-source/my_first_mlp.h5
+results/session3/my_first_mlp.h5
