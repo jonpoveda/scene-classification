@@ -6,14 +6,13 @@ from sklearn.metrics import recall_score
 
 
 class Evaluator(object):
-    def __init__(self, ground_truth, labels):
+    def __init__(self, ground_truth, labels, label_list = list(['mountain', 'inside_city', 'Opencountry', 'coast',
+                  'street', 'forest', 'tallbuilding', 'highway'])):
         # type: (int) -> None
         # FIXME: remove number_of_features if they are not explicity needed
         self.ground_truth = ground_truth[0:len(labels)]
         self.labels = labels
-        self.label_list = \
-            list(['mountain', 'inside_city', 'Opencountry', 'coast',
-                  'street', 'forest', 'tallbuilding', 'highway'])
+        self.label_list = label_list
         self.__compute()
 
     def __compute(self):

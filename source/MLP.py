@@ -162,7 +162,8 @@ class multi_layer_perceptron(object):
             batch_size=self.BATCH_SIZE,
             classes=['coast', 'forest', 'highway', 'inside_city', 'mountain',
                      'Opencountry', 'street', 'tallbuilding'],
-            class_mode='categorical')
+            class_mode='categorical',
+            shuffle = False)
 
         labels = generator.classes
 
@@ -215,7 +216,8 @@ class multi_layer_perceptron(object):
             batch_size=self.BATCH_SIZE,
             classes=['coast', 'forest', 'highway', 'inside_city', 'mountain',
                      'Opencountry', 'street', 'tallbuilding'],
-            class_mode='categorical')
+            class_mode='categorical',
+            shuffle = False)
         # Get ground truth
         test_labels = test_generator.classes
 
@@ -224,9 +226,8 @@ class multi_layer_perceptron(object):
         predictions = []
         for prediction in predictions_raw:
             predictions.append(np.argmax(prediction))
-
         # Evaluate results
-        evaluator = Evaluator(test_labels, predictions)
+        evaluator = Evaluator(test_labels, predictions, label_list = list([0,1,2,3,4,5,6,7]))
 
 
         ########
@@ -283,9 +284,9 @@ class multi_layer_perceptron(object):
         D_scaled = self.stdSlr.transform(features)
 
         # Train an SVM classifier with RBF kernel
-        self.clf = svm.SVC(kernel='rbf', C=10, gamma=.002).fit(D_scaled,
-                                                               train_labels)
-
+        #self.clf = svm.SVC(kernel='rbf', C=10, gamma=.002).fit(D_scaled,
+         #                                                      train_labels)
+        self.clf = svm.SVC(kernel='linear').fit(D_scaled, train_labels)
         end = time.time()
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
 
@@ -297,7 +298,7 @@ class multi_layer_perceptron(object):
         accuracy = 100 * self.clf.score(test_data, test_labels)
 
         predictions = self.clf.predict(test_data)
-        evaluator = Evaluator(test_labels, predictions)
+        evaluator = Evaluator(test_labels, predictions,label_list = list([0,1,2,3,4,5,6,7]))
 
         colorprint(Color.BLUE,
                    'Evaluator \nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
