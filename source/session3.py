@@ -7,7 +7,7 @@ from utils import colorprint
 
 SVM = False
 cross_validate = False
-load_model = False
+load_model = True
 
 if __name__ == "__main__":
 

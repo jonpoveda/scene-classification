@@ -27,6 +27,7 @@ keras = "*"
 tensorflow = "*"
 pillow = "*"
 pydot = "*"
+"h5py" = "*"
 
 
 [requires]

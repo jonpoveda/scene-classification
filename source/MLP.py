@@ -228,9 +228,12 @@ class multi_layer_perceptron(object):
         # Evaluate results
         evaluator = Evaluator(test_labels, predictions)
 
+
+        ########
+        scores =  self.model.evaluate_generator(test_generator)
         colorprint(Color.BLUE,
-                   'Evaluator \nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
-                   format(evaluator.accuracy, evaluator.precision,
+                   'Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
+                   format(scores[1], evaluator.accuracy, evaluator.precision,
                           evaluator.recall,
                           evaluator.fscore) + '\n')
         cm = evaluator.confusion_matrix()
