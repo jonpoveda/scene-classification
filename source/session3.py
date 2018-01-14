@@ -9,14 +9,17 @@ from source import DATA_PATH
 from utils import Color
 from utils import colorprint
 
+
+# Use two output MLP
+two_output = True
 # Compute SVM
 SVM = False
 # Compute bag of visual words
-BoVW = True
+BoVW = False
 # Do cross-validation to find best parameters
 cross_validate = False
 # Load pre-trained model or generate from scratch
-load_model = True
+load_model = False
 
 MODEL_PATH = '../results/session3/my_first_mlp.h5'
 
@@ -28,7 +31,10 @@ if __name__ == "__main__":
                                             batch_size=16,
                                             dataset_dir=DATA_PATH,
                                             model_fname=MODEL_PATH)
-    neural_network.build_MLP_model()
+    if not two_output:
+        neural_network.build_MLP_model()
+    else:
+        neural_network.build_MLP_two_outputs_model()
 
     # Train or load model
     if not load_model:

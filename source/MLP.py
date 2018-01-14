@@ -1,7 +1,7 @@
 import os
 import time
 
-from keras.layers import Dense, Reshape
+from keras.layers import Dense, Reshape, concatenate, Input
 from keras.models import Model, Sequential
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import plot_model
@@ -74,6 +74,46 @@ class multi_layer_perceptron(object):
         end = time.time()
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
 
+    def build_MLP_two_outputs_model(self):
+        # Build MLP model
+
+        init = time.time()
+
+        colorprint(Color.BLUE, 'Building MLP model...\n')       
+        
+        
+        #Input layers
+        main_input = Input(shape=(self.IMG_SIZE, self.IMG_SIZE, 3), dtype='float32', name='main_input')
+        inp = Reshape((self.IMG_SIZE * self.IMG_SIZE * 3,),input_shape=(self.IMG_SIZE, self.IMG_SIZE, 3))(main_input)
+        
+        # First branch layers
+        first = Dense(512, activation='relu')(inp)
+        first = Dense(512, activation='relu')(first)
+        
+        # Second branch layers
+        second = Dense(1024, activation='relu')(inp)
+        
+        # Concatenate the previous layers 
+        x = concatenate([first, second])
+        main_output = Dense(units=8, activation='softmax')(x)
+        
+        # Compile the model
+        self.model = Model(inputs=main_input, outputs=main_output)
+        self.model.compile(loss='categorical_crossentropy',
+                                   optimizer='sgd',
+                                   metrics=['accuracy'])
+
+        print(self.model.summary())
+
+        plot_model(self.model, to_file='modelMLP.png', show_shapes=True,
+                   show_layer_names=True)
+
+        colorprint(Color.BLUE, 'Done!\n')
+
+        end = time.time()
+        colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
+
+
     def train_MLP_model(self):
         # train the MLP model
 
@@ -121,7 +161,7 @@ class multi_layer_perceptron(object):
         self.history = self.model.fit_generator(
             train_generator,
             steps_per_epoch=1881 // self.BATCH_SIZE,
-            epochs=1,  # 50
+            epochs = 1,
             validation_data=validation_generator,
             validation_steps=807 // self.BATCH_SIZE)
 
