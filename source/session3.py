@@ -2,6 +2,8 @@ import getpass
 import os
 import time
 
+import numpy as np
+
 from MLP import multi_layer_perceptron
 from source import DATA_PATCHES_PATH, DATA_PATH
 from utils import Color
@@ -31,13 +33,12 @@ def get_nn(dataset_dir=DATA_PATH, load_model=False):
     neural_network.build_MLP_model()
 
     # Train or load model
-    if not load_model:
+    if load_model:
+        neural_network.load_MLP_model()
+    else:
         neural_network.train_MLP_model()
         neural_network.plot_history()
-    else:
-        neural_network.load_MLP_model()
     return neural_network
-
 
 if __name__ == "__main__":
     init = time.time()
@@ -45,18 +46,21 @@ if __name__ == "__main__":
         get_nn(DATA_PATH, load_model)
 
     elif BoVW:
+        # Train model using patches of images instead of whole images
         neural_network = get_nn(DATA_PATCHES_PATH, load_model)
-        features, labels = neural_network.get_layer_output(
-            layer=neural_network.LAYERS.LAST, image_set='train')
+        # features, labels = neural_network.get_layer_output(
+        #     layer=neural_network.LAYERS.LAST, image_set='train')
 
-        if not cross_validate:
+        features = np.random.rand(64 * 2, 1024)
+        labels = np.random.rand(1024)
+        if cross_validate:
+            neural_network.cross_validate_BoVW(features, labels)
+        else:
             neural_network.train_classifier_BoVW(features, labels)
             features, labels = neural_network.get_layer_output(
                 layer=neural_network.LAYERS.LAST, image_set='test')
             neural_network.evaluate_performance_BoVW(features, labels,
                                                      do_plotting=True)
-        else:
-            neural_network.cross_validate_BoVW(features, labels)
 
     else:
         neural_network = get_nn(DATA_PATH)

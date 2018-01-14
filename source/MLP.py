@@ -378,20 +378,39 @@ class multi_layer_perceptron(object):
         # Create BoVW classifier
         self.BoVW_classifier = BoVW(k=512)
 
-        # rearenge features to a single array
+        # rearrange features to a single array
         features = np.array(features)
-        size_descriptors = features[0].shape[1]
-        D = np.zeros(
-            (np.sum([len(p) for p in features]), size_descriptors),
-            dtype=np.uint8)
-        startingpoint = 0
-        for i in range(len(features)):
-            D[startingpoint:startingpoint + len(features[i])] = \
-                features[i]
-            startingpoint += len(features[i])
+        print(features.shape)
+        size_descriptors = features.shape[1]
 
-        # Compute Codebook
-        self.BoVW_classifier.compute_codebook(D)
+        size_of_mini_batches = 64
+        print(int(size_descriptors / size_of_mini_batches))
+        for i in range(int(size_descriptors / size_of_mini_batches)):
+            size_of_batch_of_descriptors = features.shape[1]
+            batch_of_features = features[
+                                size_of_mini_batches * i:size_of_mini_batches * (
+                                i + 1)]
+            print(batch_of_features.shape)
+            print('D will be a {}x{} matrix of uint8'.format(
+                np.sum([len(p) for p in batch_of_features]), size_of_batch_of_descriptors))
+
+            # FIXME: fix loop to avoid this code
+            # stop it when finish
+            if np.sum([len(p) for p in batch_of_features]) == 0:
+                break
+
+            D = np.zeros(
+                (np.sum([len(p) for p in batch_of_features]),
+                 size_of_batch_of_descriptors),
+                dtype=np.uint8)
+            startingpoint = 0
+            for i in range(len(batch_of_features)):
+                D[startingpoint:startingpoint + len(batch_of_features[i])] = \
+                    batch_of_features[i]
+                startingpoint += len(batch_of_features[i])
+
+            # Compute Codebook
+            self.BoVW_classifier.compute_codebook_partial(D)
 
         # get train visual word encoding
         visual_words = self.BoVW_classifier.get_train_encoding(features,
