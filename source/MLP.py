@@ -84,18 +84,18 @@ class multi_layer_perceptron(object):
         
         #Input layers
         main_input = Input(shape=(self.IMG_SIZE, self.IMG_SIZE, 3), dtype='float32', name='main_input')
-        inp = Reshape((self.IMG_SIZE * self.IMG_SIZE * 3,),input_shape=(self.IMG_SIZE, self.IMG_SIZE, 3))(main_input)
+        inp = Reshape((self.IMG_SIZE * self.IMG_SIZE * 3,),input_shape=(self.IMG_SIZE, self.IMG_SIZE, 3), name='Reshape')(main_input)
         
         # First branch layers
-        first = Dense(512, activation='relu')(inp)
-        first = Dense(512, activation='relu')(first)
+        first = Dense(512, activation='relu', name='1stMLP-1')(inp)
+        first = Dense(512, activation='relu', name='1stMLP-2')(first)
         
         # Second branch layers
-        second = Dense(1024, activation='relu')(inp)
+        second = Dense(1024, activation='relu',name='2ndMLP')(inp)
         
         # Concatenate the previous layers 
-        x = concatenate([first, second])
-        main_output = Dense(units=8, activation='softmax')(x)
+        x = concatenate([first, second],name='concatenation')
+        main_output = Dense(units=8, activation='softmax', name='main_output')(x)
         
         # Compile the model
         self.model = Model(inputs=main_input, outputs=main_output)
@@ -161,7 +161,7 @@ class multi_layer_perceptron(object):
         self.history = self.model.fit_generator(
             train_generator,
             steps_per_epoch=1881 // self.BATCH_SIZE,
-            epochs = 1,
+            epochs = 50,
             validation_data=validation_generator,
             validation_steps=807 // self.BATCH_SIZE)
 
