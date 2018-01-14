@@ -10,10 +10,10 @@ from utils import Color
 from utils import colorprint
 
 # Compute SVM
-SVM = True
+SVM = False
 # Compute bag of visual words
-BoVW = False
-# Do cross-validation to find best parameters 
+BoVW = True
+# Do cross-validation to find best parameters
 cross_validate = False
 # Load pre-trained model or generate from scratch
 load_model = True
@@ -51,9 +51,9 @@ if __name__ == "__main__":
             neural_network.cross_validate_SVM(features, labels)
 
     elif BoVW:
-        # feature extraction with MLP + BoVW classification
         features, labels = neural_network.get_layer_output(
             layer=neural_network.LAYERS.LAST, image_set='train')
+
         if not cross_validate:
             neural_network.train_classifier_BoVW(features, labels)
             features, labels = neural_network.get_layer_output(

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "edf1459d65845d79ad78cffd4422e95cc4d3389ad22f9ccb7917bc9cd91035f2"
+            "sha256": "7d9ed6cc9cbdcadad4d81542aada7732dcc07ae7138d70a313556788d69bbf56"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -9,10 +9,10 @@
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
-            "platform_release": "4.8.0-54-generic",
+            "platform_release": "4.10.13-1-ARCH",
             "platform_system": "Linux",
-            "platform_version": "#57~16.04.1-Ubuntu SMP Wed May 24 16:22:28 UTC 2017",
-            "python_full_version": "2.7.12",
+            "platform_version": "#1 SMP PREEMPT Thu Apr 27 12:15:09 CEST 2017",
+            "python_full_version": "2.7.14",
             "python_version": "2.7",
             "sys_platform": "linux2"
         },
@@ -30,20 +30,6 @@
         ]
     },
     "default": {
-        "backports.functools-lru-cache": {
-            "hashes": [
-                "sha256:4ba998e881f285c1d1b73f5b6e3766539b4e162320f9589334400c5ddc35198c",
-                "sha256:31f235852f88edc1558d428d890663c49eb4514ffec9f3650e7f3c9e4a12e36f"
-            ],
-            "version": "==1.4"
-        },
-        "backports.weakref": {
-            "hashes": [
-                "sha256:81bc9b51c0abc58edc76aefbbc68c62a787918ffe943a37947e162c3f8e19e82",
-                "sha256:bc4170a29915f8b22c9e7c4939701859650f2eb84184aee80da329ac0b9825c2"
-            ],
-            "version": "==1.0.post1"
-        },
         "bleach": {
             "hashes": [
                 "sha256:e67f46adcec78dbc3c04462f3aba3213a673d5652eba2609ed1ef15492a44b8d",
@@ -79,22 +65,6 @@
             ],
             "version": "==1.1.6"
         },
-        "funcsigs": {
-            "hashes": [
-                "sha256:330cc27ccbf7f1e992e69fef78261dc7c6569012cf397db8d3de0234e6c937ca",
-                "sha256:a7bb0f2cf3a3fd1ab2732cb49eba4252c2af4240442415b4abce3b87022a8f50"
-            ],
-            "markers": "python_version < '3.3'",
-            "version": "==1.0.2"
-        },
-        "futures": {
-            "hashes": [
-                "sha256:ec0a6cb848cc212002b9828c3e34c675e0c9ff6741dc445cab6fdd4e1085d1f1",
-                "sha256:9ec02aa7d674acb8618afb127e27fde7fc68994c0437ad759fa094a574adb265"
-            ],
-            "markers": "python_version < '3.2'",
-            "version": "==3.2.0"
-        },
         "h5py": {
             "hashes": [
                 "sha256:562045c57a2e47aca9c716ac8cd64448d4897c0f5fe456ab5a34b17c8b3907cb",
@@ -128,6 +98,12 @@
                 "sha256:2612a191a8d5842bfa057e41ba50bbb9dcb722419d2408c78cff4758d0754868"
             ],
             "version": "==0.9999999"
+        },
+        "imageio": {
+            "hashes": [
+                "sha256:6dd95300d3d64713a2649334390fd9cf96712013172afd6e73b008e00934a73f"
+            ],
+            "version": "==2.2.0"
         },
         "keras": {
             "hashes": [
@@ -165,13 +141,6 @@
                 "sha256:659f5e1aa0e0f01488c61eff47560c43b8be511c6a29293d7f3896ae17bd8b23"
             ],
             "version": "==2.1.1"
-        },
-        "mock": {
-            "hashes": [
-                "sha256:5ce3c71c5545b472da17b72268978914d0252980348636840bd34a00b5cc96c1",
-                "sha256:b158b6df76edd239b8208d481dc46b6afd45a846b7812ff0ce58971cf5bc8bba"
-            ],
-            "version": "==2.0.0"
         },
         "multiprocess": {
             "hashes": [
@@ -212,13 +181,6 @@
                 "sha256:a153a0a9d093220688ba7972e4a9a95996a6a5caece2feb3576b22e6d474c6a0"
             ],
             "version": "==0.2.1"
-        },
-        "pbr": {
-            "hashes": [
-                "sha256:60c25b7dfd054ef9bb0ae327af949dd4676aa09ac3a9471cdc871d8a9213f9ac",
-                "sha256:05f61c71aaefc02d8e37c0a3eeb9815ff526ea28b3b76324769e6158d7f95be1"
-            ],
-            "version": "==3.1.1"
         },
         "pillow": {
             "hashes": [
@@ -421,13 +383,6 @@
                 "sha256:70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
             ],
             "version": "==1.11.0"
-        },
-        "subprocess32": {
-            "hashes": [
-                "sha256:1e450a4a4c53bf197ad6402c564b9f7a53539385918ef8f12bdf430a61036590",
-                "sha256:7e787be117aa7db8fd856998cf27ebafb3fcf3919eee4981d9edb5d22dd2d052"
-            ],
-            "version": "==3.2.7"
         },
         "tensorflow": {
             "hashes": [

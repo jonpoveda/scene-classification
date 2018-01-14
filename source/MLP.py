@@ -378,7 +378,7 @@ class multi_layer_perceptron(object):
         # Create BoVW classifier
         self.BoVW_classifier = BoVW(k=512)
 
-        # rearenge feautures to a single array
+        # rearenge features to a single array
         features = np.array(features)
         size_descriptors = features[0].shape[1]
         D = np.zeros(
@@ -390,7 +390,7 @@ class multi_layer_perceptron(object):
                 features[i]
             startingpoint += len(features[i])
 
-            # Compute Codebook
+        # Compute Codebook
         self.BoVW_classifier.compute_codebook(D)
 
         # get train visual word encoding

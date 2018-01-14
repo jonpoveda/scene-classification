@@ -28,6 +28,7 @@ tensorflow = "*"
 pillow = "*"
 pydot = "*"
 "h5py" = "*"
+imageio = "*"
 
 
 [requires]
