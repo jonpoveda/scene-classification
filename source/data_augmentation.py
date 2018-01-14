@@ -35,5 +35,5 @@ def split_into_patches(dbpath):
             imageio.imsave(output_path, patch)
 
 
-# split_into_patches(dbpath=os.path.join(DATA_PATH, 'train'))
+split_into_patches(dbpath=os.path.join(DATA_PATH, 'train'))
 split_into_patches(dbpath=os.path.join(DATA_PATH, 'test'))
