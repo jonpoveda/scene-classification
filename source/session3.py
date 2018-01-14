@@ -12,14 +12,16 @@ from utils import colorprint
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
+# Use two output MLP
+two_output = False
 # Compute SVM
 SVM = False
 # Compute bag of visual words
-BoVW = True
+BoVW = False
 # Do cross-validation to find best parameters
 cross_validate = False
 # Load pre-trained model or generate from scratch
-load_model = True
+load_model = False
 
 MODEL_PATH = '../results/session3/my_first_mlp.h5'
 
@@ -30,7 +32,11 @@ def get_nn(dataset_dir=DATA_PATH, load_model=False):
                                             batch_size=16,
                                             dataset_dir=dataset_dir,
                                             model_fname=MODEL_PATH)
-    neural_network.build_MLP_model()
+    if two_output:
+        neural_network.build_MLP_two_outputs_model()
+
+    else:
+        neural_network.build_MLP_model()
 
     # Train or load model
     if load_model:
@@ -39,6 +45,7 @@ def get_nn(dataset_dir=DATA_PATH, load_model=False):
         neural_network.train_MLP_model()
         neural_network.plot_history()
     return neural_network
+
 
 if __name__ == "__main__":
     init = time.time()

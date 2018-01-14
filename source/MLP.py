@@ -1,7 +1,7 @@
 import os
 import time
 
-from keras.layers import Dense, Reshape
+from keras.layers import Dense, Input, Reshape, concatenate
 from keras.models import Model, Sequential
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import plot_model
@@ -41,9 +41,7 @@ class multi_layer_perceptron(object):
 
     def build_MLP_model(self):
         # Build MLP model
-
         init = time.time()
-
         colorprint(Color.BLUE, 'Building MLP model...\n')
 
         # Build the Multi Layer Perceptron model
@@ -74,9 +72,48 @@ class multi_layer_perceptron(object):
         end = time.time()
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
 
+    def build_MLP_two_outputs_model(self):
+        # Build MLP model
+        init = time.time()
+        colorprint(Color.BLUE, 'Building MLP model...\n')
+
+        # Input layers
+        main_input = Input(shape=(self.IMG_SIZE, self.IMG_SIZE, 3),
+                           dtype='float32', name='main_input')
+        inp = Reshape((self.IMG_SIZE * self.IMG_SIZE * 3,),
+                      input_shape=(self.IMG_SIZE, self.IMG_SIZE, 3),
+                      name='Reshape')(main_input)
+
+        # First branch layers
+        first = Dense(512, activation='relu', name='1stMLP-1')(inp)
+        first = Dense(512, activation='relu', name='1stMLP-2')(first)
+
+        # Second branch layers
+        second = Dense(1024, activation='relu', name='2ndMLP')(inp)
+
+        # Concatenate the previous layers 
+        x = concatenate([first, second], name='concatenation')
+        main_output = Dense(units=8, activation='softmax', name='main_output')(
+            x)
+
+        # Compile the model
+        self.model = Model(inputs=main_input, outputs=main_output)
+        self.model.compile(loss='categorical_crossentropy',
+                           optimizer='sgd',
+                           metrics=['accuracy'])
+
+        print(self.model.summary())
+
+        plot_model(self.model, to_file='modelMLP.png', show_shapes=True,
+                   show_layer_names=True)
+
+        colorprint(Color.BLUE, 'Done!\n')
+
+        end = time.time()
+        colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
+
     def train_MLP_model(self):
         # train the MLP model
-
         init = time.time()
 
         if os.path.exists(self.MODEL_FNAME):
@@ -121,7 +158,7 @@ class multi_layer_perceptron(object):
         self.history = self.model.fit_generator(
             train_generator,
             steps_per_epoch=1881 // self.BATCH_SIZE,
-            epochs=1,  # 50
+            epochs=50,
             validation_data=validation_generator,
             validation_steps=807 // self.BATCH_SIZE)
 
@@ -137,7 +174,6 @@ class multi_layer_perceptron(object):
 
     def load_MLP_model(self):
         # load a MLP model
-
         init = time.time()
 
         if not os.path.exists(self.MODEL_FNAME):
@@ -155,7 +191,6 @@ class multi_layer_perceptron(object):
 
     def get_layer_output(self, layer=LAYERS.LAST, image_set='test'):
         # get layer output
-
         init = time.time()
 
         colorprint(Color.BLUE, 'Getting layer output...\n')
@@ -242,7 +277,7 @@ class multi_layer_perceptron(object):
         evaluator = Evaluator(test_labels, predictions,
                               label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
 
-        ########
+        #
         scores = self.model.evaluate_generator(test_generator)
         colorprint(Color.BLUE,
                    'Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
@@ -389,10 +424,11 @@ class multi_layer_perceptron(object):
             size_of_batch_of_descriptors = features.shape[1]
             batch_of_features = features[
                                 size_of_mini_batches * i:size_of_mini_batches * (
-                                i + 1)]
+                                    i + 1)]
             print(batch_of_features.shape)
             print('D will be a {}x{} matrix of uint8'.format(
-                np.sum([len(p) for p in batch_of_features]), size_of_batch_of_descriptors))
+                np.sum([len(p) for p in batch_of_features]),
+                size_of_batch_of_descriptors))
 
             # FIXME: fix loop to avoid this code
             # stop it when finish
