@@ -12,11 +12,19 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 
+from bag_of_visual_words import BoVW
 from evaluator import Evaluator
 from utils import Color, colorprint
 
 
 class multi_layer_perceptron(object):
+    class LAYERS(object):
+        FIRST = 'pool1'
+        SECOND = 'fc1'
+        THIRD = 'fc2'
+        LAST = 'fc3'
+        LABELS = 'fc4'
+
     def __init__(self, img_size=32, batch_size=16,
                  dataset_dir='/home/datasets/scenes/MIT_split',
                  model_fname='my_first_mlp.h5'):
@@ -42,11 +50,15 @@ class multi_layer_perceptron(object):
         self.model = Sequential()
         self.model.add(Reshape((self.IMG_SIZE * self.IMG_SIZE * 3,),
                                input_shape=(self.IMG_SIZE, self.IMG_SIZE, 3),
-                               name='first'))
-        self.model.add(Dense(units=2048, activation='relu', name='second'))
-        self.model.add(Dense(units=1024, activation='relu'))
-        self.model.add(Dense(units=1024, activation='relu', name='last'))
-        self.model.add(Dense(units=8, activation='softmax'))
+                               name=self.LAYERS.FIRST))
+        self.model.add(
+            Dense(units=2048, activation='relu', name=self.LAYERS.SECOND))
+        self.model.add(
+            Dense(units=1024, activation='relu', name=self.LAYERS.THIRD))
+        self.model.add(
+            Dense(units=1024, activation='relu', name=self.LAYERS.LAST))
+        self.model.add(
+            Dense(units=8, activation='softmax', name=self.LAYERS.LABELS))
 
         self.model.compile(loss='categorical_crossentropy',
                            optimizer='sgd',
@@ -141,7 +153,7 @@ class multi_layer_perceptron(object):
         end = time.time()
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
 
-    def get_layer_output(self, layer='last', image_set='test'):
+    def get_layer_output(self, layer=LAYERS.LAST, image_set='test'):
         # get layer output
 
         init = time.time()
@@ -287,7 +299,7 @@ class multi_layer_perceptron(object):
         # self.clf = svm.SVC(kernel='rbf', C=10, gamma=.002).fit(D_scaled,
         #                                                      train_labels)
         self.clf = svm.SVC(kernel='linear').fit(D_scaled, train_labels)
-            end = time.time()
+        end = time.time()
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
 
     def evaluate_performance_SVM(self, features, test_labels, do_plotting):
@@ -324,3 +336,87 @@ class multi_layer_perceptron(object):
         end = time.time()
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
         colorprint(Color.BLUE, 'Final accuracy: ' + str(accuracy) + '\n')
+
+    def cross_validate_BoVW(self, features, train_labels):
+        """ cross_validate classifier with k stratified folds """
+        colorprint(Color.BLUE, 'Cross_validating the SVM classifier...\n')
+        init = time.time()
+
+        # Create BoVW classifier
+        BoVW_classifier = BoVW(k=512)
+
+        # rearenge feautures to a single array
+        features = np.array(features)
+        size_descriptors = features[0].shape[1]
+        D = np.zeros(
+            (np.sum([len(p) for p in features]), size_descriptors),
+            dtype=np.uint8)
+        startingpoint = 0
+        for i in range(len(features)):
+            D[startingpoint:startingpoint + len(features[i])] = \
+                features[i]
+            startingpoint += len(features[i])
+
+        # Compute Codebook
+        BoVW_classifier.compute_codebook(D)
+
+        # get train visual word encoding
+        visual_words = BoVW_classifier.get_train_encoding(features,
+                                                          Keypoints=[])
+
+        # Cross validate classifier
+        BoVW_classifier.cross_validate(visual_words, train_labels)
+
+        end = time.time()
+        colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
+
+    def train_classifier_BoVW(self, features, train_labels):
+        # Train an SVM classifier
+        colorprint(Color.BLUE, 'Training the SVM classifier...\n')
+        init = time.time()
+
+        # Create BoVW classifier
+        self.BoVW_classifier = BoVW(k=512)
+
+        # rearenge feautures to a single array
+        features = np.array(features)
+        size_descriptors = features[0].shape[1]
+        D = np.zeros(
+            (np.sum([len(p) for p in features]), size_descriptors),
+            dtype=np.uint8)
+        startingpoint = 0
+        for i in range(len(features)):
+            D[startingpoint:startingpoint + len(features[i])] = \
+                features[i]
+            startingpoint += len(features[i])
+
+            # Compute Codebook
+        self.BoVW_classifier.compute_codebook(D)
+
+        # get train visual word encoding
+        visual_words = self.BoVW_classifier.get_train_encoding(features,
+                                                               Keypoints=[])
+
+        # Train an SVM classifier
+        self.BoVW_classifier.train_classifier(visual_words, train_labels)
+
+        end = time.time()
+        colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
+
+    def evaluate_performance_BoVW(self, features, test_labels, do_plotting):
+        # Test the classification accuracy
+        colorprint(Color.BLUE, 'Testing the SVM classifier...\n')
+        init = time.time()
+
+        # get train visual word encoding
+        features = np.array(features)
+        visual_words_test = self.BoVW_classifier.get_train_encoding(features,
+                                                                    Keypoints=[])
+
+        # Test the classification accuracy
+        self.BoVW_classifier.evaluate_performance(visual_words_test,
+                                                  test_labels,
+                                                  do_plotting, train_data=[])
+
+        end = time.time()
+        colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')

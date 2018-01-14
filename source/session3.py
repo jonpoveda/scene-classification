@@ -1,7 +1,6 @@
 # Config for an specific GPU
-import os
-import getpass
-os.environ["CUDA_VISIBLE_DEVICES"]=getpass.getuser()[-1]
+# import getpass
+# os.environ["CUDA_VISIBLE_DEVICES"]=getpass.getuser()[-1]
 
 import time
 
@@ -10,12 +9,14 @@ from source import DATA_PATH
 from utils import Color
 from utils import colorprint
 
-# Compute SVM ?
-SVM = False
-# Do cross-validation to find best parameters ?
+# Compute SVM
+SVM = True
+# Compute bag of visual words
+BoVW = False
+# Do cross-validation to find best parameters 
 cross_validate = False
-# Load pre-trained model or generate from scratch?
-load_model = False
+# Load pre-trained model or generate from scratch
+load_model = True
 
 MODEL_PATH = '../results/session3/my_first_mlp.h5'
 
@@ -36,21 +37,33 @@ if __name__ == "__main__":
     else:
         neural_network.load_MLP_model()
 
-    if not SVM:
-        neural_network.plot_results()
-
-    else:
+    if SVM:
         # feature extraction with MLP + SVM classification
-        features, labels = neural_network.get_layer_output(layer='last',
-                                                           image_set='train')
+        features, labels = neural_network.get_layer_output(
+            layer=neural_network.LAYERS.LAST, image_set='train')
         if not cross_validate:
             neural_network.train_classifier_SVM(features, labels)
             features, labels = neural_network.get_layer_output(
-                layer='last', image_set='test')
+                layer=neural_network.LAYERS.LAST, image_set='test')
             neural_network.evaluate_performance_SVM(features, labels,
                                                     do_plotting=True)
         else:
             neural_network.cross_validate_SVM(features, labels)
+
+    elif BoVW:
+        # feature extraction with MLP + BoVW classification
+        features, labels = neural_network.get_layer_output(
+            layer=neural_network.LAYERS.LAST, image_set='train')
+        if not cross_validate:
+            neural_network.train_classifier_BoVW(features, labels)
+            features, labels = neural_network.get_layer_output(
+                layer=neural_network.LAYERS.LAST, image_set='test')
+            neural_network.evaluate_performance_BoVW(features, labels,
+                                                     do_plotting=True)
+        else:
+            neural_network.cross_validate_BoVW(features, labels)
+    else:
+        neural_network.plot_results()
 
     end = time.time()
     colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
