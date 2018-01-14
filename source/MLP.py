@@ -109,7 +109,7 @@ class multi_layer_perceptron(object):
         self.history = self.model.fit_generator(
             train_generator,
             steps_per_epoch=1881 // self.BATCH_SIZE,
-            epochs=1,#50
+            epochs=1,  # 50
             validation_data=validation_generator,
             validation_steps=807 // self.BATCH_SIZE)
 
@@ -163,7 +163,7 @@ class multi_layer_perceptron(object):
             classes=['coast', 'forest', 'highway', 'inside_city', 'mountain',
                      'Opencountry', 'street', 'tallbuilding'],
             class_mode='categorical',
-            shuffle = False)
+            shuffle=False)
 
         labels = generator.classes
 
@@ -217,7 +217,7 @@ class multi_layer_perceptron(object):
             classes=['coast', 'forest', 'highway', 'inside_city', 'mountain',
                      'Opencountry', 'street', 'tallbuilding'],
             class_mode='categorical',
-            shuffle = False)
+            shuffle=False)
         # Get ground truth
         test_labels = test_generator.classes
 
@@ -227,11 +227,11 @@ class multi_layer_perceptron(object):
         for prediction in predictions_raw:
             predictions.append(np.argmax(prediction))
         # Evaluate results
-        evaluator = Evaluator(test_labels, predictions, label_list = list([0,1,2,3,4,5,6,7]))
-
+        evaluator = Evaluator(test_labels, predictions,
+                              label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
 
         ########
-        scores =  self.model.evaluate_generator(test_generator)
+        scores = self.model.evaluate_generator(test_generator)
         colorprint(Color.BLUE,
                    'Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
                    format(scores[1], evaluator.accuracy, evaluator.precision,
@@ -284,10 +284,10 @@ class multi_layer_perceptron(object):
         D_scaled = self.stdSlr.transform(features)
 
         # Train an SVM classifier with RBF kernel
-        #self.clf = svm.SVC(kernel='rbf', C=10, gamma=.002).fit(D_scaled,
-         #                                                      train_labels)
+        # self.clf = svm.SVC(kernel='rbf', C=10, gamma=.002).fit(D_scaled,
+        #                                                      train_labels)
         self.clf = svm.SVC(kernel='linear').fit(D_scaled, train_labels)
-        end = time.time()
+            end = time.time()
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
 
     def evaluate_performance_SVM(self, features, test_labels, do_plotting):
@@ -298,7 +298,8 @@ class multi_layer_perceptron(object):
         accuracy = 100 * self.clf.score(test_data, test_labels)
 
         predictions = self.clf.predict(test_data)
-        evaluator = Evaluator(test_labels, predictions,label_list = list([0,1,2,3,4,5,6,7]))
+        evaluator = Evaluator(test_labels, predictions,
+                              label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
 
         colorprint(Color.BLUE,
                    'Evaluator \nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
