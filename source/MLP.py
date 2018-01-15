@@ -215,7 +215,7 @@ class multi_layer_perceptron(object):
         labels = generator.classes
 
         # get the features from images
-        features = model_layer.predict_generator(generator)
+        features = model_layer.predict_generator(generator, steps=2)
         colorprint(Color.BLUE, 'Done!\n')
 
         end = time.time()
