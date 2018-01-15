@@ -21,7 +21,7 @@ BoVW = True
 # Do cross-validation to find best parameters
 cross_validate = False
 # Load pre-trained model or generate from scratch
-load_model = False
+load_model = True
 
 MODEL_PATH = '../results/session3/my_first_mlp.h5'
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
             features, labels = neural_network.get_layer_output(
                 layer=neural_network.LAYERS.LAST, image_set='test')
             neural_network.evaluate_performance_BoVW(features, labels,
-                                                     do_plotting=True)
+                                                     do_plotting=False)
 
     else:
         neural_network = get_nn(DATA_PATH)
