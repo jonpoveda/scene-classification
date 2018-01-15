@@ -415,11 +415,11 @@ class multi_layer_perceptron(object):
 
         # rearrange features to a single array
         features = np.array(features)
-        print(features.shape)
+        # print(features.shape)
         size_descriptors = features.shape[1]
 
         size_of_mini_batches = 64
-        print(int(size_descriptors / size_of_mini_batches))
+        # print(int(size_descriptors / size_of_mini_batches))
         for i in range(int(size_descriptors / size_of_mini_batches)):
             size_of_batch_of_descriptors = features.shape[1]
             batch_of_features = features[
@@ -448,6 +448,7 @@ class multi_layer_perceptron(object):
             # Compute Codebook
             self.BoVW_classifier.compute_codebook_partial(D)
 
+        self.BoVW_classifier.compute_codebook_partial(None, only_save=True)
         # get train visual word encoding
         visual_words = self.BoVW_classifier.get_train_encoding(features,
                                                                Keypoints=[])

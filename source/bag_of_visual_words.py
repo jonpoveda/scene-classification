@@ -109,17 +109,19 @@ class BoVW(object):
             startingpoint += len(Train_descriptors[i])
         return D, Train_descriptors, Keypoints
 
-    def compute_codebook_partial(self, D, save=False):
+    def compute_codebook_partial(self, D, only_save=False):
         print('Computing kmeans with ' + str(self.k) + ' centroids')
         init = time.time()
+
+        if only_save:
+            cPickle.dump(self.codebook, open("codebook.dat", "wb"))
+            return
 
         self.codebook.partial_fit(D)
 
         end = time.time()
         print('Done in ' + str(end - init) + ' secs.')
 
-        if save:
-            cPickle.dump(self.codebook, open("codebook.dat", "wb"))
 
     def compute_codebook(self, D):
         # compute the codebook
