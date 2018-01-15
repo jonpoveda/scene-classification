@@ -455,6 +455,7 @@ class multi_layer_perceptron(object):
                                                                Keypoints=[])
 
         # Train an SVM classifier
+	print("Problematic code here, the next shapes should match")
         print(visual_words.shape)
         print(train_labels.shape)
         self.BoVW_classifier.train_classifier(visual_words, train_labels)
