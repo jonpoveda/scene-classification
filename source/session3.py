@@ -17,7 +17,7 @@ two_output = False
 # Compute SVM
 SVM = False
 # Compute bag of visual words
-BoVW = False
+BoVW = True
 # Do cross-validation to find best parameters
 cross_validate = False
 # Load pre-trained model or generate from scratch
@@ -58,6 +58,7 @@ if __name__ == "__main__":
         # features, labels = neural_network.get_layer_output(
         #     layer=neural_network.LAYERS.LAST, image_set='train')
 
+        # FIXME: remove this two lines
         features = np.random.rand(64 * 2, 1024)
         labels = np.random.rand(1024)
         if cross_validate:
