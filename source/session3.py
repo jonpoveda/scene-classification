@@ -2,15 +2,13 @@ import getpass
 import os
 import time
 
-import numpy as np
-
 from MLP import multi_layer_perceptron
 from source import DATA_PATCHES_PATH, DATA_PATH
 from utils import Color
 from utils import colorprint
 
 # Config to run on one GPU
-#os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
+os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
 # Use two output MLP
 two_output = False
@@ -55,12 +53,12 @@ if __name__ == "__main__":
     elif BoVW:
         # Train model using patches of images instead of whole images
         neural_network = get_nn(DATA_PATCHES_PATH, load_model)
-        # features, labels = neural_network.get_layer_output(
-        #     layer=neural_network.LAYERS.LAST, image_set='train')
+        features, labels = neural_network.get_layer_output(
+            layer=neural_network.LAYERS.LAST, image_set='train')
 
         # FIXME: remove this two lines
-        features = np.random.rand(64 * 2, 1024)
-        labels = np.random.rand(1024)
+        # features = np.random.rand(64 * 2, 1024)
+        # labels = np.random.rand(1024)
         if cross_validate:
             neural_network.cross_validate_BoVW(features, labels)
         else:
