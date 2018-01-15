@@ -10,7 +10,7 @@ from utils import Color
 from utils import colorprint
 
 # Config to run on one GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
+#os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
 # Use two output MLP
 two_output = False
