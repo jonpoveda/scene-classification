@@ -449,11 +449,14 @@ class multi_layer_perceptron(object):
             self.BoVW_classifier.compute_codebook_partial(D)
 
         self.BoVW_classifier.compute_codebook_partial(None, only_save=True)
+
         # get train visual word encoding
         visual_words = self.BoVW_classifier.get_train_encoding(features,
                                                                Keypoints=[])
 
         # Train an SVM classifier
+        print(visual_words.shape)
+        print(train_labels.shape)
         self.BoVW_classifier.train_classifier(visual_words, train_labels)
 
         end = time.time()
