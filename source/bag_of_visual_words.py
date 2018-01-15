@@ -159,7 +159,7 @@ class BoVW(object):
     def cross_validate(self, visual_words, train_labels):
         """ cross_validate classifier with k stratified folds """
         # Train an SVM classifier with RBF kernel
-        print('Training the SVM classifier...')
+        print('[cross_validate]: Training the SVM classifier...')
         init = time.time()
         stdSlr = StandardScaler().fit(visual_words)
         D_scaled = stdSlr.transform(visual_words)
@@ -184,7 +184,7 @@ class BoVW(object):
 
     def train_classifier(self, visual_words, train_labels):
         # Train an SVM classifier
-        print('Training the SVM classifier...')
+        print('[train_classifier]: Training the SVM classifier...')
         init = time.time()
         self.stdSlr = StandardScaler().fit(visual_words)
         D_scaled = self.stdSlr.transform(visual_words)

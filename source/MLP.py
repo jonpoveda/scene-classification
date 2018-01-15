@@ -406,8 +406,8 @@ class multi_layer_perceptron(object):
         colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
 
     def train_classifier_BoVW(self, features, train_labels):
-        # Train an SVM classifier
-        colorprint(Color.BLUE, 'Training the SVM classifier...\n')
+        # Train an BoVW classifier
+        colorprint(Color.BLUE, '[train_classifier_BoVW]: Training the classifier...\n')
         init = time.time()
 
         # Create BoVW classifier
@@ -460,7 +460,7 @@ class multi_layer_perceptron(object):
 
     def evaluate_performance_BoVW(self, features, test_labels, do_plotting):
         # Test the classification accuracy
-        colorprint(Color.BLUE, 'Testing the SVM classifier...\n')
+        colorprint(Color.BLUE, '[evaluate_performance_BOVW]: Testing the SVM classifier...\n')
         init = time.time()
 
         # get train visual word encoding
