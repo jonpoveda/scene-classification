@@ -194,8 +194,8 @@ class multi_layer_perceptron(object):
         init = time.time()
 
         colorprint(Color.BLUE, 'Getting layer output...\n')
-        model_layer = Model(input=self.model.input,
-                            output=self.model.get_layer(layer).output)
+        model_layer = Model(inputs=self.model.input,
+                            outputs=self.model.get_layer(layer).output)
 
         # this is the dataset configuration we will use for testing:
         # only rescaling
