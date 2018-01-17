@@ -119,48 +119,60 @@ def do_plotting(history):
     plt.savefig('results/session4/loss.jpg')
 
 
+def get_dataset_generators(data_generator):
+    """ Get datasets generators given a data generator
+
+    :return (train, validation, test) generators
+    """
+    train_generator = data_generator.flow_from_directory(
+        TRAIN_PATH,
+        target_size=(img_width, img_height),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+    test_generator = data_generator.flow_from_directory(
+        TEST_PATH,
+        target_size=(img_width, img_height),
+        batch_size=batch_size,
+        class_mode='categorical')
+
+    validation_generator = data_generator.flow_from_directory(
+        VALIDATION_PATH,
+        target_size=(img_width,
+                     img_height),
+        batch_size=batch_size,
+        class_mode='categorical')
+    return train_generator, validation_generator, test_generator
+
+
 def main():
     base_model = get_base_model()
     model = modify_model_for_eight_classes(base_model)
     for layer in model.layers:
         print(layer.name, layer.trainable)
 
+    # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
-    datagen = ImageDataGenerator(featurewise_center=False,
-                                 samplewise_center=False,
-                                 featurewise_std_normalization=False,
-                                 samplewise_std_normalization=False,
-                                 preprocessing_function=preprocess_input,
-                                 rotation_range=0.,
-                                 width_shift_range=0.,
-                                 height_shift_range=0.,
-                                 shear_range=0.,
-                                 zoom_range=0.,
-                                 channel_shift_range=0.,
-                                 fill_mode='nearest',
-                                 cval=0.,
-                                 horizontal_flip=False,
-                                 vertical_flip=False,
-                                 rescale=None)
+    data_generator = ImageDataGenerator(featurewise_center=False,
+                                        samplewise_center=False,
+                                        featurewise_std_normalization=False,
+                                        samplewise_std_normalization=False,
+                                        preprocessing_function=preprocess_input,
+                                        rotation_range=0.,
+                                        width_shift_range=0.,
+                                        height_shift_range=0.,
+                                        shear_range=0.,
+                                        zoom_range=0.,
+                                        channel_shift_range=0.,
+                                        fill_mode='nearest',
+                                        cval=0.,
+                                        horizontal_flip=False,
+                                        vertical_flip=False,
+                                        rescale=None)
 
-    train_generator = datagen.flow_from_directory(TRAIN_PATH,
-                                                  target_size=(
-                                                      img_width, img_height),
-                                                  batch_size=batch_size,
-                                                  class_mode='categorical')
+    train_generator, validation_generator, test_generator = \
+        get_dataset_generators(data_generator)
 
-    test_generator = datagen.flow_from_directory(TEST_PATH,
-                                                 target_size=(
-                                                     img_width, img_height),
-                                                 batch_size=batch_size,
-                                                 class_mode='categorical')
-
-    validation_generator = datagen.flow_from_directory(VALIDATION_PATH,
-                                                       target_size=(
-                                                           img_width,
-                                                           img_height),
-                                                       batch_size=batch_size,
-                                                       class_mode='categorical')
     history = model.fit_generator(train_generator,
                                   steps_per_epoch=(int(
                                       400 * 1881 / 1881 // batch_size) + 1),
