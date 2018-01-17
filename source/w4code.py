@@ -6,9 +6,9 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
 
-train_data_dir = '/data/MIT/train'
-val_data_dir = '/data/MIT/test'
-test_data_dir = '/data/MIT/test'
+train_data_dir = '/data/train'
+val_data_dir = '/data/test'
+test_data_dir = '/data/test'
 img_width = 224
 img_height = 224
 batch_size = 32
