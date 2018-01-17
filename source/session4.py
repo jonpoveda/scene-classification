@@ -1,4 +1,6 @@
+import getpass
 import os
+import time
 
 from keras import backend as K
 from keras.applications.vgg16 import VGG16
@@ -10,11 +12,18 @@ import matplotlib.pyplot as plt
 
 from source import TEST_PATH
 from source import TRAIN_PATH
+from utils import Color
+from utils import colorprint
 
+# Config to run on one GPU
+os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
+
+# Top-level vars
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
 batch_size = 32
 number_of_epoch = 20
+plot_history = False
 
 
 def colour_channel_swapping(x, dim_ordering):
@@ -173,18 +182,21 @@ def main():
     train_generator, validation_generator, test_generator = \
         get_dataset_generators(data_generator)
 
+    init = time.time()
     history = model.fit_generator(train_generator,
                                   steps_per_epoch=(int(
                                       400 * 1881 / 1881 // batch_size) + 1),
                                   epochs=number_of_epoch,
                                   validation_data=validation_generator,
                                   validation_steps=807)
-
+    init = time.time()
     result = model.evaluate_generator(test_generator, val_samples=807)
+    end = time.time()
+    colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
     print(result)
 
     # list all data in history
-    if False:
+    if plot_history:
         do_plotting(history)
 
 
