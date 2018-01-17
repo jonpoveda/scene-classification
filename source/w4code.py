@@ -91,9 +91,9 @@ validation_generator = datagen.flow_from_directory(VALIDATION_PATH,
                                                        img_width, img_height),
                                                    batch_size=batch_size,
                                                    class_mode='categorical')
-samples_per_epoch = batch_size * (int(400 * 1881 / 1881 // batch_size) + 1)
 history = model.fit_generator(train_generator,
-                              steps_per_epoch=samples_per_epoch / batch_size,
+                              steps_per_epoch=(int(
+                                  400 * 1881 / 1881 // batch_size) + 1),
                               epochs=number_of_epoch,
                               validation_data=validation_generator,
                               validation_steps=807)
