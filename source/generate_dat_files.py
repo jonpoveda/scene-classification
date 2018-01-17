@@ -6,7 +6,7 @@ from source import DATA_PATH
 
 
 def for_train():
-    folder_path = os.path.join(os.path.dirname(DATA_PATH), 'data-mini',
+    folder_path = os.path.join(os.path.dirname(DATA_PATH), 'data-toy',
                                'train')
     paths = glob(folder_path + '**/*/*.jpg')
     relative_paths = list()
@@ -27,7 +27,7 @@ def for_train():
 
 
 def for_test():
-    folder_path = os.path.join(os.path.dirname(DATA_PATH), 'data-mini',
+    folder_path = os.path.join(os.path.dirname(DATA_PATH), 'data-toy',
                                'test')
     paths = glob(folder_path + '**/*/*.jpg')
     relative_paths = list()

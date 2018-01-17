@@ -1,4 +1,5 @@
 import getpass
+import logging
 import os
 import time
 
@@ -12,18 +13,35 @@ import matplotlib.pyplot as plt
 
 from source import TEST_PATH
 from source import TRAIN_PATH
-from utils import Color
-from utils import colorprint
 
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
+# Create a file logger
+logger = logging.getLogger('session4')
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+file_handler = logging.FileHandler('session4.log')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
 # Top-level vars
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
-batch_size = 32
-number_of_epoch = 20
 plot_history = False
+running_in_server = False
+if running_in_server:
+    batch_size = 32
+    number_of_epoch = 20
+else:
+    batch_size = 5
+    number_of_epoch = 1
 
 
 def colour_channel_swapping(x, dim_ordering):
@@ -78,7 +96,7 @@ def get_base_model():
     """ create the base pre-trained model """
     base_model = VGG16(weights='imagenet')
     plot(base_model,
-         to_file='results/session4/modelVGG16a.png',
+         to_file='../results/session4/modelVGG16a.png',
          show_shapes=True,
          show_layer_names=True)
     return base_model
@@ -94,7 +112,7 @@ def modify_model_for_eight_classes(base_model):
 
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
-         to_file='results/session4/modelVGG16b.png',
+         to_file='../results/session4/modelVGG16b.png',
          show_shapes=True,
          show_layer_names=True)
 
@@ -115,7 +133,7 @@ def do_plotting(history):
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'validation'], loc='upper left')
-    plt.savefig('results/session4/accuracy.jpg')
+    plt.savefig('../results/session4/accuracy.jpg')
     plt.close()
 
     # summarize history for loss
@@ -125,40 +143,41 @@ def do_plotting(history):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'validation'], loc='upper left')
-    plt.savefig('results/session4/loss.jpg')
+    plt.savefig('../results/session4/loss.jpg')
 
 
-def get_dataset_generators(data_generator):
+def get_generators(data_generator, train_path, test_path, validate_path):
     """ Get datasets generators given a data generator
 
-    :return (train, validation, test) generators
+    :return (train, test, validation) generators
     """
+
     train_generator = data_generator.flow_from_directory(
-        TRAIN_PATH,
+        train_path,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
 
     test_generator = data_generator.flow_from_directory(
-        TEST_PATH,
+        test_path,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
 
     validation_generator = data_generator.flow_from_directory(
-        VALIDATION_PATH,
+        validate_path,
         target_size=(img_width,
                      img_height),
         batch_size=batch_size,
         class_mode='categorical')
-    return train_generator, validation_generator, test_generator
+    return train_generator, test_generator, validation_generator
 
 
 def main():
     base_model = get_base_model()
     model = modify_model_for_eight_classes(base_model)
     for layer in model.layers:
-        print(layer.name, layer.trainable)
+        logger.debug(layer.name, layer.trainable)
 
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
@@ -179,21 +198,52 @@ def main():
                                         vertical_flip=False,
                                         rescale=None)
 
-    train_generator, validation_generator, test_generator = \
-        get_dataset_generators(data_generator)
+    if running_in_server:
+        train_generator, test_generator, validation_generator = get_generators(
+            data_generator,
+            train_path=TRAIN_PATH,
+            test_path=TEST_PATH,
+            validate_path=TEST_PATH)
 
-    init = time.time()
-    history = model.fit_generator(train_generator,
-                                  steps_per_epoch=(int(
-                                      400 * 1881 / 1881 // batch_size) + 1),
-                                  epochs=number_of_epoch,
-                                  validation_data=validation_generator,
-                                  validation_steps=807)
-    init = time.time()
-    result = model.evaluate_generator(test_generator, val_samples=807)
-    end = time.time()
-    colorprint(Color.BLUE, 'Done in ' + str(end - init) + ' secs.\n')
-    print(result)
+        init = time.time()
+        history = model.fit_generator(train_generator,
+                                      steps_per_epoch=(int(
+                                          400 * 1881 / 1881 // batch_size) + 1),
+                                      epochs=number_of_epoch,
+                                      validation_data=validation_generator,
+                                      validation_steps=807)
+        end = time.time()
+        logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
+
+        init = time.time()
+        result = model.evaluate_generator(test_generator, val_samples=807)
+        end = time.time()
+        logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
+
+
+    else:
+        logger.info('Running in a laptop! Toy mode active')
+        train_generator, test_generator, validation_generator = get_generators(
+            data_generator,
+            train_path='../data-toy/train',
+            test_path='../data-toy/test',
+            validate_path='../data-toy/test')
+
+        init = time.time()
+        history = model.fit_generator(train_generator,
+                                      steps_per_epoch=1,
+                                      epochs=1,
+                                      validation_data=validation_generator,
+                                      validation_steps=10)
+        end = time.time()
+        logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
+
+        init = time.time()
+        result = model.evaluate_generator(test_generator, val_samples=10)
+        end = time.time()
+        logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
+
+    logger.debug(result)
 
     # list all data in history
     if plot_history:
@@ -202,9 +252,10 @@ def main():
 
 if __name__ == '__main__':
     try:
-        os.makedirs('results/session4')
+        os.makedirs('../results/session4')
     except OSError as expected:
         # Expected when the folder already exists
         pass
-
+    logger.info('Start')
     main()
+    logger.info('End')
