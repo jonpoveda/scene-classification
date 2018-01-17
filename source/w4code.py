@@ -6,9 +6,10 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
 
-train_data_dir = '/data/train'
-val_data_dir = '/data/test'
-test_data_dir = '/data/test'
+from source import TEST_PATH
+from source import TRAIN_PATH
+
+VALIDATION_PATH = TEST_PATH
 img_width = 224
 img_height = 224
 batch_size = 32
@@ -53,7 +54,7 @@ for layer in base_model.layers:
 model.compile(loss='categorical_crossentropy', optimizer='adadelta',
               metrics=['accuracy'])
 for layer in model.layers:
-    print layer.name, layer.trainable
+    print(layer.name, layer.trainable)
 
 # preprocessing_function=preprocess_input,
 datagen = ImageDataGenerator(featurewise_center=False,
@@ -73,33 +74,32 @@ datagen = ImageDataGenerator(featurewise_center=False,
                              vertical_flip=False,
                              rescale=None)
 
-train_generator = datagen.flow_from_directory(train_data_dir,
+train_generator = datagen.flow_from_directory(TRAIN_PATH,
                                               target_size=(
                                                   img_width, img_height),
                                               batch_size=batch_size,
                                               class_mode='categorical')
 
-test_generator = datagen.flow_from_directory(test_data_dir,
+test_generator = datagen.flow_from_directory(TEST_PATH,
                                              target_size=(
                                                  img_width, img_height),
                                              batch_size=batch_size,
                                              class_mode='categorical')
 
-validation_generator = datagen.flow_from_directory(val_data_dir,
+validation_generator = datagen.flow_from_directory(VALIDATION_PATH,
                                                    target_size=(
                                                        img_width, img_height),
                                                    batch_size=batch_size,
                                                    class_mode='categorical')
-
+samples_per_epoch = batch_size * (int(400 * 1881 / 1881 // batch_size) + 1)
 history = model.fit_generator(train_generator,
-                              samples_per_epoch=batch_size * (
-                                  int(400 * 1881 / 1881 // batch_size) + 1),
-                              nb_epoch=number_of_epoch,
+                              steps_per_epoch=samples_per_epoch / batch_size,
+                              epochs=number_of_epoch,
                               validation_data=validation_generator,
-                              nb_val_samples=807)
+                              validation_steps=807)
 
 result = model.evaluate_generator(test_generator, val_samples=807)
-print result
+print(result)
 
 # list all data in history
 
