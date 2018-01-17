@@ -35,10 +35,10 @@ logger.addHandler(console_handler)
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
 plot_history = False
-running_in_server = False
+running_in_server = True
 if running_in_server:
     batch_size = 32
-    number_of_epoch = 20
+    number_of_epoch = 200
 else:
     batch_size = 5
     number_of_epoch = 1
@@ -177,7 +177,7 @@ def main():
     base_model = get_base_model()
     model = modify_model_for_eight_classes(base_model)
     for layer in model.layers:
-        logger.debug(layer.name, layer.trainable)
+        logger.debug([layer.name, layer.trainable])
 
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
