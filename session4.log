@@ -244,3 +244,33 @@
 2018-01-18 12:06:54,473 DEBUG ['fc1', False]
 2018-01-18 12:06:54,473 DEBUG ['fc2', False]
 2018-01-18 12:06:54,473 DEBUG ['predictions', True]
+2018-01-18 13:49:19,203 INFO [Training] Done in 6133.45647907 secs.
+
+2018-01-18 13:53:45,554 INFO [Evaluation] Done in 266.349760056 secs.
+
+2018-01-18 13:53:45,555 DEBUG [0.34615023774820447, 0.87384725952630049]
+2018-01-18 13:53:45,555 INFO End
+2018-01-18 14:46:51,983 INFO Start
+2018-01-18 14:46:57,678 DEBUG ['input_1', False]
+2018-01-18 14:46:57,678 DEBUG ['block1_conv1', False]
+2018-01-18 14:46:57,678 DEBUG ['block1_conv2', False]
+2018-01-18 14:46:57,678 DEBUG ['block1_pool', False]
+2018-01-18 14:46:57,679 DEBUG ['block2_conv1', False]
+2018-01-18 14:46:57,679 DEBUG ['block2_conv2', False]
+2018-01-18 14:46:57,679 DEBUG ['block2_pool', False]
+2018-01-18 14:46:57,679 DEBUG ['block3_conv1', False]
+2018-01-18 14:46:57,679 DEBUG ['block3_conv2', False]
+2018-01-18 14:46:57,679 DEBUG ['block3_conv3', False]
+2018-01-18 14:46:57,679 DEBUG ['block3_pool', False]
+2018-01-18 14:46:57,679 DEBUG ['block4_conv1', False]
+2018-01-18 14:46:57,680 DEBUG ['block4_conv2', False]
+2018-01-18 14:46:57,680 DEBUG ['block4_conv3', False]
+2018-01-18 14:46:57,680 DEBUG ['block4_pool', False]
+2018-01-18 14:46:57,680 DEBUG ['block5_conv1', False]
+2018-01-18 14:46:57,680 DEBUG ['block5_conv2', False]
+2018-01-18 14:46:57,680 DEBUG ['block5_conv3', False]
+2018-01-18 14:46:57,680 DEBUG ['block5_pool', False]
+2018-01-18 14:46:57,680 DEBUG ['flatten', False]
+2018-01-18 14:46:57,681 DEBUG ['fc1', False]
+2018-01-18 14:46:57,681 DEBUG ['fc2', False]
+2018-01-18 14:46:57,681 DEBUG ['predictions', True]
