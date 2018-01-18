@@ -35,7 +35,7 @@ class BaseClassifier(object):
 
     def train(self, descriptors, labels):
         # type: (List, List) -> None
-        self.model.fit(descriptors, labels)
+        self.model._fit(descriptors, labels)
 
     def predict(self, descriptor):
         # type: (np.array) -> np.array

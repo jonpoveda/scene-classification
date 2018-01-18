@@ -7,10 +7,10 @@ import time
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense
 from keras.models import Model
-from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
 
+from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -138,12 +138,14 @@ def main():
 
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
-    data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
-    data_generator = ImageDataGenerator(**DataGeneratorConfig.CONFIG1)
+    # data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
+    # data_generator = ImageDataGenerator(**DataGeneratorConfig.CONFIG1)
+
+    data_gen = DataGenerator(img_width, img_height, batch_size)
+    data_gen.configure(DataGeneratorConfig.CONFIG1)
 
     if running_in_server:
-        train_generator, test_generator, validation_generator = get_generators(
-            data_generator,
+        train_generator, test_generator, validation_generator = data_gen.get(
             train_path=TRAIN_PATH,
             test_path=TEST_PATH,
             validate_path=TEST_PATH)
@@ -159,15 +161,14 @@ def main():
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
-        result = model.evaluate_generator(test_generator, val_samples=807)
+        result = model.evaluate_generator(test_generator, steps=807)
         end = time.time()
         logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
 
 
     else:
         logger.info('Running in a laptop! Toy mode active')
-        train_generator, test_generator, validation_generator = get_generators(
-            data_generator,
+        train_generator, test_generator, validation_generator = data_gen.get(
             train_path='../data-toy/train',
             test_path='../data-toy/test',
             validate_path='../data-toy/test')
@@ -182,7 +183,7 @@ def main():
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
-        result = model.evaluate_generator(test_generator, val_samples=10)
+        result = model.evaluate_generator(test_generator, steps=10)
         end = time.time()
         logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
 
