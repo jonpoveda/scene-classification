@@ -2,6 +2,7 @@ import getpass
 import logging
 import os
 import time
+import sys
 
 from keras import backend as K
 from keras.applications.vgg16 import VGG16
@@ -10,6 +11,8 @@ from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from source import TEST_PATH
 from source import TRAIN_PATH
