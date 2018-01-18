@@ -16,3 +16,13 @@ Epoch 59/200
 13/13 [==============================] - 331s 25s/step - loss: 0.2120 - acc: 0.9279 - val_loss: 0.2717 -
 ```
 
+### Model VGG16c + DataGeneratorConfig.
+
+```
+```
+
+### Model VGG16d + DataGeneratorConfig.
+
+```
+```
+
