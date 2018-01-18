@@ -1,6 +1,6 @@
 # Configs and Performance
 
-### DataGeneratorConfig.DEFAULT
+### Model VGG16a + DataGeneratorConfig.DEFAULT
 
 ```
 Epoch 20/20
@@ -9,7 +9,19 @@ Done in 112.530706882 secs.
 [0.23001522977099781, 0.93061599282572294]
 ```
 
-### DataGeneratorConfig.CONFIG1
+### Model VGG16b + DataGeneratorConfig.CONFIG1
+
+```
+Epoch 59/200
+13/13 [==============================] - 331s 25s/step - loss: 0.2120 - acc: 0.9279 - val_loss: 0.2717 -
+```
+
+### Model VGG16c + DataGeneratorConfig.
+
+```
+```
+
+### Model VGG16d + DataGeneratorConfig.
 
 ```
 ```

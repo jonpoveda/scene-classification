@@ -30,7 +30,7 @@ class DataGenerator(object):
         print('Got {} images for pre-processing'.format(number_of_images))
 
         example_image = misc.imread(paths[0])
-	image_size = example_image.shape
+        image_size = example_image.shape
 
         data = np.zeros(
             (number_of_images, image_size[0], image_size[1], image_size[2]))
