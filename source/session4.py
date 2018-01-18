@@ -6,6 +6,7 @@ import time
 
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense
+from keras.layers import Dropout
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
@@ -38,7 +39,7 @@ logger.addHandler(console_handler)
 # Top-level vars
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
-plot_history = False
+plot_history = True
 running_in_server = True
 
 if running_in_server:
@@ -63,8 +64,12 @@ def get_base_model():
 def modify_model_for_eight_classes(base_model):
     """ Modify to classify 8 classes.
 
-    Get the XXX layer and add a FC to classify scenes (8-class classifier)
+    Get the XXX layer and add a FC to classify scenes (8-class classifier).
+    Freeze the former layers to not train them.
     """
+    for layer in base_model.layers:
+        layer.trainable = False
+
     x = base_model.layers[-2].output
     x = Dense(8, activation='softmax', name='predictions')(x)
 
@@ -74,8 +79,45 @@ def modify_model_for_eight_classes(base_model):
          show_shapes=True,
          show_layer_names=True)
 
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adadelta',
+                  metrics=['accuracy'])
+    return model
+
+
+def modify_model_before_block4(base_model):
+    """ Modify to classify 8 classes.
+
+    Get the XXX layer and add a FC to classify scenes (8-class classifier).
+    Freeze the former layers to not train them.
+    """
     for layer in base_model.layers:
         layer.trainable = False
+
+    x = base_model.layers[-13].output
+    # TODO: fer aqui les modificacions
+    # x = Dense(8, activation='softmax', name='predictions')(x)
+
+    model = Model(inputs=base_model.input, outputs=x)
+    plot(model,
+         to_file='../results/session4/modelVGG16b.png',
+         show_shapes=True,
+         show_layer_names=True)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adadelta',
+                  metrics=['accuracy'])
+    return model
+
+
+def add_dropout(base_model):
+    x = base_model.layers[-2].output
+    x = Dropout(0.5)(x)
+    model = Model(inputs=base_model.input, outputs=x)
+    plot(model,
+         to_file='../results/session4/model_with_dropout.png',
+         show_shapes=True,
+         show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
@@ -133,7 +175,7 @@ def get_generators(data_generator, train_path, test_path, validate_path):
 
 def main():
     base_model = get_base_model()
-    model = modify_model_for_eight_classes(base_model)
+    model = modify_model_before_block4(base_model)
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
 
@@ -165,7 +207,6 @@ def main():
         result = model.evaluate_generator(test_generator, steps=807)
         end = time.time()
         logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
-
 
     else:
         logger.info('Running in a laptop! Toy mode active')
