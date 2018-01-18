@@ -17,6 +17,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from source import TEST_PATH
 from source import TRAIN_PATH
+from source import REDUCED_TRAIN_PATH
 
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
@@ -39,7 +40,7 @@ logger.addHandler(console_handler)
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
 plot_history = False
-running_in_server = True
+running_in_server = False
 
 if running_in_server:
     batch_size = 32
@@ -147,7 +148,7 @@ def main():
 
     if running_in_server:
         train_generator, test_generator, validation_generator = data_gen.get(
-            train_path=TRAIN_PATH,
+            train_path=REDUCED_TRAIN_PATH,
             test_path=TEST_PATH,
             validate_path=TEST_PATH)
 
