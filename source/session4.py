@@ -69,11 +69,11 @@ def modify_model_for_eight_classes(base_model):
     Get the XXX layer and add a FC to classify scenes (8-class classifier).
     Freeze the former layers to not train them.
     """
-    for layer in base_model.layers:
-        layer.trainable = False
-
     x = base_model.layers[-2].output
     x = Dense(8, activation='softmax', name='predictions')(x)
+
+    for layer in base_model.layers:
+        layer.trainable = False
 
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
@@ -93,8 +93,6 @@ def modify_model_before_block4(base_model):
     Set a new model from a layer below block4 including at
     least a fully connected layer + a prediction layer.
     """
-    for layer in base_model.layers:
-        layer.trainable = False
 
     x = base_model.layers[-13].output
     x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
@@ -102,6 +100,9 @@ def modify_model_before_block4(base_model):
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dense(1024, activation='relu', name='fc2')(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
+
+    for layer in base_model.layers:
+        layer.trainable = False
 
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
