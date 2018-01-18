@@ -7,6 +7,7 @@ import time
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense
 from keras.layers import Dropout
+from keras.layers import Flatten
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
@@ -95,10 +96,9 @@ def modify_model_before_block4(base_model):
         layer.trainable = False
 
     x = base_model.layers[-13].output
-    from keras.layers import Flatten
     x = Flatten()(x)
-    x = Dense(4096, activation='softmax', name='fc1')(x)
-    x = Dense(1024, activation='softmax', name='fc2')(x)
+    x = Dense(4096, activation='ReLU', name='fc1')(x)
+    x = Dense(1024, activation='ReLU', name='fc2')(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
 
     model = Model(inputs=base_model.input, outputs=x)
@@ -113,9 +113,18 @@ def modify_model_before_block4(base_model):
     return model
 
 
-def add_dropout(base_model):
-    x = base_model.layers[-2].output
+def modify_model_before_block4_with_dropout(base_model):
+    for layer in base_model.layers:
+        layer.trainable = False
+
+    x = base_model.layers[-13].output
+    x = Flatten()(x)
+    x = Dense(4096, activation='ReLU', name='fc1')(x)
     x = Dropout(0.5)(x)
+    x = Dense(1024, activation='ReLU', name='fc2')(x)
+    x = Dropout(0.5)(x)
+    x = Dense(8, activation='softmax', name='predictions')(x)
+
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
          to_file='../results/session4/modelVGG16d.png',
