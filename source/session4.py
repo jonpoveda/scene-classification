@@ -41,8 +41,9 @@ plot_history = False
 running_in_server = True
 if running_in_server:
     batch_size = 32
-    number_of_epoch = 200
+    number_of_epoch = 20
 else:
+    # Just a toy parameters to try everything is working
     batch_size = 5
     number_of_epoch = 1
 
@@ -184,7 +185,7 @@ def main():
 
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
-    data_generator = ImageDataGenerator(featurewise_center=False,
+    config_default = dict(featurewise_center=False,
                                         samplewise_center=False,
                                         featurewise_std_normalization=False,
                                         samplewise_std_normalization=False,
@@ -200,6 +201,25 @@ def main():
                                         horizontal_flip=False,
                                         vertical_flip=False,
                                         rescale=None)
+
+    config_1 =  dict(featurewise_center=True,
+                                        samplewise_center=True,
+                                        featurewise_std_normalization=False,
+                                        samplewise_std_normalization=False,
+                                        preprocessing_function=preprocess_input,
+                                        rotation_range=0.1,
+                                        width_shift_range=0.9,
+                                        height_shift_range=0.,
+                                        shear_range=0.,
+                                        zoom_range=0.,
+                                        channel_shift_range=0.,
+                                        fill_mode='nearest',
+                                        cval=0.,
+                                        horizontal_flip=True,
+                                        vertical_flip=False,
+                                        rescale=None)
+
+    data_generator = ImageDataGenerator(**config_default)
 
     if running_in_server:
         train_generator, test_generator, validation_generator = get_generators(
