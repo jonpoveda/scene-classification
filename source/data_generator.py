@@ -20,7 +20,7 @@ class DataGenerator(object):
         If not done it uses the DataGeneratorConfig.DEFAULT
         """
         self.data_generator = ImageDataGenerator(**config)
-        self._fit('../data-toy/train/coast')
+        self._fit('data/train/')
 
     def _fit(self, train_path):
         """ Fits the datagenerator if needed """
@@ -29,7 +29,8 @@ class DataGenerator(object):
         number_of_images = len(paths)
         print('Got {} images for pre-processing'.format(number_of_images))
 
-        image_size = misc.imread(paths[0]).shape
+        example_image = misc.imread(paths[0])
+	image_size = example_image.shape
 
         data = np.zeros(
             (number_of_images, image_size[0], image_size[1], image_size[2]))

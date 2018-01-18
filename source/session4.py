@@ -39,7 +39,8 @@ logger.addHandler(console_handler)
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
 plot_history = False
-running_in_server = False
+running_in_server = True
+
 if running_in_server:
     batch_size = 32
     number_of_epoch = 20
