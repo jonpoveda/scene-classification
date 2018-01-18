@@ -76,7 +76,7 @@ def modify_model_for_eight_classes(base_model):
 
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
-         to_file='../results/session4/modelVGG16b.png',
+         to_file='../results/session4/modelVGG16c.png',
          show_shapes=True,
          show_layer_names=True)
 
@@ -101,7 +101,7 @@ def modify_model_before_block4(base_model):
 
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
-         to_file='../results/session4/modelVGG16b.png',
+         to_file='../results/session4/modelVGG16d.png',
          show_shapes=True,
          show_layer_names=True)
 
