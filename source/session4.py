@@ -17,7 +17,6 @@ from data_generator_config import DataGeneratorConfig
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from source import TEST_PATH
-from source import TRAIN_PATH
 from source import REDUCED_TRAIN_PATH
 
 # Config to run on one GPU
@@ -63,7 +62,7 @@ def get_base_model():
 
 
 def modify_model_for_eight_classes(base_model):
-    """ Modify to classify 8 classes.
+    """ Task 0: Modify to classify 8 classes.
 
     Get the XXX layer and add a FC to classify scenes (8-class classifier).
     Freeze the former layers to not train them.
@@ -72,6 +71,34 @@ def modify_model_for_eight_classes(base_model):
         layer.trainable = False
 
     x = base_model.layers[-2].output
+    x = Dense(8, activation='softmax', name='predictions')(x)
+
+    model = Model(inputs=base_model.input, outputs=x)
+    plot(model,
+         to_file='../results/session4/modelVGG16b.png',
+         show_shapes=True,
+         show_layer_names=True)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adadelta',
+                  metrics=['accuracy'])
+    return model
+
+
+def modify_model_before_block4(base_model):
+    """ Task 1
+
+    Set a new model from a layer below block4 including at
+    least a fully connected layer + a prediction layer.
+    """
+    for layer in base_model.layers:
+        layer.trainable = False
+
+    x = base_model.layers[-13].output
+    from keras.layers import Flatten
+    x = Flatten()(x)
+    x = Dense(4096, activation='softmax', name='fc1')(x)
+    x = Dense(1024, activation='softmax', name='fc2')(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
 
     model = Model(inputs=base_model.input, outputs=x)
@@ -86,37 +113,12 @@ def modify_model_for_eight_classes(base_model):
     return model
 
 
-def modify_model_before_block4(base_model):
-    """ Modify to classify 8 classes.
-
-    Get the XXX layer and add a FC to classify scenes (8-class classifier).
-    Freeze the former layers to not train them.
-    """
-    for layer in base_model.layers:
-        layer.trainable = False
-
-    x = base_model.layers[-13].output
-    # TODO: fer aqui les modificacions
-    # x = Dense(8, activation='softmax', name='predictions')(x)
-
-    model = Model(inputs=base_model.input, outputs=x)
-    plot(model,
-         to_file='../results/session4/modelVGG16d.png',
-         show_shapes=True,
-         show_layer_names=True)
-
-    model.compile(loss='categorical_crossentropy',
-                  optimizer='adadelta',
-                  metrics=['accuracy'])
-    return model
-
-
 def add_dropout(base_model):
     x = base_model.layers[-2].output
     x = Dropout(0.5)(x)
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
-         to_file='../results/session4/model_with_dropout.png',
+         to_file='../results/session4/modelVGG16d.png',
          show_shapes=True,
          show_layer_names=True)
 
@@ -179,7 +181,7 @@ def main():
     model = modify_model_before_block4(base_model)
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
-
+    die()
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
