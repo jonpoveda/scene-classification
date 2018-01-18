@@ -1,8 +1,8 @@
 import getpass
 import logging
 import os
-import time
 import sys
+import time
 
 from keras import backend as K
 from keras.applications.vgg16 import VGG16
@@ -38,7 +38,7 @@ logger.addHandler(console_handler)
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
 plot_history = False
-running_in_server = True
+running_in_server = False
 if running_in_server:
     batch_size = 32
     number_of_epoch = 20
@@ -177,6 +177,43 @@ def get_generators(data_generator, train_path, test_path, validate_path):
     return train_generator, test_generator, validation_generator
 
 
+class DataGeneratorConfig(object):
+    """ Contains dictionaries of configurations """
+    DEFAULT = dict(featurewise_center=False,
+                   samplewise_center=False,
+                   featurewise_std_normalization=False,
+                   samplewise_std_normalization=False,
+                   preprocessing_function=preprocess_input,
+                   rotation_range=0.,
+                   width_shift_range=0.,
+                   height_shift_range=0.,
+                   shear_range=0.,
+                   zoom_range=0.,
+                   channel_shift_range=0.,
+                   fill_mode='nearest',
+                   cval=0.,
+                   horizontal_flip=False,
+                   vertical_flip=False,
+                   rescale=None)
+
+    CONFIG1 = dict(featurewise_center=True,
+                   samplewise_center=True,
+                   featurewise_std_normalization=False,
+                   samplewise_std_normalization=False,
+                   preprocessing_function=preprocess_input,
+                   rotation_range=15,
+                   width_shift_range=0.9,
+                   height_shift_range=0.,
+                   shear_range=0.,
+                   zoom_range=0.3,
+                   channel_shift_range=0.,
+                   fill_mode='reflect',
+                   cval=0.,
+                   horizontal_flip=True,
+                   vertical_flip=False,
+                   rescale=None)
+
+
 def main():
     base_model = get_base_model()
     model = modify_model_for_eight_classes(base_model)
@@ -185,41 +222,8 @@ def main():
 
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
-    config_default = dict(featurewise_center=False,
-                                        samplewise_center=False,
-                                        featurewise_std_normalization=False,
-                                        samplewise_std_normalization=False,
-                                        preprocessing_function=preprocess_input,
-                                        rotation_range=0.,
-                                        width_shift_range=0.,
-                                        height_shift_range=0.,
-                                        shear_range=0.,
-                                        zoom_range=0.,
-                                        channel_shift_range=0.,
-                                        fill_mode='nearest',
-                                        cval=0.,
-                                        horizontal_flip=False,
-                                        vertical_flip=False,
-                                        rescale=None)
 
-    config_1 =  dict(featurewise_center=True,
-                                        samplewise_center=True,
-                                        featurewise_std_normalization=False,
-                                        samplewise_std_normalization=False,
-                                        preprocessing_function=preprocess_input,
-                                        rotation_range=0.1,
-                                        width_shift_range=0.9,
-                                        height_shift_range=0.,
-                                        shear_range=0.,
-                                        zoom_range=0.,
-                                        channel_shift_range=0.,
-                                        fill_mode='nearest',
-                                        cval=0.,
-                                        horizontal_flip=True,
-                                        vertical_flip=False,
-                                        rescale=None)
-
-    data_generator = ImageDataGenerator(**config_default)
+    data_generator = ImageDataGenerator(**DataGeneratorConfig.CONFIG1)
 
     if running_in_server:
         train_generator, test_generator, validation_generator = get_generators(

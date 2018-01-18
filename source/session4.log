@@ -2,3 +2,28 @@
 2018-01-18 00:28:55,434 INFO Start main
 2018-01-18 00:50:11,121 INFO Start
 2018-01-18 00:50:11,121 INFO End
+2018-01-18 09:58:03,828 INFO Start
+2018-01-18 09:58:05,790 DEBUG ['input_1', False]
+2018-01-18 09:58:05,790 DEBUG ['block1_conv1', False]
+2018-01-18 09:58:05,790 DEBUG ['block1_conv2', False]
+2018-01-18 09:58:05,790 DEBUG ['block1_pool', False]
+2018-01-18 09:58:05,790 DEBUG ['block2_conv1', False]
+2018-01-18 09:58:05,790 DEBUG ['block2_conv2', False]
+2018-01-18 09:58:05,790 DEBUG ['block2_pool', False]
+2018-01-18 09:58:05,790 DEBUG ['block3_conv1', False]
+2018-01-18 09:58:05,790 DEBUG ['block3_conv2', False]
+2018-01-18 09:58:05,790 DEBUG ['block3_conv3', False]
+2018-01-18 09:58:05,790 DEBUG ['block3_pool', False]
+2018-01-18 09:58:05,790 DEBUG ['block4_conv1', False]
+2018-01-18 09:58:05,790 DEBUG ['block4_conv2', False]
+2018-01-18 09:58:05,790 DEBUG ['block4_conv3', False]
+2018-01-18 09:58:05,791 DEBUG ['block4_pool', False]
+2018-01-18 09:58:05,791 DEBUG ['block5_conv1', False]
+2018-01-18 09:58:05,791 DEBUG ['block5_conv2', False]
+2018-01-18 09:58:05,791 DEBUG ['block5_conv3', False]
+2018-01-18 09:58:05,791 DEBUG ['block5_pool', False]
+2018-01-18 09:58:05,791 DEBUG ['flatten', False]
+2018-01-18 09:58:05,791 DEBUG ['fc1', False]
+2018-01-18 09:58:05,791 DEBUG ['fc2', False]
+2018-01-18 09:58:05,791 DEBUG ['predictions', True]
+2018-01-18 09:58:05,791 INFO Running in a laptop! Toy mode active
