@@ -8,6 +8,7 @@ from keras.applications.vgg16 import VGG16
 from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import Flatten
+from keras.layers import MaxPooling2D
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
@@ -96,9 +97,10 @@ def modify_model_before_block4(base_model):
         layer.trainable = False
 
     x = base_model.layers[-13].output
+    x = MaxPooling2D(pool_size=(4, 4), padding='valid')(x)
     x = Flatten()(x)
-    x = Dense(4096, activation='ReLU', name='fc1')(x)
-    x = Dense(1024, activation='ReLU', name='fc2')(x)
+    x = Dense(4096, activation='relu', name='fc1')(x)
+    x = Dense(1024, activation='relu', name='fc2')(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
 
     model = Model(inputs=base_model.input, outputs=x)
@@ -118,10 +120,11 @@ def modify_model_before_block4_with_dropout(base_model):
         layer.trainable = False
 
     x = base_model.layers[-13].output
+    x = MaxPooling2D()(x)
     x = Flatten()(x)
-    x = Dense(4096, activation='ReLU', name='fc1')(x)
+    x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dropout(0.5)(x)
-    x = Dense(1024, activation='ReLU', name='fc2')(x)
+    x = Dense(1024, activation='relu', name='fc2')(x)
     x = Dropout(0.5)(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
 
@@ -134,6 +137,7 @@ def modify_model_before_block4_with_dropout(base_model):
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
+    die()
     return model
 
 
@@ -190,7 +194,6 @@ def main():
     model = modify_model_before_block4(base_model)
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
-    die()
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)

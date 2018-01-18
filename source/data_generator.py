@@ -20,7 +20,7 @@ class DataGenerator(object):
         If not done it uses the DataGeneratorConfig.DEFAULT
         """
         self.data_generator = ImageDataGenerator(**config)
-        self._fit('data/train/')
+        self._fit('../data/train/')
 
     def _fit(self, train_path):
         """ Fits the datagenerator if needed """
