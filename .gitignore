@@ -1,7 +1,3 @@
-M3 Project CNN Week3.pdf
-data_patch
-data-toy
-
 # Dataset
 data/
 !data/*.dat
@@ -29,3 +25,5 @@ __pycache__/
 
 # virtualenv
 .venv
+data-toy/
+data_patch/
