@@ -26,4 +26,6 @@ __pycache__/
 # virtualenv
 .venv
 data-toy/
+data_patch/reduced_train/
 data_patch/
+reduced_train/
