@@ -3,6 +3,7 @@ data/
 !data/*.dat
 data-mini/
 !data-mini//*.dat
+*.swp
 
 # Generated files
 results/*/codebook.dat

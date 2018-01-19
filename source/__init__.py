@@ -4,6 +4,7 @@ import sys
 # Set project paths
 
 ROOT_PATH = os.path.dirname(os.path.dirname(__file__))
+ROOT_PATH = '/home/master10/scene-classificator'
 SOURCE_PATH = os.path.join(ROOT_PATH, 'source')
 DATA_PATH = os.path.join(ROOT_PATH, 'data')
 DATA_PATCHES_PATH = os.path.join(ROOT_PATH, 'data_patch')

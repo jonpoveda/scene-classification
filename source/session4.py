@@ -192,14 +192,16 @@ def get_generators(data_generator, train_path, test_path, validate_path):
 def main():
     base_model = get_base_model()
     model = modify_model_before_block4(base_model)
+    logger.debug('Trainability of the layers:')
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
+
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.CONFIG1)
 
-    data_gen = DataGenerator(img_width, img_height, batch_size)
+    data_gen = DataGenerator(img_width, img_height, batch_size, REDUCED_TRAIN_PATH)
     data_gen.configure(DataGeneratorConfig.CONFIG1)
 
     if running_in_server:

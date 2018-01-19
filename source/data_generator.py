@@ -8,10 +8,12 @@ from data_generator_config import DataGeneratorConfig
 
 
 class DataGenerator(object):
-    def __init__(self, img_width, img_height, batch_size):
+    def __init__(self, img_width, img_height, batch_size, train_path):
+	""" Path used for normalizing the train set afterwards """
         self.img_width = img_width
         self.img_height = img_height
         self.batch_size = batch_size
+	self.train_path = train_path
         self.data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
 
     def configure(self, config):  # type: (dict) -> None
@@ -20,12 +22,11 @@ class DataGenerator(object):
         If not done it uses the DataGeneratorConfig.DEFAULT
         """
         self.data_generator = ImageDataGenerator(**config)
-        self._fit('../data/train/')
+        self._fit()
 
-    def _fit(self, train_path):
+    def _fit(self):
         """ Fits the datagenerator if needed """
-
-        paths = glob.glob(train_path + '*/*.jpg')
+        paths = glob.glob(self.train_path + '/*/*.jpg')
         number_of_images = len(paths)
         print('Got {} images for pre-processing'.format(number_of_images))
 
