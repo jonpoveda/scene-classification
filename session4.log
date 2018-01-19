@@ -274,3 +274,23 @@
 2018-01-18 14:46:57,681 DEBUG ['fc1', False]
 2018-01-18 14:46:57,681 DEBUG ['fc2', False]
 2018-01-18 14:46:57,681 DEBUG ['predictions', True]
+2018-01-18 21:02:55,716 INFO Start
+2018-01-18 21:03:09,641 DEBUG ['input_1', False]
+2018-01-18 21:03:09,641 DEBUG ['block1_conv1', False]
+2018-01-18 21:03:09,641 DEBUG ['block1_conv2', False]
+2018-01-18 21:03:09,641 DEBUG ['block1_pool', False]
+2018-01-18 21:03:09,641 DEBUG ['block2_conv1', False]
+2018-01-18 21:03:09,641 DEBUG ['block2_conv2', False]
+2018-01-18 21:03:09,642 DEBUG ['block2_pool', False]
+2018-01-18 21:03:09,642 DEBUG ['block3_conv1', False]
+2018-01-18 21:03:09,642 DEBUG ['block3_conv2', False]
+2018-01-18 21:03:09,642 DEBUG ['block3_conv3', False]
+2018-01-18 21:03:09,642 DEBUG ['block3_pool', False]
+2018-01-18 21:03:09,642 DEBUG ['flatten_1', True]
+2018-01-18 21:03:09,642 DEBUG ['fc1', True]
+2018-01-18 21:03:09,642 DEBUG ['fc2', True]
+2018-01-18 21:03:09,642 DEBUG ['predictions', True]
+2018-01-18 21:03:32,211 INFO Start
+2018-01-18 21:30:04,280 INFO Start
+2018-01-18 21:42:57,774 INFO Start
+2018-01-18 21:49:29,831 INFO Start

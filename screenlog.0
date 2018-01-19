@@ -1,0 +1,6 @@
+ls
+[0m[01;34mdata[0m     [01;34mdata_patch[0m  LICENSE       Pipfile       README.md      [01;34mresults[0m      session4.log
+[01;34mdata400[0m  [01;34mdata-toy[0m    [01;35mmodelMLP.png[0m  Pipfile.lock  [01;34mreduced_train[0m  screenlog.0  [01;34msource[0m
+[01;32mmaster10@etse-75-51[00m:[01;34m~/scene-classificator[00m$ cat screenlog.0 
+[01;32mmaster10@etse-75-51[00m:[01;34m~/scene-classificator[00m$ [21P(reverse-i-search)`':[C[27@p': python source/session4.py[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1@y[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C^C
+[01;32mmaster10@etse-75-51[00m:[01;34m~/scene-classificator[00m$ 

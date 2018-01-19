@@ -66,7 +66,8 @@ def get_base_model():
 def modify_model_for_eight_classes(base_model):
     """ Task 0: Modify to classify 8 classes.
 
-    Get the XXX layer and add a FC to classify scenes (8-class classifier).
+    Get the second-to-last layer and add a FC to classify scenes (8-class classifier).
+    Namely, change the last layer from 1000 classes to 8 classes.
     Freeze the former layers to not train them.
     """
     x = base_model.layers[-2].output
@@ -96,7 +97,6 @@ def modify_model_before_block4(base_model):
 
     x = base_model.layers[-13].output
     x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
-    x = Flatten()(x)
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dense(1024, activation='relu', name='fc2')(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
@@ -121,7 +121,7 @@ def modify_model_before_block4_with_dropout(base_model):
         layer.trainable = False
 
     x = base_model.layers[-13].output
-    x = MaxPooling2D()(x)
+    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dropout(0.5)(x)
@@ -138,7 +138,6 @@ def modify_model_before_block4_with_dropout(base_model):
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
-    die()
     return model
 
 
