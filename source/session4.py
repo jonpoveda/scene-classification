@@ -45,8 +45,8 @@ plot_history = True
 running_in_server = True
 
 if running_in_server:
-    batch_size = 32
-    number_of_epoch = 20
+    batch_size = 5#32
+    number_of_epoch = 1#20
 else:
     # Just a toy parameters to try everything is working
     batch_size = 5
@@ -118,6 +118,10 @@ def modify_model_before_block4(base_model):
 
 
 def modify_model_before_block4_with_dropout(base_model):
+    """ Task 4
+
+    Introduce and evaluate the usage of a dropout layer.
+    """
     for layer in base_model.layers:
         layer.trainable = False
 
@@ -139,6 +143,26 @@ def modify_model_before_block4_with_dropout(base_model):
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
+    return model
+
+
+def unlock_layers(base_model):
+    """ Task 1
+
+    unlock all layer for training.
+    """
+
+    for layer in base_model.layers:
+        layer.trainable = False
+
+    model = Model(inputs=base_model.input, outputs=base_model.layers[-1].output)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adadelta',
+                  metrics=['accuracy'])
+    for layer in model.layers:
+        logger.debug([layer.name, layer.trainable])
+    
     return model
 
 
@@ -217,6 +241,15 @@ def main():
                                       validation_data=validation_generator,
                                       validation_steps=807)
         end = time.time()
+        #unlock all layers and train 
+        model = unlock_layers(model)
+        history2 = model.fit_generator(train_generator,
+                              steps_per_epoch=(int(
+                                  400 * 1881 / 1881 // batch_size) + 1),
+                              epochs=number_of_epoch,
+                              validation_data=validation_generator,
+                              validation_steps=807)
+        
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
@@ -250,6 +283,7 @@ def main():
     # list all data in history
     if plot_history:
         do_plotting(history)
+    return history, history2
 
 
 if __name__ == '__main__':
@@ -259,5 +293,5 @@ if __name__ == '__main__':
         # Expected when the folder already exists
         pass
     logger.info('Start')
-    main()
+    history, history2 = main()
     logger.info('End')
