@@ -114,7 +114,7 @@ def modify_model_before_block4(base_model):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adadelta',
+                  optimizer='sgd',#'adadelta',
                   metrics=['accuracy'])
     return model
 
