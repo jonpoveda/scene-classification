@@ -270,7 +270,7 @@ def main():
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
-        scores = model.evaluate_generator(test_generator, steps=807)
+        scores = model.evaluate_generator(test_generator, steps=807//64)
         end = time.time()
         logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
 
