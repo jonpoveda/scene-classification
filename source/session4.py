@@ -100,8 +100,8 @@ def modify_model_before_block4(base_model):
     x = base_model.layers[-10].output
     #x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
-    x = Dense(512, activation='relu', name='fc1')(x)
-    x = Dense(256, activation='relu', name='fc2')(x)
+    x = Dense(256, activation='relu', name='fc1')(x)
+    x = Dense(128, activation='relu', name='fc2')(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
 
     for layer in base_model.layers:
