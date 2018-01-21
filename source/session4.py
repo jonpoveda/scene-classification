@@ -192,7 +192,8 @@ def do_plotting(history, history2):
 
 def main():
     base_model = get_base_model()
-    model = modify_model_before_block4(base_model)
+    #model = modify_model_before_block4(base_model)
+    model = modify_model_for_eight_classes(base_model)
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
     # Get train, validation and test dataset
