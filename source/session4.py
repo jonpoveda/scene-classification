@@ -223,7 +223,6 @@ def do_plotting(history, history2, cm=None):
 
 def main():
     base_model = get_base_model()
-    model = modify_model_before_block4(base_model)
     logger.debug('Trainability of the layers:')
     model = modify_model_before_block4(base_model)
     for layer in model.layers:
