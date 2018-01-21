@@ -333,9 +333,9 @@ def modify(base_model, fc1_size, fc2_size, dropout=False):
 
 def function_to_optimize(bounds):
     batch_size, fc1_size, fc2_size = \
-        np.floor(bounds[:, 0], cast=np.int32), \
-        np.floor(bounds[:, 1], cast=np.int32), \
-        np.floor(bounds[:, 2], cast=np.int32)
+        np.rint(bounds[:, 0], casting=np.int32), \
+        np.rint(bounds[:, 1], casting=np.int32), \
+        np.rint(bounds[:, 2], casting=np.int32)
     logger.info('Bounds in action {}'.format(bounds))
 
     base_model = get_base_model()
