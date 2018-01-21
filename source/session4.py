@@ -98,10 +98,10 @@ def modify_model_before_block4(base_model):
     """
 
     x = base_model.layers[-10].output
-    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
+    # x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
-    x = Dense(4096, activation='relu', name='fc1')(x)
-    x = Dense(1024, activation='relu', name='fc2')(x)
+    x = Dense(512, activation='relu', name='fc1')(x)
+    x = Dense(256, activation='relu', name='fc2')(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
 
     for layer in base_model.layers:
@@ -250,7 +250,7 @@ def main():
                                           400 * 1881 / 1881 // batch_size) + 1),
                                       epochs=number_of_epoch,
                                       validation_data=validation_generator,
-                                      validation_steps=807 // 32)
+                                      validation_steps=807 // 64)
 
         # unlock all layers and train
         model = unlock_layers(model)
@@ -259,7 +259,7 @@ def main():
                                            400 * 1881 / 1881 // batch_size) + 1),
                                        epochs=number_of_epoch,
                                        validation_data=validation_generator,
-                                       validation_steps=807)
+                                       validation_steps=807 // 64)
         end = time.time()
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
