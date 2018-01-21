@@ -1,7 +1,7 @@
 import glob
 
-from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
+from keras.preprocessing.image import ImageDataGenerator
 from scipy import misc
 
 from data_generator_config import DataGeneratorConfig
@@ -9,11 +9,11 @@ from data_generator_config import DataGeneratorConfig
 
 class DataGenerator(object):
     def __init__(self, img_width, img_height, batch_size, train_path):
-	""" Path used for normalizing the train set afterwards """
+        """ Path used for normalizing the train set afterwards """
         self.img_width = img_width
         self.img_height = img_height
         self.batch_size = batch_size
-	self.train_path = train_path
+        self.train_path = train_path
         self.data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
 
     def configure(self, config):  # type: (dict) -> None
