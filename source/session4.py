@@ -402,7 +402,8 @@ def function_to_optimize(bounds):
     if plot_history:
         do_plotting(history=history, history2=None, cm=cm)
 
-    logger.info('Param to optimize [Accuracy] is: {}'.format(evaluator.accuracy))
+    logger.info(
+        'Param to optimize [Accuracy] is: {}'.format(evaluator.accuracy))
     return evaluator.accuracy
 
 
