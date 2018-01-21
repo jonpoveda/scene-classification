@@ -236,7 +236,7 @@ def main():
 
     data_gen = DataGenerator(img_width, img_height, batch_size,
                              REDUCED_TRAIN_PATH)
-    data_gen.configure(DataGeneratorConfig.CONFIG1)
+    data_gen.configure(DataGeneratorConfig.DEFAULT)
 
     train_generator, test_generator, validation_generator = data_gen.get(
         train_path=REDUCED_TRAIN_PATH,
