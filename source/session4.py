@@ -130,7 +130,7 @@ def modify_model_before_block3(base_model, dropout=False):
     for layer in base_model.layers:
         layer.trainable = False
 
-    x = base_model.layers[-10].output
+    x = base_model.layers[-13].output
     x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
     x = Dense(256, activation='relu', name='fc1')(x)
