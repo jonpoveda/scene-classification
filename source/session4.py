@@ -281,10 +281,14 @@ def main():
                               label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
 
         logger.info(
-            'Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
+            'Evaluator \n'
+            'Acc (model)\n'
+            'Accuracy: {} \n'
+            'Precision: {} \n'
+            'Recall: {} \n'
+            'Fscore: {}'.
             format(scores[1], evaluator.accuracy, evaluator.precision,
-                   evaluator.recall,
-                   evaluator.fscore) + '\n')
+                   evaluator.recall, evaluator.fscore) + '\n')
         cm = evaluator.confusion_matrix()
 
         # Plot the confusion matrix on test data
@@ -294,7 +298,6 @@ def main():
 
         end = time.time()
         logger.info('Done in ' + str(end - init) + ' secs.\n')
-
 
     else:
         logger.info('Running in a laptop! Toy mode active')
