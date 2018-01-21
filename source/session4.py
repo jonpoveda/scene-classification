@@ -98,7 +98,7 @@ def modify_model_before_block4(base_model):
     """
 
     x = base_model.layers[-13].output
-    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
+    #x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dense(1024, activation='relu', name='fc2')(x)
@@ -194,8 +194,7 @@ def main():
     base_model = get_base_model()
     model = modify_model_before_block4(base_model)
     logger.debug('Trainability of the layers:')
-    #model = modify_model_before_block4(base_model)
-    model = modify_model_for_eight_classes(base_model)
+    model = modify_model_before_block4(base_model)
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
 
