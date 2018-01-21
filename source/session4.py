@@ -164,10 +164,10 @@ def unlock_layers(base_model):
 
     model = Model(inputs=base_model.input,
                   outputs=base_model.layers[-1].output)
-    opt = optimizers.Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
+    opt = optimizers.Adadelta(lr=0.1)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adadelta',
+                  optimizer=opt,
                   metrics=['accuracy'])
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
