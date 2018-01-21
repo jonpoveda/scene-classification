@@ -13,6 +13,7 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
+from keras import optimizers
 
 from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
@@ -116,7 +117,7 @@ def modify_model_before_block4(base_model, dropout=False):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+                  optimizer='adadelta',
                   metrics=['accuracy'])
     return model
 
@@ -129,7 +130,7 @@ def modify_model_before_block3(base_model, dropout=False):
     for layer in base_model.layers:
         layer.trainable = False
 
-    x = base_model.layers[-10].output
+    x = base_model.layers[-13].output
     x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
     x = Dense(256, activation='relu', name='fc1')(x)
@@ -147,7 +148,7 @@ def modify_model_before_block3(base_model, dropout=False):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+                  optimizer='adadelta',
                   metrics=['accuracy'])
     return model
 
@@ -163,9 +164,10 @@ def unlock_layers(base_model):
 
     model = Model(inputs=base_model.input,
                   outputs=base_model.layers[-1].output)
+    opt = optimizers.Adadelta(lr=0.1)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+                  optimizer=opt,
                   metrics=['accuracy'])
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
