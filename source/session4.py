@@ -101,10 +101,10 @@ def modify_model_before_block4(base_model, dropout=False):
     x = base_model.layers[-10].output
     x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
-    x = Dense(512, activation='relu', name='fc1')(x)
+    x = Dense(256, activation='relu', name='fc1')(x)
     if dropout:
         x = Dropout(0.5)(x)
-    x = Dense(256, activation='relu', name='fc2')(x)
+    x = Dense(128, activation='relu', name='fc2')(x)
     if dropout:
         x = Dropout(0.5)(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
@@ -129,13 +129,13 @@ def modify_model_before_block3(base_model, dropout=False):
     for layer in base_model.layers:
         layer.trainable = False
 
-    x = base_model.layers[-13].output
+    x = base_model.layers[-10].output
     x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
-    x = Dense(512, activation='relu', name='fc1')(x)
+    x = Dense(256, activation='relu', name='fc1')(x)
     if dropout:
         x = Dropout(0.5)(x)
-    x = Dense(256, activation='relu', name='fc2')(x)
+    x = Dense(128, activation='relu', name='fc2')(x)
     if dropout:
         x = Dropout(0.5)(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
@@ -227,11 +227,11 @@ def do_plotting(history, history2, cm=None):
 
 def main():
     base_model = get_base_model()
-    model = modify_model_before_block4(base_model)
     logger.debug('Trainability of the layers:')
+    model = modify_model_before_block4(base_model)
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
-    die()
+
     # Get train, validation and test dataset
     # preprocessing_function=preprocess_input,
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)

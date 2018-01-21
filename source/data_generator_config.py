@@ -21,10 +21,10 @@ class DataGeneratorConfig(object):
                    vertical_flip=False,
                    rescale=None)
 
-    CONFIG1 = dict(featurewise_center=True,
-                   samplewise_center=True,
-                   featurewise_std_normalization=False,
-                   samplewise_std_normalization=False,
+    CONFIG1 = dict(featurewise_center=False,
+                   samplewise_center=False,
+                   featurewise_std_normalization=True,
+                   samplewise_std_normalization=True,
                    preprocessing_function=preprocess_input,
                    rotation_range=15,
                    width_shift_range=0.9,
