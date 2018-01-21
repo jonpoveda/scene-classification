@@ -21,8 +21,8 @@ class DataGeneratorConfig(object):
                    vertical_flip=False,
                    rescale=None)
 
-    CONFIG1 = dict(featurewise_center=True,
-                   samplewise_center=True,
+    CONFIG1 = dict(featurewise_center=False,
+                   samplewise_center=False,
                    featurewise_std_normalization=False,
                    samplewise_std_normalization=False,
                    preprocessing_function=preprocess_input,
