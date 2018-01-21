@@ -412,11 +412,11 @@ def function_to_optimize(bounds):
 def main_with_random_search():
     bounds = [
         {'name': 'batch_size', 'type': 'discrete',
-         'domain': np.array((16, 32, 64), dtype=np.int32)},
+         'domain': (16, 32, 64)},
         {'name': 'fc1_size', 'type': 'discrete',
-         'domain': np.array((512, 1024, 2048, 4096), dtype=np.int32)},
+         'domain': (512, 1024, 2048, 4096)},
         {'name': 'fc2_size', 'type': 'discrete',
-         'domain': np.array((128, 256, 512, 1024), dtype=np.int32)}]
+         'domain': (128, 256, 512, 1024)}]
 
     optimizer = BayesianOptimization(f=function_to_optimize, domain=bounds)
     optimizer.run_optimization(max_iter=10)
