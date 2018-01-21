@@ -320,7 +320,7 @@ def modify(base_model, fc1_size, fc2_size, dropout=False):
 
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
-         to_file='../results/session4/modelVGG16g_{}_{}_{}.png'.format(
+         to_file='../results/session4/modelVGG16g_{}_{}.png'.format(
              fc1_size, fc2_size),
          show_shapes=True,
          show_layer_names=True)
@@ -331,9 +331,9 @@ def modify(base_model, fc1_size, fc2_size, dropout=False):
     return model
 
 
-def function_to_optimize(bounds):
-    batch_size, fc1_size, fc2_size = \
-        bounds[:, 0], bounds[:, 1], bounds[:, 2]
+def function_to_optimize(bounds):  # type: (ndarray) -> int
+    b = bounds.astype(np.int64)
+    batch_size, fc1_size, fc2_size = b[:, 0][0], b[:, 1][0], b[:, 2][0]
     logger.info('Bounds in action {}'.format(bounds))
 
     base_model = get_base_model()
