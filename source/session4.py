@@ -301,7 +301,6 @@ def main():
         logger.info('Confusion matrix:\n')
         logger.info(cm)
         logger.info('Final accuracy: ' + str(evaluator.accuracy) + '\n')
-
         end = time.time()
         logger.info('Done in ' + str(end - init) + ' secs.\n')
 
@@ -325,8 +324,7 @@ def main():
         result = model.evaluate_generator(test_generator, steps=10)
         end = time.time()
         logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
-
-    logger.debug(result)
+        logger.debug(result)
 
     # list all data in history
     if plot_history:
