@@ -118,6 +118,10 @@ def modify_model_before_block4(base_model):
 
 
 def modify_model_before_block4_with_dropout(base_model):
+    """ Task 4
+
+    Introduce and evaluate the usage of a dropout layer.
+    """
     for layer in base_model.layers:
         layer.trainable = False
 
@@ -142,10 +146,30 @@ def modify_model_before_block4_with_dropout(base_model):
     return model
 
 
-def do_plotting(history):
+def unlock_layers(base_model):
+    """ Task 1
+
+    unlock all layer for training.
+    """
+
+    for layer in base_model.layers:
+        layer.trainable = True
+
+    model = Model(inputs=base_model.input, outputs=base_model.layers[-1].output)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adadelta',
+                  metrics=['accuracy'])
+    for layer in model.layers:
+        logger.debug([layer.name, layer.trainable])
+    
+    return model
+
+
+def do_plotting(history,history2):
     # summarize history for accuracy
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
+    plt.plot(history.history['acc'] + history2.history['acc'])
+    plt.plot(history.history['val_acc'] + history2.history['val_acc'])
     plt.title('model accuracy')
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
@@ -154,8 +178,8 @@ def do_plotting(history):
     plt.close()
 
     # summarize history for loss
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
+    plt.plot(history.history['loss']+history2.history['loss'])
+    plt.plot(history.history['val_loss']+history2.history['val_loss'])
     plt.title('model loss')
     plt.ylabel('loss')
     plt.xlabel('epoch')
@@ -219,6 +243,15 @@ def main():
                                       validation_data=validation_generator,
                                       validation_steps=807)
         end = time.time()
+        #unlock all layers and train 
+        model = unlock_layers(model)
+        history2 = model.fit_generator(train_generator,
+                              steps_per_epoch=(int(
+                                  400 * 1881 / 1881 // batch_size) + 1),
+                              epochs=number_of_epoch,
+                              validation_data=validation_generator,
+                              validation_steps=807)
+        
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
@@ -251,7 +284,8 @@ def main():
 
     # list all data in history
     if plot_history:
-        do_plotting(history)
+        do_plotting(history, history2)
+
 
 
 if __name__ == '__main__':
