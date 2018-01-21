@@ -310,5 +310,8 @@ if __name__ == '__main__':
         pass
     logger.info('Start')
     logging.debug('Running as PID: {}'.format(os.getpid()))
+    init = time.time()
     main()
+    end = time.time()
+    logger.info('Everything done in ' + str(end - init) + ' secs.\n')
     logger.info('End')
