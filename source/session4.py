@@ -117,7 +117,7 @@ def modify_model_before_block4(base_model, dropout=False):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+                  optimizer='adadelta',
                   metrics=['accuracy'])
     return model
 
@@ -148,7 +148,7 @@ def modify_model_before_block3(base_model, dropout=False):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+                  optimizer='adadelta',
                   metrics=['accuracy'])
     return model
 
@@ -167,7 +167,7 @@ def unlock_layers(base_model):
     opt = optimizers.Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer=opt,
+                  optimizer='adadelta',
                   metrics=['accuracy'])
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
