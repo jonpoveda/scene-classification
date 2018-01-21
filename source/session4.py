@@ -218,7 +218,7 @@ def main():
                                           400 * 1881 / 1881 // batch_size) + 1),
                                       epochs=number_of_epoch,
                                       validation_data=validation_generator,
-                                      validation_steps=807// 32)
+                                      validation_steps=807// 64)
         
         # unlock all layers and train
         model = unlock_layers(model)
@@ -227,7 +227,7 @@ def main():
                                            400 * 1881 / 1881 // batch_size) + 1),
                                        epochs=number_of_epoch,
                                        validation_data=validation_generator,
-                                       validation_steps=807)
+                                       validation_steps=807// 64)
         end = time.time()
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
