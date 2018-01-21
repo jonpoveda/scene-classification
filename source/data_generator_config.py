@@ -23,8 +23,8 @@ class DataGeneratorConfig(object):
 
     CONFIG1 = dict(featurewise_center=True,
                    samplewise_center=True,
-                   featurewise_std_normalization=True,
-                   samplewise_std_normalization=True,
+                   featurewise_std_normalization=False,
+                   samplewise_std_normalization=False,
                    preprocessing_function=preprocess_input,
                    rotation_range=15,
                    width_shift_range=0.9,
