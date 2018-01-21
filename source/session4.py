@@ -169,25 +169,56 @@ def unlock_layers(base_model):
     return model
 
 
-def do_plotting(history, history2):
-    # summarize history for accuracy
-    plt.plot(history.history['acc'] + history2.history['acc'])
-    plt.plot(history.history['val_acc'] + history2.history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('accuracy')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'validation'], loc='upper left')
-    plt.savefig('../results/session4/accuracy.jpg')
-    plt.close()
+def do_plotting(history, history2, cm=None):
+    if history2:
+        # summarize history for accuracy
+        plt.plot(history.history['acc'] + history2.history['acc'])
+        plt.plot(history.history['val_acc'] + history2.history['val_acc'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'validation'], loc='upper left')
+        plt.savefig('../results/session4/accuracy.jpg')
+        plt.close()
 
-    # summarize history for loss
-    plt.plot(history.history['loss'] + history2.history['loss'])
-    plt.plot(history.history['val_loss'] + history2.history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'validation'], loc='upper left')
-    plt.savefig('../results/session4/loss.jpg')
+        # summarize history for loss
+        plt.plot(history.history['loss'] + history2.history['loss'])
+        plt.plot(history.history['val_loss'] + history2.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'validation'], loc='upper left')
+        plt.savefig('../results/session4/loss.jpg')
+
+    else:
+        # summarize history for accuracy
+        plt.plot(history.history['acc'])
+        plt.plot(history.history['val_acc'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'validation'], loc='upper left')
+        plt.savefig('../results/session4/accuracy.jpg')
+        plt.close()
+
+        # summarize history for loss
+        plt.plot(history.history['loss'] + history2.history['loss'])
+        plt.plot(history.history['val_loss'] + history2.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'validation'], loc='upper left')
+        plt.savefig('../results/session4/loss.jpg')
+
+    if cm:
+        print(cm)
+        plt.matshow(cm)
+        plt.title('Confusion matrix')
+        plt.colorbar()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        plt.show()
+        plt.savefig('cm.jpg')
 
 
 def main():
@@ -203,7 +234,8 @@ def main():
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.CONFIG1)
 
-    data_gen = DataGenerator(img_width, img_height, batch_size, REDUCED_TRAIN_PATH)
+    data_gen = DataGenerator(img_width, img_height, batch_size,
+                             REDUCED_TRAIN_PATH)
     data_gen.configure(DataGeneratorConfig.CONFIG1)
 
     if running_in_server:
@@ -218,8 +250,8 @@ def main():
                                           400 * 1881 / 1881 // batch_size) + 1),
                                       epochs=number_of_epoch,
                                       validation_data=validation_generator,
-                                      validation_steps=807// 32)
-        
+                                      validation_steps=807 // 32)
+
         # unlock all layers and train
         model = unlock_layers(model)
         history2 = model.fit_generator(train_generator,
@@ -258,15 +290,6 @@ def main():
         # Plot the confusion matrix on test data
         logger.info('Confusion matrix:\n')
         logger.info(cm)
-#        print(cm)
-#
-#        plt.matshow(cm)
-#        plt.title('Confusion matrix')
-#        plt.colorbar()
-#        plt.ylabel('True label')
-#        plt.xlabel('Predicted label')
-#        plt.show()
-#        plt.savefig('cm.jpg')
         logger.info('Final accuracy: ' + str(evaluator.accuracy) + '\n')
 
         end = time.time()
@@ -298,7 +321,7 @@ def main():
 
     # list all data in history
     if plot_history:
-        do_plotting(history, history2)
+        do_plotting(history, history2, cm)
 
 
 if __name__ == '__main__':
