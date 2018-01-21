@@ -6,8 +6,8 @@ class DataGeneratorConfig(object):
 
     DEFAULT = dict(featurewise_center=False,
                    samplewise_center=False,
-                   featurewise_std_normalization=False,
-                   samplewise_std_normalization=False,
+                   featurewise_std_normalization=True,
+                   samplewise_std_normalization=True,
                    preprocessing_function=preprocess_input,
                    rotation_range=0.,
                    width_shift_range=0.,
