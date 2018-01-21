@@ -97,8 +97,8 @@ def modify_model_before_block4(base_model):
     least a fully connected layer + a prediction layer.
     """
 
-    x = base_model.layers[-13].output
-    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
+    x = base_model.layers[-10].output
+    #x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dense(1024, activation='relu', name='fc2')(x)
@@ -143,7 +143,7 @@ def modify_model_before_block4_with_dropout(base_model):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adadelta',
+                  optimizer='adam',
                   metrics=['accuracy'])
     return model
 
@@ -161,7 +161,7 @@ def unlock_layers(base_model):
                   outputs=base_model.layers[-1].output)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adadelta',
+                  optimizer='adam',
                   metrics=['accuracy'])
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
@@ -213,12 +213,12 @@ def main():
             validate_path=TEST_PATH)
 
         init = time.time()
-        #history = model.fit_generator(train_generator,
-#                                      steps_per_epoch=(int(
-#                                          400 * 1881 / 1881 // batch_size) + 1),
-#                                      epochs=number_of_epoch,
-#                                      validation_data=validation_generator,
-#                                      validation_steps=807)
+        history = model.fit_generator(train_generator,
+                                      steps_per_epoch=(int(
+                                          400 * 1881 / 1881 // batch_size) + 1),
+                                      epochs=number_of_epoch,
+                                      validation_data=validation_generator,
+                                      validation_steps=807)
         
         # unlock all layers and train
         model = unlock_layers(model)
