@@ -214,11 +214,11 @@ def main():
 
         init = time.time()
         #history = model.fit_generator(train_generator,
-                                      steps_per_epoch=(int(
-                                          400 * 1881 / 1881 // batch_size) + 1),
-                                      epochs=number_of_epoch,
-                                      validation_data=validation_generator,
-                                      validation_steps=807)
+#                                      steps_per_epoch=(int(
+#                                          400 * 1881 / 1881 // batch_size) + 1),
+#                                      epochs=number_of_epoch,
+#                                      validation_data=validation_generator,
+#                                      validation_steps=807)
         
         # unlock all layers and train
         model = unlock_layers(model)
