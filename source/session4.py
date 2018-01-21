@@ -164,7 +164,7 @@ def unlock_layers(base_model):
 
     model = Model(inputs=base_model.input,
                   outputs=base_model.layers[-1].output)
-    opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    opt = optimizers.Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
 
     model.compile(loss='categorical_crossentropy',
                   optimizer=opt,
