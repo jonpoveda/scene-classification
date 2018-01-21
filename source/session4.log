@@ -1160,3 +1160,51 @@
 2018-01-18 21:21:17,014 DEBUG ['fc2', True]
 2018-01-18 21:21:17,014 DEBUG ['predictions', True]
 2018-01-18 21:21:31,814 INFO Start
+2018-01-21 19:22:47,296 INFO Start
+2018-01-21 19:23:50,641 INFO Start
+2018-01-21 19:24:34,361 INFO Start
+2018-01-21 19:25:10,400 INFO Start
+2018-01-21 19:28:05,309 INFO Start
+2018-01-21 19:32:54,110 INFO Start
+2018-01-21 19:35:56,715 INFO Start
+2018-01-21 19:35:58,509 DEBUG Trainability of the layers:
+2018-01-21 19:35:58,509 DEBUG ['input_1', False]
+2018-01-21 19:35:58,509 DEBUG ['block1_conv1', False]
+2018-01-21 19:35:58,509 DEBUG ['block1_conv2', False]
+2018-01-21 19:35:58,509 DEBUG ['block1_pool', False]
+2018-01-21 19:35:58,509 DEBUG ['block2_conv1', False]
+2018-01-21 19:35:58,509 DEBUG ['block2_conv2', False]
+2018-01-21 19:35:58,509 DEBUG ['block2_pool', False]
+2018-01-21 19:35:58,509 DEBUG ['block3_conv1', False]
+2018-01-21 19:35:58,509 DEBUG ['block3_conv2', False]
+2018-01-21 19:35:58,509 DEBUG ['block3_conv3', False]
+2018-01-21 19:35:58,509 DEBUG ['block3_pool', False]
+2018-01-21 19:35:58,509 DEBUG ['pool', True]
+2018-01-21 19:35:58,509 DEBUG ['flatten_1', True]
+2018-01-21 19:35:58,509 DEBUG ['fc1', True]
+2018-01-21 19:35:58,509 DEBUG ['dropout_1', True]
+2018-01-21 19:35:58,509 DEBUG ['fc2', True]
+2018-01-21 19:35:58,509 DEBUG ['dropout_2', True]
+2018-01-21 19:35:58,509 DEBUG ['predictions', True]
+2018-01-21 19:43:26,083 INFO Start
+2018-01-21 19:45:53,911 INFO Start
+2018-01-21 19:45:55,812 DEBUG Trainability of the layers:
+2018-01-21 19:45:55,812 DEBUG ['input_1', False]
+2018-01-21 19:45:55,812 DEBUG ['block1_conv1', False]
+2018-01-21 19:45:55,812 DEBUG ['block1_conv2', False]
+2018-01-21 19:45:55,812 DEBUG ['block1_pool', False]
+2018-01-21 19:45:55,812 DEBUG ['block2_conv1', False]
+2018-01-21 19:45:55,813 DEBUG ['block2_conv2', False]
+2018-01-21 19:45:55,813 DEBUG ['block2_pool', False]
+2018-01-21 19:45:55,813 DEBUG ['block3_conv1', False]
+2018-01-21 19:45:55,813 DEBUG ['block3_conv2', False]
+2018-01-21 19:45:55,813 DEBUG ['block3_conv3', False]
+2018-01-21 19:45:55,813 DEBUG ['block3_pool', False]
+2018-01-21 19:45:55,813 DEBUG ['block4_conv1', False]
+2018-01-21 19:45:55,813 DEBUG ['block4_conv2', False]
+2018-01-21 19:45:55,813 DEBUG ['block4_conv3', False]
+2018-01-21 19:45:55,813 DEBUG ['pool', True]
+2018-01-21 19:45:55,813 DEBUG ['flatten_1', True]
+2018-01-21 19:45:55,813 DEBUG ['fc1', True]
+2018-01-21 19:45:55,813 DEBUG ['fc2', True]
+2018-01-21 19:45:55,813 DEBUG ['predictions', True]

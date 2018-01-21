@@ -65,7 +65,7 @@ def get_base_model():
     return base_model
 
 
-def modify_model_for_eight_classes(base_model):
+def modify_last_fc_to_classify_eight_classes(base_model):
     """ Task 0: Modify to classify 8 classes.
 
     Get the second-to-last layer and add a FC to classify scenes (8-class classifier).
@@ -90,36 +90,7 @@ def modify_model_for_eight_classes(base_model):
     return model
 
 
-def modify_model_before_block4(base_model):
-    """ Task 1
-
-    Set a new model from a layer below block4 including at
-    least a fully connected layer + a prediction layer.
-    """
-
-    x = base_model.layers[-10].output
-    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
-    x = Flatten()(x)
-    x = Dense(256, activation='relu', name='fc1')(x)
-    x = Dense(128, activation='relu', name='fc2')(x)
-    x = Dense(8, activation='softmax', name='predictions')(x)
-
-    for layer in base_model.layers:
-        layer.trainable = False
-
-    model = Model(inputs=base_model.input, outputs=x)
-    plot(model,
-         to_file='../results/session4/modelVGG16c.png',
-         show_shapes=True,
-         show_layer_names=True)
-
-    model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
-                  metrics=['accuracy'])
-    return model
-
-
-def modify_model_before_block4_with_dropout(base_model):
+def modify_model_before_block4(base_model, dropout=False):
     """ Task 4
 
     Introduce and evaluate the usage of a dropout layer.
@@ -131,14 +102,47 @@ def modify_model_before_block4_with_dropout(base_model):
     x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
     x = Dense(256, activation='relu', name='fc1')(x)
-    x = Dropout(0.5)(x)
+    if dropout:
+        x = Dropout(0.5)(x)
     x = Dense(128, activation='relu', name='fc2')(x)
-    x = Dropout(0.5)(x)
+    if dropout:
+        x = Dropout(0.5)(x)
     x = Dense(8, activation='softmax', name='predictions')(x)
 
     model = Model(inputs=base_model.input, outputs=x)
     plot(model,
-         to_file='../results/session4/modelVGG16d.png',
+         to_file='../results/session4/modelVGG16e.png',
+         show_shapes=True,
+         show_layer_names=True)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adam',
+                  metrics=['accuracy'])
+    return model
+
+
+def modify_model_before_block3(base_model, dropout=False):
+    """ Task 4
+
+    Introduce and evaluate the usage of a dropout layer.
+    """
+    for layer in base_model.layers:
+        layer.trainable = False
+
+    x = base_model.layers[-10].output
+    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
+    x = Flatten()(x)
+    x = Dense(256, activation='relu', name='fc1')(x)
+    if dropout:
+        x = Dropout(0.5)(x)
+    x = Dense(128, activation='relu', name='fc2')(x)
+    if dropout:
+        x = Dropout(0.5)(x)
+    x = Dense(8, activation='softmax', name='predictions')(x)
+
+    model = Model(inputs=base_model.input, outputs=x)
+    plot(model,
+         to_file='../results/session4/modelVGG16f.png',
          show_shapes=True,
          show_layer_names=True)
 
@@ -224,7 +228,8 @@ def do_plotting(history, history2, cm=None):
 def main():
     base_model = get_base_model()
     logger.debug('Trainability of the layers:')
-    model = modify_model_before_block4(base_model)
+    model = modify_model_before_block4(base_model, dropout=False)
+    # model = modify_model_before_block3(base_model, dropout=False)
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
 
