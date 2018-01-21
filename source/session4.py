@@ -334,9 +334,9 @@ def modify(base_model, fc1_size, fc2_size, dropout=False):
 def function_to_optimize(bounds):
     from numpy import ndarray
     batch_size, fc1_size, fc2_size = \
-        np.array(bounds[:, 0], dtype=np.int64), \
-        np.array(bounds[:, 1], dtype=np.int64), \
-        np.array(bounds[:, 2], dtype=np.int64)
+        np.array(bounds[:, 0], dtype=np.int64)[0], \
+        np.array(bounds[:, 1], dtype=np.int64)[0], \
+        np.array(bounds[:, 2], dtype=np.int64)[0]
     logger.info('Bounds in action {}'.format(bounds))
 
     base_model = get_base_model()
