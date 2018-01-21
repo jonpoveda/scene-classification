@@ -45,7 +45,7 @@ logger.addHandler(console_handler)
 # Top-level vars
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
-plot_history = True
+plot_history = False
 
 batch_size = 32
 number_of_epoch = 20
@@ -237,7 +237,7 @@ def main():
 
     data_gen = DataGenerator(img_width, img_height, batch_size,
                              REDUCED_TRAIN_PATH)
-    data_gen.configure(DataGeneratorConfig.CONFIG1)
+    data_gen.configure(DataGeneratorConfig.DEFAULT)
 
     train_generator, test_generator, validation_generator = data_gen.get(
         train_path=REDUCED_TRAIN_PATH,
@@ -429,7 +429,10 @@ if __name__ == '__main__':
         # Expected when the folder already exists
         pass
     logger.info('Start')
-    logger.debug('Running as PID: {}'.format(os.getpid()))
+    logging.debug('Running as PID: {}'.format(os.getpid()))
+    init = time.time()
     # main()
     main_with_random_search()
+    end = time.time()
+    logger.info('Everything done in ' + str(end - init) + ' secs.\n')
     logger.info('End')
