@@ -97,8 +97,8 @@ def modify_model_before_block4(base_model):
     least a fully connected layer + a prediction layer.
     """
 
-    x = base_model.layers[-13].output
-    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
+    x = base_model.layers[-12].output
+    #x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
     x = Flatten()(x)
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dense(1024, activation='relu', name='fc2')(x)
