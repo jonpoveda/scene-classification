@@ -192,8 +192,13 @@ def do_plotting(history, history2):
 
 def main():
     base_model = get_base_model()
+<<<<<<< HEAD
     model = modify_model_before_block4(base_model)
     logger.debug('Trainability of the layers:')
+=======
+    #model = modify_model_before_block4(base_model)
+    model = modify_model_for_eight_classes(base_model)
+>>>>>>> 157060da2f65c7e4a80c18b77ebf89ad974133d3
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
 
