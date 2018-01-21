@@ -6,6 +6,7 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+from GPyOpt.methods import BayesianOptimization
 from keras import optimizers
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense
@@ -211,7 +212,7 @@ def do_plotting(history, history2, cm=None):
         plt.savefig('../results/session4/loss.jpg')
 
     if cm:
-        print(cm)
+        logger(cm)
         plt.matshow(cm)
         plt.title('Confusion matrix')
         plt.colorbar()
@@ -302,6 +303,124 @@ def main():
         do_plotting(history, history2, cm)
 
 
+def modify(base_model, fc1_size, fc2_size, dropout=False):
+    for layer in base_model.layers:
+        layer.trainable = False
+
+    x = base_model.layers[-10].output
+    x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
+    x = Flatten()(x)
+    x = Dense(fc1_size, activation='relu', name='fc1')(x)
+    if dropout:
+        x = Dropout(0.5)(x)
+    x = Dense(fc2_size, activation='relu', name='fc2')(x)
+    if dropout:
+        x = Dropout(0.5)(x)
+    x = Dense(8, activation='softmax', name='predictions')(x)
+
+    model = Model(inputs=base_model.input, outputs=x)
+    plot(model,
+         to_file='../results/session4/modelVGG16g_{}_{}_{}.png'.format(
+             fc1_size, fc2_size),
+         show_shapes=True,
+         show_layer_names=True)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adadelta',
+                  metrics=['accuracy'])
+    return model
+
+
+def function_to_optimize(bounds):
+    batch_size, fc1_size, fc2_size = \
+        bounds[:, 0], bounds[:, 1], bounds[:, 2]
+    logger.info('Bounds in action {}'.format(bounds))
+
+    base_model = get_base_model()
+    logger.debug('Trainability of the layers:')
+    model = modify(base_model, fc1_size, fc2_size, dropout=False)
+
+    for layer in model.layers:
+        logger.debug([layer.name, layer.trainable])
+
+    data_gen = DataGenerator(img_width, img_height, batch_size,
+                             REDUCED_TRAIN_PATH)
+    data_gen.configure(DataGeneratorConfig.CONFIG1)
+
+    train_generator, test_generator, validation_generator = data_gen.get(
+        train_path=REDUCED_TRAIN_PATH,
+        test_path=TEST_PATH,
+        validate_path=TEST_PATH)
+
+    init = time.time()
+    history = model.fit_generator(train_generator,
+                                  steps_per_epoch=(int(
+                                      400 * 1881 / 1881 // batch_size) + 1),
+                                  epochs=number_of_epoch,
+                                  validation_data=validation_generator,
+                                  validation_steps=807 // batch_size)
+
+    end = time.time()
+    logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
+
+    init = time.time()
+    scores = model.evaluate_generator(test_generator, steps=807 // 64)
+    end = time.time()
+    logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
+
+    # Get ground truth
+    test_labels = test_generator.classes
+
+    # Predict test images
+    predictions_raw = model.predict_generator(test_generator)
+    predictions = []
+    for prediction in predictions_raw:
+        predictions.append(np.argmax(prediction))
+    # Evaluate results
+    evaluator = Evaluator(test_labels, predictions,
+                          label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
+
+    logger.info(
+        'Evaluator \n'
+        'Acc (model)\n'
+        'Accuracy: {} \n'
+        'Precision: {} \n'
+        'Recall: {} \n'
+        'Fscore: {}'.
+        format(scores[1], evaluator.accuracy, evaluator.precision,
+               evaluator.recall, evaluator.fscore) + '\n')
+    cm = evaluator.confusion_matrix()
+
+    # Plot the confusion matrix on test data
+    logger.info('Confusion matrix:\n')
+    logger.info(cm)
+    logger.info('Final accuracy: ' + str(evaluator.accuracy) + '\n')
+    end = time.time()
+    logger.info('Done in ' + str(end - init) + ' secs.\n')
+
+    # list all data in history
+    if plot_history:
+        do_plotting(history=history, history2=None, cm=cm)
+
+    logger.info('Param to optimize [Accuracy] is: {}'.format(evaluator.accuracy))
+    return evaluator.accuracy
+
+
+def main_with_random_search():
+    bounds = [
+        {'name': 'batch_size', 'type': 'discrete',
+         'domain': (16, 32, 64)},
+        {'name': 'fc1_size', 'type': 'discrete',
+         'domain': (512, 1024, 2048, 4096)},
+        {'name': 'fc2_size', 'type': 'discrete',
+         'domain': (128, 256, 512, 1024)}]
+
+    optimizer = BayesianOptimization(f=function_to_optimize, domain=bounds)
+    optimizer.run_optimization(max_iter=10)
+    logger.info('optimized parameters: {}'.format(optimizer.x_opt))
+    logger.info('optimized accuracy: {}'.format(optimizer.fx_opt))
+
+
 if __name__ == '__main__':
     try:
         os.makedirs('../results/session4')
@@ -309,6 +428,7 @@ if __name__ == '__main__':
         # Expected when the folder already exists
         pass
     logger.info('Start')
-    logging.debug('Running as PID: {}'.format(os.getpid()))
-    main()
+    logger.debug('Running as PID: {}'.format(os.getpid()))
+    # main()
+    main_with_random_search()
     logger.info('End')
