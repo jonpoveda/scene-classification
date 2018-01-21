@@ -114,7 +114,7 @@ def modify_model_before_block4(base_model):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adadelta',
+                  optimizer='adam',
                   metrics=['accuracy'])
     return model
 
@@ -218,7 +218,7 @@ def main():
                                           400 * 1881 / 1881 // batch_size) + 1),
                                       epochs=number_of_epoch,
                                       validation_data=validation_generator,
-                                      validation_steps=807)
+                                      validation_steps=807// 32)
         
         # unlock all layers and train
         model = unlock_layers(model)
