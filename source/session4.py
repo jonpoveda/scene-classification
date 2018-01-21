@@ -86,7 +86,7 @@ def modify_last_fc_to_classify_eight_classes(base_model):
 
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
-                  metrics=['accuracy'])
+                  metrics=['accuracy', 'top_k_categorical_accuracy'])
     return model
 
 
@@ -338,5 +338,6 @@ if __name__ == '__main__':
         # Expected when the folder already exists
         pass
     logger.info('Start')
+    logging.debug('Running as PID: {}'.format(os.getpid()))
     main()
     logger.info('End')
