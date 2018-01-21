@@ -22,7 +22,7 @@ class DataGenerator(object):
         If not done it uses the DataGeneratorConfig.DEFAULT
         """
         self.data_generator = ImageDataGenerator(**config)
-        # self._fit()
+        self._fit()
 
     def _fit(self):
         """ Fits the datagenerator if needed """
