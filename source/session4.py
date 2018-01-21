@@ -44,7 +44,7 @@ logger.addHandler(console_handler)
 # Top-level vars
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
-plot_history = True
+plot_history = False
 
 batch_size = 32
 number_of_epoch = 20
