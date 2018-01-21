@@ -12,6 +12,7 @@ from keras.layers import MaxPooling2D
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
 import matplotlib.pyplot as plt
+import numpy as np
 
 from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
@@ -20,6 +21,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from source import TEST_PATH
 from source import REDUCED_TRAIN_PATH
+from evaluator import Evaluator
 
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
@@ -203,7 +205,8 @@ def get_generators(data_generator, train_path, test_path, validate_path):
         test_path,
         target_size=(img_width, img_height),
         batch_size=batch_size,
-        class_mode='categorical')
+        class_mode='categorical',
+        shuffle=False)
 
     validation_generator = data_generator.flow_from_directory(
         validate_path,
@@ -253,9 +256,45 @@ def main():
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
-        result = model.evaluate_generator(test_generator, steps=807)
+        scores = model.evaluate_generator(test_generator, steps=807)
         end = time.time()
         logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
+        
+        # Get ground truth
+        test_labels = test_generator.classes
+
+        # Predict test images
+        predictions_raw = model.predict_generator(test_generator)
+        predictions = []
+        for prediction in predictions_raw:
+            predictions.append(np.argmax(prediction))
+        # Evaluate results
+        evaluator = Evaluator(test_labels, predictions,
+                              label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
+
+        logger.info('Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
+                   format(scores[1], evaluator.accuracy, evaluator.precision,
+                          evaluator.recall,
+                          evaluator.fscore) + '\n')
+        cm = evaluator.confusion_matrix()
+
+        # Plot the confusion matrix on test data
+        logger.info('Confusion matrix:\n')
+        logger.info(cm)
+        print(cm)
+
+        plt.matshow(cm)
+        plt.title('Confusion matrix')
+        plt.colorbar()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        plt.show()
+        plt.savefig('cm.jpg')
+        logger.info('Final accuracy: ' + str(evaluator.accuracy) + '\n')
+
+        end = time.time()
+        logger.info('Done in ' + str(end - init) + ' secs.\n')
+        
 
     else:
         logger.info('Running in a laptop! Toy mode active')
