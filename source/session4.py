@@ -114,7 +114,7 @@ def modify_model_before_block4(base_model):
          show_layer_names=True)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='sgd',#'adadelta',
+                  optimizer='adadelta',
                   metrics=['accuracy'])
     return model
 
@@ -213,13 +213,13 @@ def main():
             validate_path=TEST_PATH)
 
         init = time.time()
-        history = model.fit_generator(train_generator,
+        #history = model.fit_generator(train_generator,
                                       steps_per_epoch=(int(
                                           400 * 1881 / 1881 // batch_size) + 1),
                                       epochs=number_of_epoch,
                                       validation_data=validation_generator,
                                       validation_steps=807)
-        end = time.time()
+        
         # unlock all layers and train
         model = unlock_layers(model)
         history2 = model.fit_generator(train_generator,
@@ -228,7 +228,7 @@ def main():
                                        epochs=number_of_epoch,
                                        validation_data=validation_generator,
                                        validation_steps=807)
-
+        end = time.time()
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
@@ -258,15 +258,15 @@ def main():
         # Plot the confusion matrix on test data
         logger.info('Confusion matrix:\n')
         logger.info(cm)
-        print(cm)
-
-        plt.matshow(cm)
-        plt.title('Confusion matrix')
-        plt.colorbar()
-        plt.ylabel('True label')
-        plt.xlabel('Predicted label')
-        plt.show()
-        plt.savefig('cm.jpg')
+#        print(cm)
+#
+#        plt.matshow(cm)
+#        plt.title('Confusion matrix')
+#        plt.colorbar()
+#        plt.ylabel('True label')
+#        plt.xlabel('Predicted label')
+#        plt.show()
+#        plt.savefig('cm.jpg')
         logger.info('Final accuracy: ' + str(evaluator.accuracy) + '\n')
 
         end = time.time()
