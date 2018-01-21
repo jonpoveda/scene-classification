@@ -4,6 +4,8 @@ import os
 import sys
 import time
 
+import matplotlib.pyplot as plt
+import numpy as np
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -11,8 +13,6 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
-import matplotlib.pyplot as plt
-import numpy as np
 
 from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
@@ -157,18 +157,19 @@ def unlock_layers(base_model):
     for layer in base_model.layers:
         layer.trainable = True
 
-    model = Model(inputs=base_model.input, outputs=base_model.layers[-1].output)
+    model = Model(inputs=base_model.input,
+                  outputs=base_model.layers[-1].output)
 
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
-    
+
     return model
 
 
-def do_plotting(history,history2):
+def do_plotting(history, history2):
     # summarize history for accuracy
     plt.plot(history.history['acc'] + history2.history['acc'])
     plt.plot(history.history['val_acc'] + history2.history['val_acc'])
@@ -180,41 +181,13 @@ def do_plotting(history,history2):
     plt.close()
 
     # summarize history for loss
-    plt.plot(history.history['loss']+history2.history['loss'])
-    plt.plot(history.history['val_loss']+history2.history['val_loss'])
+    plt.plot(history.history['loss'] + history2.history['loss'])
+    plt.plot(history.history['val_loss'] + history2.history['val_loss'])
     plt.title('model loss')
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'validation'], loc='upper left')
     plt.savefig('../results/session4/loss.jpg')
-
-
-def get_generators(data_generator, train_path, test_path, validate_path):
-    """ Get datasets generators given a data generator
-
-    :return (train, test, validation) generators
-    """
-
-    train_generator = data_generator.flow_from_directory(
-        train_path,
-        target_size=(img_width, img_height),
-        batch_size=batch_size,
-        class_mode='categorical')
-
-    test_generator = data_generator.flow_from_directory(
-        test_path,
-        target_size=(img_width, img_height),
-        batch_size=batch_size,
-        class_mode='categorical',
-        shuffle=False)
-
-    validation_generator = data_generator.flow_from_directory(
-        validate_path,
-        target_size=(img_width,
-                     img_height),
-        batch_size=batch_size,
-        class_mode='categorical')
-    return train_generator, test_generator, validation_generator
 
 
 def main():
@@ -244,22 +217,22 @@ def main():
                                       validation_data=validation_generator,
                                       validation_steps=807)
         end = time.time()
-        #unlock all layers and train 
+        # unlock all layers and train
         model = unlock_layers(model)
         history2 = model.fit_generator(train_generator,
-                              steps_per_epoch=(int(
-                                  400 * 1881 / 1881 // batch_size) + 1),
-                              epochs=number_of_epoch,
-                              validation_data=validation_generator,
-                              validation_steps=807)
-        
+                                       steps_per_epoch=(int(
+                                           400 * 1881 / 1881 // batch_size) + 1),
+                                       epochs=number_of_epoch,
+                                       validation_data=validation_generator,
+                                       validation_steps=807)
+
         logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
         init = time.time()
         scores = model.evaluate_generator(test_generator, steps=807)
         end = time.time()
         logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
-        
+
         # Get ground truth
         test_labels = test_generator.classes
 
@@ -272,10 +245,11 @@ def main():
         evaluator = Evaluator(test_labels, predictions,
                               label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
 
-        logger.info('Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
-                   format(scores[1], evaluator.accuracy, evaluator.precision,
-                          evaluator.recall,
-                          evaluator.fscore) + '\n')
+        logger.info(
+            'Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
+            format(scores[1], evaluator.accuracy, evaluator.precision,
+                   evaluator.recall,
+                   evaluator.fscore) + '\n')
         cm = evaluator.confusion_matrix()
 
         # Plot the confusion matrix on test data
@@ -294,7 +268,7 @@ def main():
 
         end = time.time()
         logger.info('Done in ' + str(end - init) + ' secs.\n')
-        
+
 
     else:
         logger.info('Running in a laptop! Toy mode active')
@@ -322,7 +296,6 @@ def main():
     # list all data in history
     if plot_history:
         do_plotting(history, history2)
-
 
 
 if __name__ == '__main__':
