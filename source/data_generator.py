@@ -56,7 +56,8 @@ class DataGenerator(object):
             test_path,
             target_size=(self.img_width, self.img_height),
             batch_size=self.batch_size,
-            class_mode='categorical')
+            class_mode='categorical',
+            shuffle=False)
 
         validation_generator = self.data_generator.flow_from_directory(
             validate_path,
