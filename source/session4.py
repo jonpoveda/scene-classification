@@ -45,8 +45,8 @@ plot_history = True
 running_in_server = True
 
 if running_in_server:
-    batch_size = 5#32
-    number_of_epoch = 1#20
+    batch_size = 32
+    number_of_epoch = 20
 else:
     # Just a toy parameters to try everything is working
     batch_size = 5
@@ -153,7 +153,7 @@ def unlock_layers(base_model):
     """
 
     for layer in base_model.layers:
-        layer.trainable = False
+        layer.trainable = True
 
     model = Model(inputs=base_model.input, outputs=base_model.layers[-1].output)
 
@@ -166,10 +166,10 @@ def unlock_layers(base_model):
     return model
 
 
-def do_plotting(history):
+def do_plotting(history,history2):
     # summarize history for accuracy
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
+    plt.plot(history.history['acc'] + history2.history['acc'])
+    plt.plot(history.history['val_acc'] + history2.history['val_acc'])
     plt.title('model accuracy')
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
@@ -178,8 +178,8 @@ def do_plotting(history):
     plt.close()
 
     # summarize history for loss
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
+    plt.plot(history.history['loss']+history2.history['loss'])
+    plt.plot(history.history['val_loss']+history2.history['val_loss'])
     plt.title('model loss')
     plt.ylabel('loss')
     plt.xlabel('epoch')
@@ -282,8 +282,8 @@ def main():
 
     # list all data in history
     if plot_history:
-        do_plotting(history)
-    return history, history2
+        do_plotting(history, history2)
+
 
 
 if __name__ == '__main__':
@@ -293,5 +293,5 @@ if __name__ == '__main__':
         # Expected when the folder already exists
         pass
     logger.info('Start')
-    history, history2 = main()
+    main()
     logger.info('End')
