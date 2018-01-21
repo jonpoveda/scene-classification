@@ -37,3 +37,16 @@ class DataGeneratorConfig(object):
                    horizontal_flip=True,
                    vertical_flip=False,
                    rescale=None)
+
+    CONFIG2 = dict(preprocessing_function=preprocess_input,
+                   rotation_range=15,
+                   width_shift_range=0.9,
+                   height_shift_range=0.,
+                   shear_range=0.,
+                   zoom_range=0.3,
+                   channel_shift_range=0.,
+                   fill_mode='reflect',
+                   cval=0.,
+                   horizontal_flip=True,
+                   vertical_flip=False,
+                   rescale=None)
