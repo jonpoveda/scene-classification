@@ -6,6 +6,7 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+from keras import optimizers
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -13,7 +14,6 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
-from keras import optimizers
 
 from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
@@ -45,15 +45,9 @@ logger.addHandler(console_handler)
 VALIDATION_PATH = TEST_PATH
 img_width, img_height = 224, 224
 plot_history = True
-running_in_server = True
 
-if running_in_server:
-    batch_size = 32
-    number_of_epoch = 20
-else:
-    # Just a toy parameters to try everything is working
-    batch_size = 5
-    number_of_epoch = 1
+batch_size = 32
+number_of_epoch = 20
 
 
 def get_base_model():
@@ -244,87 +238,64 @@ def main():
                              REDUCED_TRAIN_PATH)
     data_gen.configure(DataGeneratorConfig.CONFIG1)
 
-    if running_in_server:
-        train_generator, test_generator, validation_generator = data_gen.get(
-            train_path=REDUCED_TRAIN_PATH,
-            test_path=TEST_PATH,
-            validate_path=TEST_PATH)
+    train_generator, test_generator, validation_generator = data_gen.get(
+        train_path=REDUCED_TRAIN_PATH,
+        test_path=TEST_PATH,
+        validate_path=TEST_PATH)
 
-        init = time.time()
-        history = model.fit_generator(train_generator,
-                                      steps_per_epoch=(int(
-                                          400 * 1881 / 1881 // batch_size) + 1),
-                                      epochs=number_of_epoch,
-                                      validation_data=validation_generator,
-                                      validation_steps=807 // 64)
+    init = time.time()
+    history = model.fit_generator(train_generator,
+                                  steps_per_epoch=(int(
+                                      400 * 1881 / 1881 // batch_size) + 1),
+                                  epochs=number_of_epoch,
+                                  validation_data=validation_generator,
+                                  validation_steps=807 // 64)
 
-        # unlock all layers and train
-        model = unlock_layers(model)
-        history2 = model.fit_generator(train_generator,
-                                       steps_per_epoch=(int(
-                                           400 * 1881 / 1881 // batch_size) + 1),
-                                       epochs=number_of_epoch,
-                                       validation_data=validation_generator,
-                                       validation_steps=807 // 64)
-        end = time.time()
-        logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
+    # unlock all layers and train
+    model = unlock_layers(model)
+    history2 = model.fit_generator(train_generator,
+                                   steps_per_epoch=(int(
+                                       400 * 1881 / 1881 // batch_size) + 1),
+                                   epochs=number_of_epoch,
+                                   validation_data=validation_generator,
+                                   validation_steps=807 // 64)
+    end = time.time()
+    logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
 
-        init = time.time()
-        scores = model.evaluate_generator(test_generator, steps=807//64)
-        end = time.time()
-        logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
+    init = time.time()
+    scores = model.evaluate_generator(test_generator, steps=807 // 64)
+    end = time.time()
+    logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
 
-        # Get ground truth
-        test_labels = test_generator.classes
+    # Get ground truth
+    test_labels = test_generator.classes
 
-        # Predict test images
-        predictions_raw = model.predict_generator(test_generator)
-        predictions = []
-        for prediction in predictions_raw:
-            predictions.append(np.argmax(prediction))
-        # Evaluate results
-        evaluator = Evaluator(test_labels, predictions,
-                              label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
+    # Predict test images
+    predictions_raw = model.predict_generator(test_generator)
+    predictions = []
+    for prediction in predictions_raw:
+        predictions.append(np.argmax(prediction))
+    # Evaluate results
+    evaluator = Evaluator(test_labels, predictions,
+                          label_list=list([0, 1, 2, 3, 4, 5, 6, 7]))
 
-        logger.info(
-            'Evaluator \n'
-            'Acc (model)\n'
-            'Accuracy: {} \n'
-            'Precision: {} \n'
-            'Recall: {} \n'
-            'Fscore: {}'.
-            format(scores[1], evaluator.accuracy, evaluator.precision,
-                   evaluator.recall, evaluator.fscore) + '\n')
-        cm = evaluator.confusion_matrix()
+    logger.info(
+        'Evaluator \n'
+        'Acc (model)\n'
+        'Accuracy: {} \n'
+        'Precision: {} \n'
+        'Recall: {} \n'
+        'Fscore: {}'.
+        format(scores[1], evaluator.accuracy, evaluator.precision,
+               evaluator.recall, evaluator.fscore) + '\n')
+    cm = evaluator.confusion_matrix()
 
-        # Plot the confusion matrix on test data
-        logger.info('Confusion matrix:\n')
-        logger.info(cm)
-        logger.info('Final accuracy: ' + str(evaluator.accuracy) + '\n')
-        end = time.time()
-        logger.info('Done in ' + str(end - init) + ' secs.\n')
-
-    else:
-        logger.info('Running in a laptop! Toy mode active')
-        train_generator, test_generator, validation_generator = data_gen.get(
-            train_path='../data-toy/train',
-            test_path='../data-toy/test',
-            validate_path='../data-toy/test')
-
-        init = time.time()
-        history = model.fit_generator(train_generator,
-                                      steps_per_epoch=1,
-                                      epochs=1,
-                                      validation_data=validation_generator,
-                                      validation_steps=10)
-        end = time.time()
-        logger.info('[Training] Done in ' + str(end - init) + ' secs.\n')
-
-        init = time.time()
-        result = model.evaluate_generator(test_generator, steps=10)
-        end = time.time()
-        logger.info('[Evaluation] Done in ' + str(end - init) + ' secs.\n')
-        logger.debug(result)
+    # Plot the confusion matrix on test data
+    logger.info('Confusion matrix:\n')
+    logger.info(cm)
+    logger.info('Final accuracy: ' + str(evaluator.accuracy) + '\n')
+    end = time.time()
+    logger.info('Done in ' + str(end - init) + ' secs.\n')
 
     # list all data in history
     if plot_history:
