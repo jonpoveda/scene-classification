@@ -13,6 +13,7 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.models import Model
 from keras.utils.vis_utils import plot_model as plot
+from keras import optimizers
 
 from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
@@ -163,9 +164,10 @@ def unlock_layers(base_model):
 
     model = Model(inputs=base_model.input,
                   outputs=base_model.layers[-1].output)
+    opt = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
 
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+                  optimizer=opt,
                   metrics=['accuracy'])
     for layer in model.layers:
         logger.debug([layer.name, layer.trainable])
