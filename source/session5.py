@@ -25,7 +25,7 @@ cross_validate = False
 # Load pre-trained model or generate from scratch
 load_model = False
 # select number of epochs
-n_epochs = 5
+n_epochs = 50
 
 MODEL_PATH = 'results/session5/my_CNN.h5'
 
