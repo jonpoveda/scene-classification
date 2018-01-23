@@ -66,3 +66,21 @@ class DataGenerator(object):
             batch_size=self.batch_size,
             class_mode='categorical')
         return train_generator, test_generator, validation_generator
+		
+		
+    def get_single(self, path, shuffle = True):
+        """ Get dataset generator given a data generator
+
+        :return single generators
+        """
+        generator = self.data_generator.flow_from_directory(
+            path,
+            target_size=(self.img_width, self.img_height),
+            batch_size=self.batch_size,
+            class_mode='categorical',
+            shuffle=shuffle)
+
+
+        return generator
+		
+		

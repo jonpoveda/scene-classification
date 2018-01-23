@@ -1,0 +1,175 @@
+2018-01-23 13:42:03,318 INFO Creating object
+
+2018-01-23 13:43:56,242 INFO Creating object
+
+2018-01-23 13:44:55,356 INFO Creating object
+
+2018-01-23 13:45:33,927 INFO Creating object
+
+2018-01-23 13:45:56,799 INFO Building MLP model...
+
+2018-01-23 13:47:10,195 INFO Creating object
+
+2018-01-23 13:47:36,689 INFO Building MLP model...
+
+2018-01-23 13:47:36,864 INFO None
+2018-01-23 13:48:23,256 INFO Creating object
+
+2018-01-23 13:48:51,992 INFO Building MLP model...
+
+2018-01-23 13:48:52,158 INFO None
+2018-01-23 13:55:06,631 INFO Creating object
+
+2018-01-23 13:55:29,926 INFO Building MLP model...
+
+2018-01-23 13:55:30,100 INFO None
+2018-01-23 13:57:35,769 INFO Creating object
+
+2018-01-23 13:58:02,112 INFO Building MLP model...
+
+2018-01-23 13:58:02,296 INFO None
+2018-01-23 13:58:02,422 INFO Done!
+
+2018-01-23 13:58:02,423 INFO Done in 0.311275005341 secs.
+
+2018-01-23 13:58:02,423 INFO Start training...
+
+2018-01-23 14:01:18,851 INFO Creating object
+
+2018-01-23 14:01:45,127 INFO Building MLP model...
+
+2018-01-23 14:01:45,311 INFO None
+2018-01-23 14:01:45,439 INFO Done!
+
+2018-01-23 14:01:45,439 INFO Done in 0.312843799591 secs.
+
+2018-01-23 14:01:45,439 INFO Start training...
+
+2018-01-23 14:03:02,124 INFO Creating object
+
+2018-01-23 14:03:28,469 INFO Building MLP model...
+
+2018-01-23 14:03:28,620 INFO None
+2018-01-23 14:03:28,761 INFO Done!
+
+2018-01-23 14:03:28,761 INFO Done in 0.291616916656 secs.
+
+2018-01-23 14:03:28,761 INFO Start training...
+
+2018-01-23 15:05:08,636 INFO Creating object
+
+2018-01-23 15:05:34,355 INFO Building MLP model...
+
+2018-01-23 15:05:34,523 INFO None
+2018-01-23 15:05:34,659 INFO Done!
+
+2018-01-23 15:05:34,659 INFO Done in 0.304520130157 secs.
+
+2018-01-23 15:05:34,660 INFO Start training...
+
+2018-01-23 15:09:24,373 INFO Creating object
+
+2018-01-23 15:09:47,247 INFO Building MLP model...
+
+2018-01-23 15:09:47,400 INFO None
+2018-01-23 15:09:47,534 INFO Done!
+
+2018-01-23 15:09:47,535 INFO Done in 0.287703037262 secs.
+
+2018-01-23 15:09:47,535 INFO Start training...
+
+2018-01-23 15:14:25,390 INFO Done!
+
+2018-01-23 15:14:25,390 INFO Saving the model into ../results/session5/my_CNN.h5 
+
+2018-01-23 15:15:21,771 INFO Creating object
+
+2018-01-23 15:15:47,995 INFO Building MLP model...
+
+2018-01-23 15:15:48,153 INFO None
+2018-01-23 15:15:48,292 INFO Done!
+
+2018-01-23 15:15:48,293 INFO Done in 0.298375844955 secs.
+
+2018-01-23 15:15:48,293 INFO Start training...
+
+2018-01-23 15:20:10,083 INFO Done!
+
+2018-01-23 15:20:10,084 INFO Saving the model into results/session5/my_CNN.h5 
+
+2018-01-23 15:20:10,307 INFO Done!
+
+2018-01-23 15:20:10,308 INFO Done in 262.014505148 secs.
+
+2018-01-23 15:28:18,190 INFO Creating object
+
+2018-01-23 15:28:41,539 INFO Building MLP model...
+
+2018-01-23 15:28:41,715 INFO None
+2018-01-23 15:28:41,853 INFO Done!
+
+2018-01-23 15:28:41,854 INFO Done in 0.314809083939 secs.
+
+2018-01-23 15:28:41,854 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+
+2018-01-23 15:28:41,854 INFO Start training...
+
+2018-01-23 15:33:01,777 INFO Done!
+
+2018-01-23 15:33:01,777 INFO Saving the model into results/session5/my_CNN.h5 
+
+2018-01-23 15:33:02,087 INFO Done!
+
+2018-01-23 15:33:02,088 INFO Done in 260.233974934 secs.
+
+2018-01-23 15:33:02,439 INFO Getting classification results...
+
+2018-01-23 15:33:10,591 INFO Evaluator 
+Acc (model)
+Accuracy: 0.5071868585 
+Precision: 0.125256673511 
+Recall: 0.119892618132 
+Fscore: 0.129017838267
+
+2018-01-23 15:33:10,596 INFO Confusion matrix:
+
+2018-01-23 15:33:10,597 INFO [[16  1  6  9  8 12 15  4]
+ [14  1 10 15  1  7 12 10]
+ [11  0  6  6  3 15 11  9]
+ [ 7  0  5 10  2  6  6 10]
+ [13  2  8  8  4  4 11  7]
+ [16  3  8 13  4  7 13  5]
+ [13  4  3  9  7  1  8  3]
+ [12  0 14  6  7  8  9  9]]
+2018-01-23 15:33:10,910 INFO Final accuracy: 0.125256673511
+
+2018-01-23 15:33:10,911 INFO Done in 8.4715051651 secs.
+
+2018-01-23 15:33:10,911 INFO Everything done in 292.720870972 secs.
+
+2018-01-23 15:40:27,479 INFO Creating object
+
+2018-01-23 15:40:55,252 INFO Building MLP model...
+
+2018-01-23 15:40:55,425 INFO None
+2018-01-23 15:40:55,568 INFO Done!
+
+2018-01-23 15:40:55,569 INFO Done in 0.316758871078 secs.
+
+2018-01-23 15:40:55,569 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+
+2018-01-23 15:40:55,569 INFO Start training...
+
+2018-01-23 15:44:47,952 INFO Creating object
+
+2018-01-23 15:45:12,012 INFO Building MLP model...
+
+2018-01-23 15:45:12,156 INFO None
+2018-01-23 15:45:12,286 INFO Done!
+
+2018-01-23 15:45:12,286 INFO Done in 0.273524999619 secs.
+
+2018-01-23 15:45:12,286 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+
+2018-01-23 15:45:12,286 INFO Start training...
+

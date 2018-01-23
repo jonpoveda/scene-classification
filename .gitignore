@@ -8,6 +8,7 @@ data-mini/
 # Generated files
 results/*/codebook.dat
 results/session3/*.h5
+results/session5/*.h5
 material/
 
 # compressed repository for delivery
