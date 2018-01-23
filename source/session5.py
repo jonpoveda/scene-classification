@@ -2,16 +2,16 @@ import getpass
 import logging
 import os
 import sys
-
 import time
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-from CNN import conv_neural_network
 from source import DATA_PATH
 
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
+
+from CNN import conv_neural_network
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 # Do cross-validation to find best parameters
 cross_validate = False
