@@ -60,13 +60,7 @@ class conv_neural_network(object):
             self.logger.info('ERROR: dataset directory {} do not exists!'.
                              format(self.dataset_dir))
 
-    def build_CNN_model(self):
-        # Build CNN model
-        init = time.time()
-        self.logger.info('Building MLP model...')
-
-        # Build the CNN model
-        # Input layers
+    def design_model(self):
         main_input = Input(shape=(self.image_size, self.image_size, 3),
                            dtype='float32',
                            name='main_input')
@@ -82,11 +76,21 @@ class conv_neural_network(object):
         main_output = Dense(units=8, activation='softmax', name='predictions')(
             x)
 
+        # Compile the model
+        self.model = Model(inputs=main_input, outputs=main_output)
+
+    def build_CNN_model(self):
+        # Build CNN model
+        init = time.time()
+        self.logger.info('Building MLP model...')
+
+        # Build the CNN model
+        self.design_model()
+
         # Select the optimizer:
         opt = optimizers.Adadelta(lr=0.1)
 
         # Compile the model
-        self.model = Model(inputs=main_input, outputs=main_output)
         self.model.compile(loss='categorical_crossentropy',
                            optimizer=opt,
                            metrics=['accuracy'])
