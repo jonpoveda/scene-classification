@@ -20,15 +20,6 @@ from CNN import conv_neural_network
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-# Do cross-validation to find best parameters
-cross_validate = False
-# Load pre-trained model or generate from scratch
-load_model = False
-# select number of epochs
-n_epochs = 50
-
-MODEL_PATH = 'results/session5/my_CNN.h5'
-
 # Create a file logger
 logger = logging.getLogger('session5')
 logger.setLevel(logging.DEBUG)
@@ -43,12 +34,21 @@ console_handler.setLevel(logging.DEBUG)
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
+# Do cross-validation to find best parameters
+cross_validate = False
+# Load pre-trained model or generate from scratch
+load_model = False
+# select number of epochs
+n_epochs = 50
+
+MODEL_PATH = 'results/session5/my_CNN.h5'
+
 if __name__ == "__main__":
 
     init = time.time()
 
     neural_network = conv_neural_network(logger,
-                                         img_size=256,
+                                         input_image_size=256,
                                          batch_size=16,
                                          dataset_dir=DATA_PATH,
                                          model_fname=MODEL_PATH)
@@ -68,4 +68,4 @@ if __name__ == "__main__":
         neural_network.plot_results()
 
     end = time.time()
-    logger.info('Everything done in ' + str(end - init) + ' secs.\n')
+    logger.info('Everything done in {} secs.\n'.format(str(end - init)))
