@@ -1,15 +1,12 @@
 import os
+import time
 
 import numpy as np
-import time
 from keras import optimizers
 from keras.layers import Dense, Input, Flatten, Dropout, Conv2D, MaxPooling2D
-from keras.models import Model, Sequential
-from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Model
 from keras.utils import plot_model
 from matplotlib import pyplot as plt
-from sklearn import svm
-from sklearn.model_selection import GridSearchCV
 
 from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
@@ -197,8 +194,8 @@ class conv_neural_network(object):
         cm = evaluator.confusion_matrix()
 
         # Plot the confusion matrix on test data
-        self.logger.info( 'Confusion matrix:\n')
-        self.logger.info( cm)
+        self.logger.info('Confusion matrix:\n')
+        self.logger.info(cm)
 
         plt.matshow(cm)
         plt.title('Confusion matrix')

@@ -2,8 +2,10 @@ import getpass
 import logging
 import os
 import sys
-import logging
+import time
+
 import matplotlib
+
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
 
@@ -22,7 +24,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 cross_validate = False
 # Load pre-trained model or generate from scratch
 load_model = False
-#select number of epochs
+# select number of epochs
 n_epochs = 10
 
 MODEL_PATH = 'results/session5/my_CNN.h5'
