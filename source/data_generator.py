@@ -14,7 +14,7 @@ class DataGenerator(object):
         self.img_height = img_height
         self.batch_size = batch_size
         self.train_path = train_path
-        self.data_generator = ImageDataGenerator(**DataGeneratorConfig.DEFAULT)
+        self.data_generator = ImageDataGenerator(**DataGeneratorConfig.NORMALISE)
 
     def configure(self, config):  # type: (dict) -> None
         """ Load a DataGeneratorConfig into the DataGenerator.
@@ -27,6 +27,8 @@ class DataGenerator(object):
     def _fit(self):
         """ Fits the datagenerator if needed """
         paths = glob.glob(self.train_path + '/*/*.jpg')
+        if not paths:
+            raise ValueError('No images found in {}'.format(self.train_path))
         number_of_images = len(paths)
         print('Got {} images for pre-processing'.format(number_of_images))
 

@@ -13,7 +13,7 @@ from data_generator_config import DataGeneratorConfig
 from evaluator import Evaluator
 
 
-class conv_neural_network(object):
+class CNN(object):
     class LAYERS(object):
         FIRST = 'pool1'
         SECOND = 'fc1'
@@ -24,10 +24,14 @@ class conv_neural_network(object):
     def __init__(self, logger,
                  input_image_size=256, batch_size=16,
                  dataset_dir='/home/datasets/scenes/MIT_split',
-                 model_fname='my_first_mlp.h5'):
+                 model_fname='my_first_mlp.h5',
+                 model=None):
 
         # initialize model
-        self.model = None
+        if model:
+            self.model = model
+        else:
+            self.model = self._default_model()
         self.history = None
         self.image_size = input_image_size
         self.batch_size = batch_size
@@ -40,11 +44,11 @@ class conv_neural_network(object):
         self.data_gen_test = DataGenerator(self.image_size, self.image_size,
                                            self.batch_size,
                                            self.dataset_dir + '/train')
-        self.data_gen_test.configure(DataGeneratorConfig.DEFAULT)
+        self.data_gen_test.configure(DataGeneratorConfig.NORMALISE)
 
         self.test_generator = self.data_gen_test.get_single(
-            path=self.dataset_dir + '/testCNN', 
-            shuffle = False)
+            path=self.dataset_dir + '/testCNN',
+            shuffle=False)
 
         self.validation_generator = self.data_gen_test.get_single(
             path=self.dataset_dir + '/validationCNN')
@@ -52,7 +56,7 @@ class conv_neural_network(object):
         self.data_gen_train = DataGenerator(self.image_size, self.image_size,
                                             self.batch_size,
                                             self.dataset_dir + '/train')
-        self.data_gen_train.configure(DataGeneratorConfig.CONFIG1)
+        self.data_gen_train.configure(DataGeneratorConfig.NORM_AND_TRANSFORM)
 
         self.train_generator = self.data_gen_train.get_single(
             path=self.dataset_dir + '/train')
@@ -61,7 +65,7 @@ class conv_neural_network(object):
             self.logger.info('ERROR: dataset directory {} do not exists!'.
                              format(self.dataset_dir))
 
-    def design_model(self):
+    def _default_model(self):
         main_input = Input(shape=(self.image_size, self.image_size, 3),
                            dtype='float32',
                            name='main_input')
@@ -78,15 +82,15 @@ class conv_neural_network(object):
             x)
 
         # Compile the model
-        self.model = Model(inputs=main_input, outputs=main_output)
+        return Model(inputs=main_input, outputs=main_output)
 
     def build_CNN_model(self):
         # Build CNN model
         init = time.time()
-        self.logger.info('Building MLP model...')
+        self.logger.info('Compiling MLP model...')
 
         # Build the CNN model
-        self.design_model()
+        self._default_model()
 
         # Select the optimizer:
         opt = optimizers.Adadelta(lr=0.1)
@@ -97,14 +101,12 @@ class conv_neural_network(object):
                            metrics=['accuracy'])
 
         print(self.model.summary())
-        self.logger.info(self.model.summary())
+        self.logger.info('Summary: {}'.format(self.model.summary()))
 
         plot_model(self.model,
-                   to_file='results/session5/CNN.png',
+                   to_file='../results/session5/CNN.png',
                    show_shapes=True,
                    show_layer_names=True)
-
-        self.logger.info('Done!')
 
         end = time.time()
         self.logger.info('Done in {} secs.'.format(str(end - init)))
@@ -228,3 +230,7 @@ class conv_neural_network(object):
 
         end = time.time()
         self.logger.info('Done in {} secs.'.format(str(end - init)))
+
+
+class CNN1(CNN):
+    pass

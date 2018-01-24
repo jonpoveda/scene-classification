@@ -5,8 +5,9 @@ import sys
 import time
 
 import matplotlib
-
 # Force matplotlib to not use any Xwindows backend.
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+
 matplotlib.use('Agg')
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -16,7 +17,7 @@ from source import DATA_PATH
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
-from CNN import conv_neural_network
+from CNN import CNN
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
@@ -43,17 +44,73 @@ n_epochs = 50
 
 MODEL_PATH = 'results/session5/my_CNN.h5'
 
+from keras import Model, Input
+
+
+def get_model(model_id, image_size):
+    def _model1():
+        main_input = Input(shape=(image_size, image_size, 3),
+                           dtype='float32',
+                           name='main_input')
+
+        x = Conv2D(32, (3, 3), activation='relu', name='conv1')(main_input)
+        x = Conv2D(32, (3, 3), activation='relu', name='conv2')(x)
+        x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
+        x = Flatten()(x)
+        x = Dense(256, activation='relu', name='fc1')(x)
+        x = Dense(128, activation='relu', name='fc2')(x)
+        x = Dropout(0.5)(x)
+
+        main_output = Dense(units=8, activation='softmax', name='predictions')(
+            x)
+
+        # Compile the model
+        return Model(inputs=main_input, outputs=main_output)
+
+    def _model2():
+        main_input = Input(shape=(image_size, image_size, 3),
+                           dtype='float32',
+                           name='main_input')
+
+        x = Conv2D(32, (3, 3), activation='relu', name='conv1')(main_input)
+        x = Conv2D(32, (3, 3), activation='relu', name='conv2')(x)
+        x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool')(x)
+        x = Conv2D(32, (3, 3), activation='relu', name='conv3')(x)
+        x = Conv2D(32, (3, 3), activation='relu', name='conv4')(x)
+        x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool2')(x)
+        x = Flatten()(x)
+        x = Dense(256, activation='relu', name='fc1')(x)
+        x = Dense(128, activation='relu', name='fc2')(x)
+        x = Dropout(0.5)(x)
+
+        main_output = Dense(units=8, activation='softmax', name='predictions')(
+            x)
+
+        # Compile the model
+        return Model(inputs=main_input, outputs=main_output)
+
+    return {
+        1: _model1(),
+        2: _model2()
+    }.get(model_id)
+
+
 if __name__ == "__main__":
 
     init = time.time()
 
-    neural_network = conv_neural_network(logger,
-                                         input_image_size=256,
-                                         batch_size=16,
-                                         dataset_dir=DATA_PATH,
-                                         model_fname=MODEL_PATH)
+    image_size = 64
+    model = get_model(model_id=2, image_size=image_size)
+
+    neural_network = CNN(logger,
+                         input_image_size=image_size,
+                         batch_size=16,
+                         dataset_dir=DATA_PATH,
+                         model_fname=MODEL_PATH,
+                         model=model)
 
     neural_network.build_CNN_model()
+    die()
 
     if cross_validate:
         neural_network.cross_validate()
