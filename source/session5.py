@@ -6,11 +6,11 @@ import time
 
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
+
 from GPyOpt.methods import BayesianOptimization
 from keras import Input, optimizers
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
-
-matplotlib.use('Agg')
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
