@@ -14,7 +14,8 @@ class DataGenerator(object):
         self.img_height = img_height
         self.batch_size = batch_size
         self.train_path = train_path
-        self.data_generator = ImageDataGenerator(**DataGeneratorConfig.NORMALISE)
+        self.data_generator = ImageDataGenerator(
+            **DataGeneratorConfig.NORMALISE)
 
     def configure(self, config):  # type: (dict) -> None
         """ Load a DataGeneratorConfig into the DataGenerator.
@@ -68,9 +69,8 @@ class DataGenerator(object):
             batch_size=self.batch_size,
             class_mode='categorical')
         return train_generator, test_generator, validation_generator
-		
-		
-    def get_single(self, path, shuffle = True):
+
+    def get_single(self, path, shuffle=True):
         """ Get dataset generator given a data generator
 
         :return single generators
@@ -82,7 +82,4 @@ class DataGenerator(object):
             class_mode='categorical',
             shuffle=shuffle)
 
-
         return generator
-		
-		

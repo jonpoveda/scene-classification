@@ -41,25 +41,28 @@ class CNN(object):
         self.logger.info('Creating object')
 
         # create data generator objects
-        self.data_gen_test = DataGenerator(self.image_size, self.image_size,
-                                           self.batch_size,
-                                           self.dataset_dir + '/train')
+        self.data_gen_test = \
+            DataGenerator(self.image_size,
+                          self.image_size,
+                          self.batch_size,
+                          '{}/train'.format(self.dataset_dir))
         self.data_gen_test.configure(DataGeneratorConfig.NORMALISE)
 
         self.test_generator = self.data_gen_test.get_single(
-            path=self.dataset_dir + '/testCNN',
+            path='{}/testCNN'.format(self.dataset_dir),
             shuffle=False)
 
         self.validation_generator = self.data_gen_test.get_single(
-            path=self.dataset_dir + '/validationCNN')
+            path='{}/validationCNN'.format(self.dataset_dir))
 
-        self.data_gen_train = DataGenerator(self.image_size, self.image_size,
-                                            self.batch_size,
-                                            self.dataset_dir + '/train')
+        self.data_gen_train = \
+            DataGenerator(self.image_size, self.image_size,
+                          self.batch_size,
+                          '{}/train'.format(self.dataset_dir))
         self.data_gen_train.configure(DataGeneratorConfig.NORM_AND_TRANSFORM)
 
         self.train_generator = self.data_gen_train.get_single(
-            path=self.dataset_dir + '/train')
+            path='{}/train'.format(self.dataset_dir))
 
         if not os.path.exists(self.dataset_dir):
             self.logger.info('ERROR: dataset directory {} do not exists!'.
