@@ -173,3 +173,236 @@ Fscore: 0.129017838267
 
 2018-01-23 15:45:12,286 INFO Start training...
 
+2018-01-23 16:08:42,971 INFO Creating object
+
+2018-01-23 16:09:08,502 INFO Building MLP model...
+
+2018-01-23 16:09:08,692 INFO None
+2018-01-23 16:09:08,834 INFO Done!
+
+2018-01-23 16:09:08,834 INFO Done in 0.332590818405 secs.
+
+2018-01-23 16:09:08,834 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+
+2018-01-23 16:09:08,835 INFO Start training...
+
+2018-01-23 16:30:05,341 INFO Done!
+
+2018-01-23 16:30:05,341 INFO Saving the model into results/session5/my_CNN.h5 
+
+2018-01-23 16:30:05,700 INFO Done!
+
+2018-01-23 16:30:05,700 INFO Done in 1256.86591697 secs.
+
+2018-01-23 16:30:06,222 INFO Getting classification results...
+
+2018-01-23 16:30:13,841 INFO Evaluator 
+Acc (model)
+Accuracy: 0.700205338809 
+Precision: 0.154004106776 
+Recall: 0.151279556065 
+Fscore: 0.151754301062
+
+2018-01-23 16:30:13,848 INFO Confusion matrix:
+
+2018-01-23 16:30:13,848 INFO [[12 10  9  7  6 10  8  9]
+ [ 8  9 12  8  9  8  8  8]
+ [12  6 17  3  8  4  2  9]
+ [ 7  5  3  7  6  2  7  9]
+ [ 9  7 10  7  6  7  3  8]
+ [ 9  4  6  6  6 12 12 14]
+ [10  8  6  2  7  5  4  6]
+ [11 10 10  4  4 10  8  8]]
+2018-01-23 16:30:14,206 INFO Final accuracy: 0.154004106776
+
+2018-01-23 16:30:14,206 INFO Done in 7.98316907883 secs.
+
+2018-01-23 16:30:14,206 INFO Everything done in 1291.23457408 secs.
+
+2018-01-23 17:12:12,316 INFO Creating object
+
+2018-01-23 17:12:38,058 INFO Building MLP model...
+
+2018-01-23 17:12:38,229 INFO None
+2018-01-23 17:12:38,369 INFO Done!
+
+2018-01-23 17:12:38,370 INFO Done in 0.311421871185 secs.
+
+2018-01-23 17:12:38,370 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+
+2018-01-23 17:12:38,370 INFO Start training...
+
+2018-01-23 17:20:28,872 INFO Creating object
+
+2018-01-23 17:20:54,711 INFO Building MLP model...
+
+2018-01-23 17:20:54,880 INFO None
+2018-01-23 17:20:55,008 INFO Done!
+
+2018-01-23 17:20:55,009 INFO Done in 0.298660993576 secs.
+
+2018-01-23 17:20:55,009 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+
+2018-01-23 17:20:55,009 INFO Start training...
+
+2018-01-23 19:50:33,567 INFO Creating object
+
+2018-01-23 19:51:04,259 INFO Building MLP model...
+
+2018-01-23 19:51:04,407 INFO None
+2018-01-23 19:51:04,546 INFO Done!
+
+2018-01-23 19:51:04,546 INFO Done in 0.287839889526 secs.
+
+2018-01-23 19:51:04,547 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+
+2018-01-23 19:51:04,547 INFO Start training...
+
+2018-01-23 23:22:12,583 INFO Done!
+
+2018-01-23 23:22:12,583 INFO Saving the model into results/session5/my_CNN.h5 
+
+2018-01-23 23:22:12,987 INFO Done!
+
+2018-01-23 23:22:12,987 INFO Done in 12668.440567 secs.
+
+2018-01-23 23:22:13,457 INFO Getting classification results...
+
+2018-01-23 23:22:21,015 INFO Evaluator 
+Acc (model)
+Accuracy: 0.833675565661 
+Precision: 0.110882956879 
+Recall: 0.110787050239 
+Fscore: 0.110040289253
+
+2018-01-23 23:22:21,019 INFO Confusion matrix:
+
+2018-01-23 23:22:21,019 INFO [[ 8  9  9  5 11 10  8 11]
+ [16  6  9  4  8 15  7  5]
+ [ 5 13  7  7  5  8  9  7]
+ [ 7  6  4  5  5  3  8  8]
+ [10  9  3  2  6  9  9  9]
+ [10 12  5  4  8 14  2 14]
+ [11  2  5  5  8  7  5  5]
+ [11 14 12  6  8  7  4  3]]
+2018-01-23 23:22:21,302 INFO Final accuracy: 0.110882956879
+
+2018-01-23 23:22:21,302 INFO Done in 7.84530615807 secs.
+
+2018-01-23 23:22:21,303 INFO Everything done in 12707.7356701 secs.
+
+2018-01-24 06:15:43,933 INFO Creating object
+2018-01-24 06:16:11,640 INFO Building MLP model...
+2018-01-24 06:16:11,820 INFO None
+2018-01-24 06:16:11,960 INFO Done!
+2018-01-24 06:16:11,960 INFO Done in 0.32013297081 secs.
+2018-01-24 06:16:11,960 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-24 06:16:11,961 INFO Start training...
+2018-01-24 06:20:30,059 INFO Done!
+2018-01-24 06:20:30,060 INFO Saving the model into results/session5/my_CNN.h5
+2018-01-24 06:20:30,408 INFO Done!
+2018-01-24 06:20:30,409 INFO Done in 258.448364019 secs.
+2018-01-24 06:20:30,968 INFO Getting classification results...
+2018-01-24 06:20:36,500 INFO Evaluator 
+Acc (model) 0.611909651414
+Accuracy: 0.611909650924 
+Precision: 0.625692553252 
+Recall: 0.620572598255 
+Fscore: 0.623122058754
+2018-01-24 06:20:36,504 INFO Confusion matrix:
+2018-01-24 06:20:36,504 INFO [[46  3  4  7  1  4  3  3]
+ [ 6 36  1  2  1 12  1 11]
+ [ 4  1 48  0  0  2  3  3]
+ [ 2  2  0 35  0  2  4  1]
+ [ 4  1  2  2 21  4 20  3]
+ [ 7  5  0  1  2 37  4 13]
+ [ 0  0  1  2  5  1 36  3]
+ [ 2  8  2  1  2  6  5 39]]
+2018-01-24 06:20:36,776 INFO Final accuracy: 0.611909650924
+2018-01-24 06:20:36,776 INFO Done in 5.80761790276 secs.
+2018-01-24 06:20:36,776 INFO Everything done in 292.842884064 secs.
+
+2018-01-24 06:30:30,687 INFO Creating object
+2018-01-24 06:30:55,155 INFO Building MLP model...
+2018-01-24 06:30:55,335 INFO None
+2018-01-24 06:30:55,463 INFO Done!
+2018-01-24 06:30:55,463 INFO Done in 0.307578802109 secs.
+2018-01-24 06:30:55,463 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-24 06:30:55,463 INFO Start training...
+2018-01-24 07:18:08,824 INFO Creating object
+2018-01-24 07:18:31,893 INFO Building MLP model...
+2018-01-24 07:18:32,062 INFO None
+2018-01-24 07:18:32,200 INFO Done!
+2018-01-24 07:18:32,201 INFO Done in 0.307736158371 secs.
+2018-01-24 07:18:32,201 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-24 07:18:32,201 INFO Start training...
+2018-01-24 10:53:40,697 INFO Creating object
+2018-01-24 10:54:07,106 INFO Building MLP model...
+2018-01-24 10:54:07,297 INFO None
+2018-01-24 10:54:07,420 INFO Done!
+2018-01-24 10:54:07,421 INFO Done in 0.314723014832 secs.
+2018-01-24 10:54:07,421 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-24 10:54:07,421 INFO Start training...
+2018-01-24 21:10:09,000 INFO Creating object
+2018-01-24 21:10:40,599 INFO Compiling MLP model...
+2018-01-24 21:10:40,631 INFO Summary: None
+2018-01-24 21:13:52,722 INFO Creating object
+2018-01-24 21:14:20,155 INFO Compiling MLP model...
+2018-01-24 21:14:20,190 INFO Summary: None
+2018-01-24 21:14:20,336 INFO Done in 0.181134939194 secs.
+2018-01-24 21:16:21,500 INFO Creating object
+2018-01-24 21:16:53,309 INFO Compiling MLP model...
+2018-01-24 21:16:53,344 INFO Summary: None
+2018-01-24 21:16:53,499 INFO Done in 0.18950510025 secs.
+2018-01-24 21:16:53,499 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-24 21:16:53,499 INFO Start training...
+2018-01-24 21:17:03,476 INFO Done!
+2018-01-24 21:17:03,476 INFO Saving the model into results/session5/my_CNN.h5
+2018-01-24 21:17:03,576 INFO Done!
+2018-01-24 21:17:03,576 INFO Done in 10.0768458843 secs.
+2018-01-24 21:17:50,212 INFO Creating object
+2018-01-24 21:18:18,533 INFO Compiling MLP model...
+2018-01-24 21:18:18,572 INFO Summary: None
+2018-01-24 21:18:18,725 INFO Done in 0.191249847412 secs.
+2018-01-24 21:18:18,725 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-24 21:18:18,725 INFO Start training...
+2018-01-24 21:18:28,808 INFO Done!
+2018-01-24 21:18:28,808 INFO Saving the model into results/session5/my_CNN.h5
+2018-01-24 21:18:28,886 INFO Done!
+2018-01-24 21:18:28,886 INFO Done in 10.1610560417 secs.
+2018-01-24 21:23:51,157 INFO Creating object
+2018-01-24 21:24:15,128 INFO Compiling MLP model...
+2018-01-24 21:24:15,164 INFO Summary: None
+2018-01-24 21:24:15,311 INFO Done in 0.18355512619 secs.
+2018-01-24 21:24:15,312 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-24 21:24:15,312 INFO Start training...
+2018-01-24 21:24:26,154 INFO Done!
+2018-01-24 21:24:26,154 INFO Saving the model into results/session5/my_CNN.h5
+2018-01-24 21:24:26,237 INFO Done!
+2018-01-24 21:24:26,238 INFO Done in 10.9257669449 secs.
+2018-01-24 21:24:26,710 INFO Getting classification results...
+2018-01-24 21:24:29,961 INFO Evaluator 
+Acc (model) 0.125256673511
+Accuracy: 0.125256673511 
+Precision: 0.0500298983456 
+Recall: 0.129618683201 
+Fscore: 0.0721943862669
+2018-01-24 21:24:29,962 INFO Evaluator 
+Acc (model) 0.125256673511
+Accuracy: 0.125256673511 
+Precision: 0.0500298983456 
+Recall: 0.129618683201 
+Fscore: 0.0721943862669
+2018-01-24 21:24:29,966 INFO Confusion matrix:
+2018-01-24 21:24:29,966 INFO [[ 0  5  1  0 48 17  0  0]
+ [ 0  2  1  0 47 20  0  0]
+ [ 0  4  2  0 53  2  0  0]
+ [ 0  1  1  0 31 13  0  0]
+ [ 0  1  2  0 49  5  0  0]
+ [ 0 10  6  0 45  8  0  0]
+ [ 0  2  1  0 33 12  0  0]
+ [ 0 11  4  0 40 10  0  0]]
+2018-01-24 21:24:30,245 INFO Final accuracy: 0.125256673511
+2018-01-24 21:24:30,245 INFO Done in 3.53508210182 secs.
+2018-01-24 21:24:30,245 INFO Everything done in 39.166934967 secs.
+
