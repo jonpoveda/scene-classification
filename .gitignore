@@ -1,33 +1,23 @@
 # Dataset
-data/
-!data/*.dat
-data-mini/
-!data-mini//*.dat
-*.swp
+data*/
 
 # Generated files
-results/*/codebook.dat
-results/session3/*.h5
-results/session5/*.h5
-material/
-
-# compressed repository for delivery
-*.tar.gz
+codebook.dat
+*.h5
 
 # IntelliJ project temp files
 .idea/
+
+# dotenv and virtualenv
+.env
+.venv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# dotenv
-.env
-
-# virtualenv
-.venv
-data-toy/
-data_patch/reduced_train/
-data_patch/
-reduced_train/
+# Other
+material/
+*.tar.gz
+/screenlog.0
