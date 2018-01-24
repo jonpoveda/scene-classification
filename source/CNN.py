@@ -22,55 +22,51 @@ class conv_neural_network(object):
         LABELS = 'fc4'
 
     def __init__(self, logger,
-                 img_size=256, batch_size=16,
+                 input_image_size=256, batch_size=16,
                  dataset_dir='/home/datasets/scenes/MIT_split',
                  model_fname='my_first_mlp.h5'):
-        # initialyze model
-        self.IMG_SIZE = img_size
-        self.BATCH_SIZE = batch_size
-        self.DATASET_DIR = dataset_dir
-        self.MODEL_FNAME = model_fname
+
+        # initialize model
+        self.model = None
+        self.history = None
+        self.image_size = input_image_size
+        self.batch_size = batch_size
+        self.dataset_dir = dataset_dir
+        self.model_fname = model_fname
         self.logger = logger
-        self.logger.info('Creating object\n')
+        self.logger.info('Creating object')
 
-        img_width, img_height = self.IMG_SIZE, self.IMG_SIZE
-
-        # create data generator obects
-        self.data_gen_test = DataGenerator(img_width, img_height,
-                                           self.BATCH_SIZE,
-                                           self.DATASET_DIR + '/train')
+        # create data generator objects
+        self.data_gen_test = DataGenerator(self.image_size, self.image_size,
+                                           self.batch_size,
+                                           self.dataset_dir + '/train')
         self.data_gen_test.configure(DataGeneratorConfig.DEFAULT)
 
         self.test_generator = self.data_gen_test.get_single(
-            path=self.DATASET_DIR + '/testCNN')
+            path=self.dataset_dir + '/testCNN')
 
         self.validation_generator = self.data_gen_test.get_single(
-            path=self.DATASET_DIR + '/validationCNN')
+            path=self.dataset_dir + '/validationCNN')
 
-        self.data_gen_train = DataGenerator(img_width, img_height,
-                                            self.BATCH_SIZE,
-                                            self.DATASET_DIR + '/train')
+        self.data_gen_train = DataGenerator(self.image_size, self.image_size,
+                                            self.batch_size,
+                                            self.dataset_dir + '/train')
         self.data_gen_train.configure(DataGeneratorConfig.CONFIG1)
 
         self.train_generator = self.data_gen_train.get_single(
-            path=self.DATASET_DIR + '/train')
+            path=self.dataset_dir + '/train')
 
-        if not os.path.exists(self.DATASET_DIR):
-            self.logger.info(
-                'ERROR: dataset directory ' + self.DATASET_DIR + ' do not exists!\n')
+        if not os.path.exists(self.dataset_dir):
+            self.logger.info('ERROR: dataset directory {} do not exists!'.
+                             format(self.dataset_dir))
 
-    def build_CNN_model(self):
-        # Build CNN model
-        init = time.time()
-        self.logger.info('Building MLP model...\n')
+    def design_model(self):
+        main_input = Input(shape=(self.image_size, self.image_size, 3),
+                           dtype='float32',
+                           name='main_input')
 
-        # Build the CNN model
-        # Input layers
-        main_input = Input(shape=(self.IMG_SIZE, self.IMG_SIZE, 3),
-                           dtype='float32', name='main_input')
-
-        x = Conv2D(32, (3, 3), activation='relu')(main_input)
-        x = Conv2D(32, (3, 3), activation='relu')(x)
+        x = Conv2D(32, (3, 3), activation='relu', name='conv1')(main_input)
+        x = Conv2D(32, (3, 3), activation='relu', name='conv2')(x)
         x = MaxPooling2D(pool_size=(4, 4), padding='valid', name='pool')(x)
         x = Flatten()(x)
         x = Dense(256, activation='relu', name='fc1')(x)
@@ -80,11 +76,21 @@ class conv_neural_network(object):
         main_output = Dense(units=8, activation='softmax', name='predictions')(
             x)
 
+        # Compile the model
+        self.model = Model(inputs=main_input, outputs=main_output)
+
+    def build_CNN_model(self):
+        # Build CNN model
+        init = time.time()
+        self.logger.info('Building MLP model...')
+
+        # Build the CNN model
+        self.design_model()
+
         # Select the optimizer:
         opt = optimizers.Adadelta(lr=0.1)
 
         # Compile the model
-        self.model = Model(inputs=main_input, outputs=main_output)
         self.model.compile(loss='categorical_crossentropy',
                            optimizer=opt,
                            metrics=['accuracy'])
@@ -92,58 +98,59 @@ class conv_neural_network(object):
         print(self.model.summary())
         self.logger.info(self.model.summary())
 
-        plot_model(self.model, to_file='results/session5/CNN.png',
+        plot_model(self.model,
+                   to_file='results/session5/CNN.png',
                    show_shapes=True,
                    show_layer_names=True)
 
-        self.logger.info('Done!\n')
+        self.logger.info('Done!')
 
         end = time.time()
-        self.logger.info('Done in ' + str(end - init) + ' secs.\n')
+        self.logger.info('Done in {} secs.'.format(str(end - init)))
 
     def train_CNN_model(self, n_epochs):
         # train the CNN model
         init = time.time()
 
-        if os.path.exists(self.MODEL_FNAME):
-            self.logger.info(
-                'WARNING: model file ' + self.MODEL_FNAME + ' exists and will be overwritten!\n')
+        if os.path.exists(self.model_fname):
+            self.logger.info('WARNING: model file {} exists and will be '
+                             'overwritten!'.format(self.model_fname))
 
-        self.logger.info('Start training...\n')
+        self.logger.info('Start training...')
 
         self.history = self.model.fit_generator(
             self.train_generator,
-            steps_per_epoch=1881 // self.BATCH_SIZE * 10,
+            steps_per_epoch=1881 // self.batch_size * 10,
             epochs=n_epochs,
             validation_data=self.validation_generator,
-            validation_steps=807 // self.BATCH_SIZE)
+            validation_steps=807 // self.batch_size)
 
-        self.logger.info('Done!\n')
-        self.logger.info(
-            'Saving the model into ' + self.MODEL_FNAME + ' \n')
+        self.logger.info('Done!')
+        self.logger.info('Saving the model into {}'.format(self.model_fname))
         self.model.save_weights(
-            self.MODEL_FNAME)  # always save your weights after training or during training
-        self.logger.info('Done!\n')
+            self.model_fname)  # always save your weights after training or during training
+        self.logger.info('Done!')
 
         end = time.time()
-        self.logger.info('Done in ' + str(end - init) + ' secs.\n')
+        self.logger.info('Done in {} secs.'.format(str(end - init)))
 
     def load_CNN_model(self):
         # load a CNN model
         init = time.time()
 
-        if not os.path.exists(self.MODEL_FNAME):
+        if not os.path.exists(self.model_fname):
             self.logger.info(
-                'Error: model file ' + self.MODEL_FNAME + ' exists and will be overwritten!\n')
+                'Error: model file {} exists and will be overwritten!'.format(
+                    self.model_fname))
 
         self.logger.info(
-            'Loading the model from ' + self.MODEL_FNAME + ' \n')
+            'Loading the model from {}'.format(self.model_fname))
         self.model.load_weights(
-            self.MODEL_FNAME)  # always save your weights after training or during training
-        self.logger.info('Done!\n')
+            self.model_fname)  # always save your weights after training or during training
+        self.logger.info('Done!')
 
         end = time.time()
-        self.logger.info('Done in ' + str(end - init) + ' secs.\n')
+        self.logger.info('Done in {} secs.'.format(str(end - init)))
 
     def plot_history(self):
 
@@ -169,7 +176,7 @@ class conv_neural_network(object):
     def plot_results(self):
         # plot classification results
 
-        self.logger.info('Getting classification results...\n')
+        self.logger.info('Getting classification results...')
         init = time.time()
 
         # Get ground truth
@@ -187,14 +194,18 @@ class conv_neural_network(object):
         #
         scores = self.model.evaluate_generator(self.test_generator)
         self.logger.info(
-            'Evaluator \nAcc (model)\nAccuracy: {} \nPrecision: {} \nRecall: {} \nFscore: {}'.
-            format(scores[1], evaluator.accuracy, evaluator.precision,
-                   evaluator.recall,
-                   evaluator.fscore) + '\n')
+            'Evaluator \n'
+            'Acc (model) {}\n'
+            'Accuracy: {} \n'
+            'Precision: {} \n'
+            'Recall: {} \n'
+            'Fscore: {}'.format(scores[1], evaluator.accuracy,
+                                evaluator.precision, evaluator.recall,
+                                evaluator.fscore))
         cm = evaluator.confusion_matrix()
 
         # Plot the confusion matrix on test data
-        self.logger.info('Confusion matrix:\n')
+        self.logger.info('Confusion matrix:')
         self.logger.info(cm)
 
         plt.matshow(cm)
@@ -205,14 +216,14 @@ class conv_neural_network(object):
         plt.show()
         plt.savefig('results/session5/cm.jpg')
         self.logger.info(
-            'Final accuracy: ' + str(evaluator.accuracy) + '\n')
+            'Final accuracy: {}'.format(str(evaluator.accuracy)))
 
         end = time.time()
-        self.logger.info('Done in ' + str(end - init) + ' secs.\n')
+        self.logger.info('Done in {} secs.'.format(str(end - init)))
 
     def cross_validate(self):
         # cross validate the MLP model
         init = time.time()
 
         end = time.time()
-        self.logger.info('Done in ' + str(end - init) + ' secs.\n')
+        self.logger.info('Done in {} secs.'.format(str(end - init)))
