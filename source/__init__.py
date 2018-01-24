@@ -11,8 +11,10 @@ DATA_PATH = os.path.join(ROOT_PATH, 'data')
 DATA_PATCHES_PATH = os.path.join(ROOT_PATH, 'data_patch')
 
 TRAIN_PATH = os.path.join(DATA_PATH, 'train')
+VALIDATION_PATH = os.path.join(DATA_PATH, 'validation')
 TEST_PATH = os.path.join(DATA_PATH, 'test')
-REDUCED_TRAIN_PATH = os.path.join(DATA_PATH, 'reduced_train')
+SMALL_TRAIN_PATH = os.path.join(DATA_PATH, 'train_small')
+TOY_TRAIN_PATH = os.path.join(DATA_PATH, 'train_toy')
 
 # Add project path to PYTHONPATH env var
 sys.path.append(ROOT_PATH)

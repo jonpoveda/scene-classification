@@ -29,4 +29,11 @@ export PYTHONPATH=[absolute_path_to_project_root]`
 The generated report and resources can be found in the folder 
 [results](results) of this repository.
 
+# About dataset
 
+The dataset is splitted in several ways, some are redundant:
+
+- train + validation_and_test (1881 + 807)
+- train + validation + test (1881+320+487)
+- train_small (400)
+- train_toy (80)

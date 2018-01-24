@@ -22,7 +22,7 @@ from data_generator_config import DataGeneratorConfig
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from source import TEST_PATH
-from source import REDUCED_TRAIN_PATH
+from source import SMALL_TRAIN_PATH
 from evaluator import Evaluator
 
 # Config to run on one GPU
@@ -236,11 +236,11 @@ def main():
     # data_generator = ImageDataGenerator(**DataGeneratorConfig.CONFIG1)
 
     data_gen = DataGenerator(img_width, img_height, batch_size,
-                             REDUCED_TRAIN_PATH)
+                             SMALL_TRAIN_PATH)
     data_gen.configure(DataGeneratorConfig.NORMALISE)
 
     train_generator, test_generator, validation_generator = data_gen.get(
-        train_path=REDUCED_TRAIN_PATH,
+        train_path=SMALL_TRAIN_PATH,
         test_path=TEST_PATH,
         validate_path=TEST_PATH)
 
@@ -344,11 +344,11 @@ def function_to_optimize(bounds):  # type: (ndarray) -> int
         logger.debug([layer.name, layer.trainable])
 
     data_gen = DataGenerator(img_width, img_height, batch_size,
-                             REDUCED_TRAIN_PATH)
+                             SMALL_TRAIN_PATH)
     data_gen.configure(DataGeneratorConfig.NORM_AND_TRANSFORM)
 
     train_generator, test_generator, validation_generator = data_gen.get(
-        train_path=REDUCED_TRAIN_PATH,
+        train_path=SMALL_TRAIN_PATH,
         test_path=TEST_PATH,
         validate_path=TEST_PATH)
 
