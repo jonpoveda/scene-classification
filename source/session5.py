@@ -174,7 +174,7 @@ if __name__ == "__main__":
             neural_network.configure()
             neural_network.build()
 
-            neural_network.train_CNN_model(n_epochs)
+            neural_network.train_CNN_model(n_epochs, steps_per_epoch=1, validation_steps=1)
             neural_network.plot_history()
 
         neural_network.plot_results()
