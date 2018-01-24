@@ -2,9 +2,8 @@ import os
 import time
 
 import numpy as np
-from keras import optimizers
-from keras.layers import Dense, Input, Flatten, Dropout, Conv2D, MaxPooling2D
-from keras.models import Model
+from keras import Model, Input, optimizers
+from keras.layers import Dense, Flatten, Dropout, Conv2D, MaxPooling2D
 from keras.utils import plot_model
 from matplotlib import pyplot as plt
 
@@ -21,29 +20,37 @@ class CNN(object):
         LAST = 'fc3'
         LABELS = 'fc4'
 
-    def __init__(self, logger,
-                 input_image_size=256, batch_size=16,
+    def __init__(self,
+                 logger,
+                 batch_size=16,
                  dataset_dir='/home/datasets/scenes/MIT_split',
-                 model_fname='my_first_mlp.h5',
-                 model=None):
+                 model_fname='my_first_mlp.h5'):
 
         # initialize model
-        if model:
-            self.model = model
-        else:
-            self.model = self._default_model()
+        self.model = self._default_model()
+        self.optimizer = optimizers.Adadelta(lr=0.1)
+
         self.history = None
-        self.image_size = input_image_size
         self.batch_size = batch_size
         self.dataset_dir = dataset_dir
         self.model_fname = model_fname
         self.logger = logger
         self.logger.info('Creating object')
 
+    def set_optimizer(self, optimizer):  # type: (optimizers.Optimizer) -> None
+        self.optimizer = optimizer
+
+    def set_model(self, model):  # type: (self, Model) -> None
+        self.model = model
+        self._configure_generators()
+
+    def _configure_generators(self):
+        image_width, image_height = \
+            self.model.input_shape[1], self.model.input_shape[2]
         # create data generator objects
         self.data_gen_test = \
-            DataGenerator(self.image_size,
-                          self.image_size,
+            DataGenerator(image_width,
+                          image_height,
                           self.batch_size,
                           '{}/train'.format(self.dataset_dir))
         self.data_gen_test.configure(DataGeneratorConfig.NORMALISE)
@@ -56,9 +63,10 @@ class CNN(object):
             path='{}/validationCNN'.format(self.dataset_dir))
 
         self.data_gen_train = \
-            DataGenerator(self.image_size, self.image_size,
+            DataGenerator(image_width, image_height,
                           self.batch_size,
                           '{}/train'.format(self.dataset_dir))
+
         self.data_gen_train.configure(DataGeneratorConfig.NORM_AND_TRANSFORM)
 
         self.train_generator = self.data_gen_train.get_single(
@@ -69,7 +77,7 @@ class CNN(object):
                              format(self.dataset_dir))
 
     def _default_model(self):
-        main_input = Input(shape=(self.image_size, self.image_size, 3),
+        main_input = Input(shape=(256, 256, 3),
                            dtype='float32',
                            name='main_input')
 
@@ -88,26 +96,20 @@ class CNN(object):
         return Model(inputs=main_input, outputs=main_output)
 
     def build_CNN_model(self):
-        # Build CNN model
         init = time.time()
         self.logger.info('Compiling MLP model...')
 
-        # Build the CNN model
-        self._default_model()
-
-        # Select the optimizer:
-        opt = optimizers.Adadelta(lr=0.1)
-
         # Compile the model
         self.model.compile(loss='categorical_crossentropy',
-                           optimizer=opt,
+                           optimizer=self.optimizer,
                            metrics=['accuracy'])
 
         print(self.model.summary())
         self.logger.info('Summary: {}'.format(self.model.summary()))
 
         plot_model(self.model,
-                   to_file='../results/session5/CNN_{}.png'.format(self.model.name),
+                   to_file='../results/session5/CNN_{}.png'.format(
+                       self.model.name),
                    show_shapes=True,
                    show_layer_names=True)
 
@@ -133,15 +135,14 @@ class CNN(object):
 
         self.logger.info('Done!')
         self.logger.info('Saving the model into {}'.format(self.model_fname))
-        self.model.save_weights(
-            self.model_fname)  # always save your weights after training or during training
+        # always save your weights after training or during training
+        self.model.save_weights(self.model_fname)
         self.logger.info('Done!')
 
         end = time.time()
         self.logger.info('Done in {} secs.'.format(str(end - init)))
 
     def load_CNN_model(self):
-        # load a CNN model
         init = time.time()
 
         if not os.path.exists(self.model_fname):
@@ -149,17 +150,15 @@ class CNN(object):
                 'Error: model file {} exists and will be overwritten!'.format(
                     self.model_fname))
 
-        self.logger.info(
-            'Loading the model from {}'.format(self.model_fname))
-        self.model.load_weights(
-            self.model_fname)  # always save your weights after training or during training
+        self.logger.info('Loading the model from {}'.format(self.model_fname))
+        # always save your weights after training or during training
+        self.model.load_weights(self.model_fname)
         self.logger.info('Done!')
 
         end = time.time()
         self.logger.info('Done in {} secs.'.format(str(end - init)))
 
     def plot_history(self):
-
         # summarize history for accuracy
         plt.plot(self.history.history['acc'])
         plt.plot(self.history.history['val_acc'])
@@ -228,12 +227,8 @@ class CNN(object):
         self.logger.info('Done in {} secs.'.format(str(end - init)))
 
     def cross_validate(self):
-        # cross validate the MLP model
         init = time.time()
+        # TODO cross validate the MLP model
 
         end = time.time()
         self.logger.info('Done in {} secs.'.format(str(end - init)))
-
-
-class CNN1(CNN):
-    pass

@@ -6,6 +6,7 @@ import time
 
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
+from keras import Model, Input, optimizers
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 
 matplotlib.use('Agg')
@@ -43,8 +44,6 @@ load_model = False
 n_epochs = 50
 
 MODEL_PATH = 'results/session5/my_CNN.h5'
-
-from keras import Model, Input
 
 
 def get_model(model_id, image_size):
@@ -99,18 +98,18 @@ if __name__ == "__main__":
 
     init = time.time()
 
-    image_size = 64
-    model = get_model(model_id=2, image_size=image_size)
 
     neural_network = CNN(logger,
-                         input_image_size=image_size,
                          batch_size=16,
                          dataset_dir=DATA_PATH,
-                         model_fname=MODEL_PATH,
-                         model=model)
+                         model_fname=MODEL_PATH)
 
+    model = get_model(model_id=2, image_size=64)
+    opt = optimizers.Adadelta(lr=0.1)
+
+    neural_network.set_model(model)
+    neural_network.set_optimizer(opt)
     neural_network.build_CNN_model()
-    die()
 
     if cross_validate:
         neural_network.cross_validate()
