@@ -4,24 +4,30 @@ import os
 import sys
 import time
 
-import matplotlib
-# Force matplotlib to not use any Xwindows backend.
-matplotlib.use('Agg')
-
-from GPyOpt.methods import BayesianOptimization
-from keras import Input, optimizers
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
-
+# Set python path to allow acceding to the modules inside /source without need
+# to specify 'from source ...'
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-from source import DATA_PATH
 
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
-from CNN import CNN
+from GPyOpt.methods import BayesianOptimization
+from keras import Input, optimizers
+from keras.layers import Dropout
+from keras.layers import Dense
+from keras.layers import Flatten
+from keras.layers import MaxPooling2D
+from keras.layers import Conv2D
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+import matplotlib
+
+# Force matplotlib to not use any Xwindows backend. If you need to import
+# pyplot, do it after setting `Agg` as the backend.
+matplotlib.use('Agg')
+
+from source import DATA_PATH
+
+from CNN import CNN
 
 # Create a file logger
 logger = logging.getLogger('session5')
@@ -174,7 +180,8 @@ if __name__ == "__main__":
             neural_network.configure()
             neural_network.build()
 
-            neural_network.train_CNN_model(n_epochs, steps_per_epoch=1, validation_steps=1)
+            neural_network.train_CNN_model(n_epochs, steps_per_epoch=1,
+                                           validation_steps=1)
             neural_network.plot_history()
 
         neural_network.plot_results()
