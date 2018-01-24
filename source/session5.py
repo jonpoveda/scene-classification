@@ -65,7 +65,7 @@ def get_model(model_id, image_size):
             x)
 
         # Compile the model
-        return Model(inputs=main_input, outputs=main_output)
+        return Model(inputs=main_input, outputs=main_output, name='model1')
 
     def _model2():
         main_input = Input(shape=(image_size, image_size, 3),
@@ -87,7 +87,7 @@ def get_model(model_id, image_size):
             x)
 
         # Compile the model
-        return Model(inputs=main_input, outputs=main_output)
+        return Model(inputs=main_input, outputs=main_output, name='model2')
 
     return {
         1: _model1(),

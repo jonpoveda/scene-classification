@@ -107,7 +107,7 @@ class CNN(object):
         self.logger.info('Summary: {}'.format(self.model.summary()))
 
         plot_model(self.model,
-                   to_file='../results/session5/CNN.png',
+                   to_file='../results/session5/CNN_{}.png'.format(self.model.name),
                    show_shapes=True,
                    show_layer_names=True)
 
