@@ -43,7 +43,8 @@ class conv_neural_network(object):
         self.data_gen_test.configure(DataGeneratorConfig.DEFAULT)
 
         self.test_generator = self.data_gen_test.get_single(
-            path=self.dataset_dir + '/testCNN')
+            path=self.dataset_dir + '/testCNN', 
+            shuffle = False)
 
         self.validation_generator = self.data_gen_test.get_single(
             path=self.dataset_dir + '/validationCNN')
