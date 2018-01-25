@@ -4,6 +4,7 @@ data*/
 # Generated files
 codebook.dat
 *.h5
+*.swp
 
 # IntelliJ project temp files
 .idea/

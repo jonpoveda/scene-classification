@@ -1,3 +1,0 @@
-Ei, he cambiat el naming dels directoris pq era una mica liat, i ja he fet el canvi de test<->validation.
-
-Básicament, hem d'utilizar els 'train', 'validation', 'test' per el CNN.

@@ -406,3 +406,21 @@ Fscore: 0.0721943862669
 2018-01-24 21:24:30,245 INFO Done in 3.53508210182 secs.
 2018-01-24 21:24:30,245 INFO Everything done in 39.166934967 secs.
 
+2018-01-25 01:19:13,744 INFO Creating object
+2018-01-25 01:25:14,260 INFO Creating object
+2018-01-25 01:28:24,417 INFO Creating object
+2018-01-25 01:28:41,143 INFO Compiling MLP model...
+2018-01-25 01:28:41,193 INFO Summary: None
+2018-01-25 01:28:41,349 INFO Done in 0.205403089523 secs.
+2018-01-25 01:28:41,349 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-25 01:28:41,349 INFO Start training...
+2018-01-25 01:32:14,663 INFO Creating object
+2018-01-25 01:32:31,111 INFO Compiling MLP model...
+2018-01-25 01:32:31,148 INFO Summary: None
+2018-01-25 01:32:31,297 INFO Done in 0.186116933823 secs.
+2018-01-25 01:32:31,297 INFO WARNING: model file results/session5/my_CNN.h5 exists and will be overwritten!
+2018-01-25 01:32:31,297 INFO Start training...
+2018-01-25 03:00:53,394 INFO Done!
+2018-01-25 03:00:53,394 INFO Saving the model into results/session5/my_CNN.h5
+2018-01-25 03:00:53,480 INFO Done!
+2018-01-25 03:00:53,481 INFO Done in 5302.18351889 secs.
