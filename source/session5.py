@@ -25,7 +25,6 @@ import matplotlib
 # pyplot, do it after setting `Agg` as the backend.
 matplotlib.use('Agg')
 
-from source import DATA_PATH
 from source import TEST_PATH
 from source import VALIDATION_PATH
 from source import TRAIN_PATH
@@ -169,24 +168,29 @@ if __name__ == "__main__":
     # Load the model if exists, train otherwise
     else:
         neural_network = CNN(logger,
-                             dataset_dir=DATA_PATH,
+                             train_path=TRAIN_PATH,
+                             validation_path=VALIDATION_PATH,
+                             test_path=TEST_PATH,
                              model_fname=MODEL_PATH)
 
         if load_model:
             neural_network.load_CNN_model()
         else:
-            # Hyper-parameters
-            model = get_model(model_id=2, image_size=64)
-            opt = optimizers.Adadelta(lr=0.1)
+            # Hyper-parameters selection
             neural_network.set_batch_size(16)
-            neural_network.set_model(model=model)
-            neural_network.set_optimizer(opt)
+            neural_network.set_model(
+                model=get_model(model_id=2, image_size=64))
+            neural_network.set_optimizer(optimizers.Adadelta(lr=0.1))
+            neural_network.set_loss_function('categorical_crossentropy')
+            neural_network.set_metrics(['accuracy'])
 
             neural_network.configure()
             neural_network.build()
 
-            neural_network.train_CNN_model(n_epochs, steps_per_epoch=1,
-                                           validation_steps=1)
+            neural_network.train_CNN_model(n_epochs=n_epochs,
+                                           steps_per_epoch_multiplier=10,
+                                           validation_steps_multiplier=5)
+
             neural_network.plot_history()
 
         neural_network.plot_results()
