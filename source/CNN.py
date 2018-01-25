@@ -63,7 +63,7 @@ class CNN(object):
         See `set_optimizer`, `set_model`, `set_batch_size`
         """
         if any(not os.path.exists(path) for path in
-               zip([self.train_path, self.validation_path, self.test_path])):
+               (self.train_path, self.validation_path, self.test_path)):
             self.logger.info('ERROR: some dataset directory do not exists!')
 
         image_width, image_height = \
