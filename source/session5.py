@@ -51,7 +51,7 @@ cross_validate = False
 load_model = False
 MODEL_PATH = 'results/session5/my_CNN.h5'
 # select number of epochs
-n_epochs = 1
+n_epochs = 40
 
 
 def get_model(model_id, image_size):  # type: (int, int) -> Model
@@ -188,7 +188,7 @@ if __name__ == "__main__":
             neural_network.build()
 
             neural_network.train_CNN_model(n_epochs=n_epochs,
-                                           steps_per_epoch_multiplier=10,
+                                           steps_per_epoch_multiplier=20,
                                            validation_steps_multiplier=5)
 
             neural_network.plot_history()

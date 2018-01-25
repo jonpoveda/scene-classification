@@ -31,7 +31,8 @@ class DataGenerator(object):
         if not paths:
             raise ValueError('No images found in {}'.format(self.train_path))
         number_of_images = len(paths)
-        print('Got {} images for pre-processing'.format(number_of_images))
+        print('Got {} images in {} for pre-processing'.format(
+            self.train_path, number_of_images))
 
         example_image = misc.imread(paths[0])
         image_size = example_image.shape
