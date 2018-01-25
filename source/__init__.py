@@ -8,7 +8,10 @@ SOURCE_PATH = os.path.join(ROOT_PATH, 'source')
 DATA_PATH = os.path.join(ROOT_PATH, 'data')
 DATA_PATCHES_PATH = os.path.join(ROOT_PATH, 'data_patch')
 
-# Default dataset
+# Default dataset (70/18/12%)
+# The dataset train contains 1881 images (70%)
+# The dataset validation contains 487 images (18%)
+# The dataset test contains 320 images (12%)
 TRAIN_PATH = os.path.join(DATA_PATH, 'train')
 VALIDATION_PATH = os.path.join(DATA_PATH, 'validation')
 TEST_PATH = os.path.join(DATA_PATH, 'test')

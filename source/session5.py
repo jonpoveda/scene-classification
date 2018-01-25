@@ -18,7 +18,7 @@ from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.layers import Conv2D
-
+from keras.models import Model
 import matplotlib
 
 # Force matplotlib to not use any Xwindows backend. If you need to import
@@ -26,6 +26,9 @@ import matplotlib
 matplotlib.use('Agg')
 
 from source import DATA_PATH
+from source import TEST_PATH
+from source import VALIDATION_PATH
+from source import TRAIN_PATH
 
 from CNN import CNN
 
@@ -47,12 +50,9 @@ logger.addHandler(console_handler)
 cross_validate = False
 # Load pre-trained model or generate from scratch
 load_model = False
+MODEL_PATH = 'results/session5/my_CNN.h5'
 # select number of epochs
 n_epochs = 1
-
-MODEL_PATH = 'results/session5/my_CNN.h5'
-
-from keras.models import Model
 
 
 def get_model(model_id, image_size):  # type: (int, int) -> Model
@@ -109,6 +109,7 @@ def get_model(model_id, image_size):  # type: (int, int) -> Model
     }.get(model_id)
 
 
+# TODO configure bounds
 def do_cross_validation():
     # Random Search
     bounds = [
@@ -133,22 +134,26 @@ def do_cross_validation():
 
 def train_and_validate():
     neural_network = CNN(logger,
-                         dataset_dir=DATA_PATH,
+                         train_path=TRAIN_PATH,
+                         validation_path=VALIDATION_PATH,
+                         test_path=TEST_PATH,
                          model_fname=MODEL_PATH)
 
     # Hyper-parameters selection
-    model = get_model(model_id=2, image_size=64)
-    opt = optimizers.Adadelta(lr=0.1)
     neural_network.set_batch_size(16)
-    neural_network.set_model(model=model)
-    neural_network.set_optimizer(opt)
+    neural_network.set_model(model=get_model(model_id=2, image_size=64))
+    neural_network.set_optimizer(optimizers.Adadelta(lr=0.1))
+    neural_network.set_loss_function('categorical_crossentropy')
+    neural_network.set_metrics(['accuracy'])
 
     # Configure and build the NN
     neural_network.configure()
     neural_network.build()
 
     # Train
-    neural_network.train_CNN_model(n_epochs)
+    neural_network.train_CNN_model(n_epochs=n_epochs,
+                                   steps_per_epoch_multiplier=10,
+                                   validation_steps_multiplier=5)
 
     neural_network.plot_history()
     neural_network.plot_results()
