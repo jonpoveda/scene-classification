@@ -19,6 +19,7 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.layers import Conv2D
 from keras.models import Model
+import numpy as np
 import matplotlib
 
 # Force matplotlib to not use any Xwindows backend. If you need to import
@@ -46,7 +47,7 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 # Do cross-validation to find best parameters
-cross_validate = False
+cross_validate = True
 # Load pre-trained model or generate from scratch
 load_model = False
 MODEL_PATH = 'results/session5/my_CNN.h5'
@@ -107,31 +108,53 @@ def get_model(model_id, image_size):  # type: (int, int) -> Model
         2: _model2()
     }.get(model_id)
 
+def get_optimizer(optimizer_id, learning_rate):  # type: (int, int) -> optimizer
+    """ Gets a optimizer by its id.
 
-# TODO configure bounds
+     Args:
+         optimizer_id: optimizer id
+         learning_rate: learning rate of the optimizer
+    """
+
+    if optimizer_id == 1:
+        optimizer = optimizers.SGD(lr = learning_rate)
+    elif optimizer_id == 2:
+        optimizer = optimizers.RMSprop(lr = learning_rate)
+    elif optimizer_id == 3:
+        optimizer = optimizers.Adam(lr = learning_rate)
+    elif optimizer_id == 4:
+        optimizer = optimizers.Adadelta(lr = learning_rate)
+
+    return optimizer
+
+
 def do_cross_validation():
     # Random Search
     bounds = [
         {'name': 'model_id', 'type': 'discrete',
-         'domain': (16, 32, 64)},
+         'domain': (1,2)},
+        {'name': 'image_size', 'type': 'discrete',
+         'domain': (32,64,128,256)},
         {'name': 'batch_size', 'type': 'discrete',
          'domain': (16, 32, 64)},
-        {'name': 'batch_size', 'type': 'discrete',
-         'domain': (16, 32, 64)},
-        {'name': 'fc1_size', 'type': 'discrete',
-         'domain': (512, 1024, 2048, 4096)},
-        {'name': 'fc2_size', 'type': 'discrete',
-         'domain': (128, 256, 512, 1024)}]
+        {'name': 'optimizer_id', 'type': 'discrete',
+         'domain': (1,2,3,4)},
+        {'name': 'lr', 'type': 'discrete',
+         'domain': (0.1,0.01,0.001,0.0001)}]
 
     optimizer = BayesianOptimization(f=train_and_validate,
                                      domain=bounds,
                                      verbosity=True)
-    optimizer.run_optimization(max_iter=10)
+    optimizer.run_optimization(max_iter=25)
     logger.info('optimized parameters: {}'.format(optimizer.x_opt))
     logger.info('optimized accuracy: {}'.format(optimizer.fx_opt))
 
 
-def train_and_validate():
+def train_and_validate(bounds):
+
+    b = bounds.astype(np.int64)
+    model_id,image_size,batch_size, optimizer_id,lr = b[:, 0][0], b[:, 1][0], b[:, 2][0], b[:, 3][0], b[:, 4][0]
+    logger.info('Bounds in action {}'.format(bounds))
     neural_network = CNN(logger,
                          train_path=TRAIN_PATH,
                          validation_path=VALIDATION_PATH,
@@ -139,9 +162,9 @@ def train_and_validate():
                          model_fname=MODEL_PATH)
 
     # Hyper-parameters selection
-    neural_network.set_batch_size(16)
-    neural_network.set_model(model=get_model(model_id=2, image_size=64))
-    neural_network.set_optimizer(optimizers.Adadelta(lr=0.1))
+    neural_network.set_batch_size(batch_size)
+    neural_network.set_model(model=get_model(model_id=model_id, image_size=image_size))
+    neural_network.set_optimizer(get_optimizer(optimizer_id,lr))
     neural_network.set_loss_function('categorical_crossentropy')
     neural_network.set_metrics(['accuracy'])
 
@@ -152,7 +175,7 @@ def train_and_validate():
     # Train
     neural_network.train_CNN_model(n_epochs=n_epochs,
                                    steps_per_epoch_multiplier=10,
-                                   validation_steps_multiplier=5)
+                                   validation_steps_multiplier=1)
 
     neural_network.plot_history()
     neural_network.plot_results()
@@ -189,7 +212,7 @@ if __name__ == "__main__":
 
             neural_network.train_CNN_model(n_epochs=n_epochs,
                                            steps_per_epoch_multiplier=20,
-                                           validation_steps_multiplier=5)
+                                           validation_steps_multiplier=1)
 
             neural_network.plot_history()
 
