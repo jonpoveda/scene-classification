@@ -48,3 +48,31 @@
 2018-01-25 01:27:10,056 INFO Creating object
 2018-01-25 01:27:36,714 INFO Creating object
 2018-01-25 01:28:04,159 INFO Creating object
+2018-01-28 23:12:26,334 INFO Bounds in action [[   1.  256.   64.    4.    1.]]
+2018-01-28 23:12:26,414 INFO Creating object
+2018-01-28 23:12:40,567 INFO Compiling MLP model...
+2018-01-28 23:12:40,607 INFO Summary: None
+2018-01-28 23:14:50,816 INFO Bounds in action [[   1.  256.   64.    4.    1.]]
+2018-01-28 23:14:50,875 INFO Creating object
+2018-01-28 23:15:02,695 INFO Compiling MLP model...
+2018-01-28 23:15:02,735 INFO Summary: None
+2018-01-28 23:15:02,807 INFO Done in 0.112116098404 secs.
+2018-01-28 23:15:13,253 INFO Bounds in action [[   2.  256.   64.    4.    1.]]
+2018-01-28 23:15:13,310 INFO Creating object
+2018-01-28 23:15:25,048 INFO Compiling MLP model...
+2018-01-28 23:15:25,087 INFO Summary: None
+2018-01-28 23:15:25,148 INFO Done in 0.0999600887299 secs.
+2018-01-28 23:15:27,579 INFO Bounds in action [[   3.  256.   64.    4.    1.]]
+2018-01-28 23:15:27,643 INFO Creating object
+2018-01-28 23:15:39,926 INFO Compiling MLP model...
+2018-01-28 23:15:39,967 INFO Summary: None
+2018-01-28 23:15:40,027 INFO Done in 0.101269006729 secs.
+2018-01-28 23:34:19,955 INFO Bounds in action [[   3.  256.   64.    4.    1.]]
+2018-01-28 23:34:20,029 INFO Creating object
+2018-01-28 23:34:31,919 INFO Compiling MLP model...
+2018-01-28 23:34:31,952 INFO Summary: None
+2018-01-28 23:37:46,347 INFO Bounds in action [[   3.  128.   64.    4.    1.]]
+2018-01-28 23:37:46,406 INFO Creating object
+2018-01-28 23:37:58,446 INFO Compiling MLP model...
+2018-01-28 23:37:58,485 INFO Summary: None
+2018-01-28 23:37:58,549 INFO Done in 0.102548122406 secs.

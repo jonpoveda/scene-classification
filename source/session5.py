@@ -26,7 +26,7 @@ import matplotlib
 # pyplot, do it after setting `Agg` as the backend.
 matplotlib.use('Agg')
 
-from source import TEST_PATH
+from source import TEST_PATH, RESULTS_PATH
 from source import VALIDATION_PATH
 from source import TRAIN_PATH
 
@@ -52,6 +52,7 @@ cross_validate = True
 load_model = False
 # select number of epochs
 n_epochs = 50
+RESULTS_DIR = os.path.join(RESULTS_PATH, 'session5')
 
 
 def get_model(model_id, image_size):  # type: (int, int) -> Model
@@ -153,11 +154,11 @@ def do_cross_validation():
     # Note the batch size is going to be multiplied cause of data-augmentation
     bounds = [
         {'name': 'model_id', 'type': 'discrete',
-         'domain': (3,)},
+         'domain': (1,23,)},
         {'name': 'image_size', 'type': 'discrete',
          'domain': (64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
-         'domain': (64,)},
+         'domain': (32,64,)},
         # {'name': 'batch_size', 'type': 'discrete',
         #  'domain': (16, 32, 64)},
         {'name': 'optimizer_id', 'type': 'discrete',
@@ -184,7 +185,8 @@ def train_and_validate(bounds):
         b[:, 0][0], b[:, 1][0], b[:, 2][0], b[:, 3][0], b[:, 4][0]
     logger.info('Bounds in action {}'.format(bounds))
     timestamp = int(time.time())
-    MODEL_PATH = 'results/session5/CNN_{}_{}.h5'.format(model_id, timestamp)
+    MODEL_PATH = os.path.join(RESULTS_DIR,
+                              'CNN_{}_{}.h5'.format(model_id, timestamp))
     neural_network = CNN(logger,
                          train_path=TRAIN_PATH,
                          validation_path=VALIDATION_PATH,
@@ -209,9 +211,9 @@ def train_and_validate(bounds):
                                    validation_steps_multiplier=1)
 
     neural_network.plot_history(
-        'results/session5/CNN_{}_{}'.format(model_id, timestamp))
+        os.path.join(RESULTS_DIR, 'CNN_{}_{}'.format(model_id, timestamp)))
     neural_network.plot_results(
-        'results/session5/CNN_{}_{}'.format(model_id, timestamp))
+        os.path.join(RESULTS_DIR, 'CNN_{}_{}'.format(model_id, timestamp)))
 
     score, evaluator = neural_network.get_results()
     return np.array(evaluator.accuracy, dtype=np.float64)
@@ -226,12 +228,12 @@ if __name__ == "__main__":
 
     # Load the model if exists, train otherwise
     else:
-        MODEL_PATH = 'results/session5/my_CNN.h5'
+        model_path = os.path.join(RESULTS_DIR, 'my_CNN.h5')
         neural_network = CNN(logger,
                              train_path=TRAIN_PATH,
                              validation_path=VALIDATION_PATH,
                              test_path=TEST_PATH,
-                             model_fname=MODEL_PATH)
+                             model_fname=model_path)
 
         if load_model:
             neural_network.load_CNN_model()
@@ -251,9 +253,9 @@ if __name__ == "__main__":
                                            steps_per_epoch_multiplier=8,
                                            validation_steps_multiplier=1)
 
-            neural_network.plot_history('results/session5/my_CNN')
+            neural_network.plot_history(os.path.join(RESULTS_DIR, 'my_CNN'))
 
-        neural_network.plot_results('results/session5/my_CNN')
+        neural_network.plot_results(os.path.join(RESULTS_DIR, 'my_CNN'))
 
     end = time.time()
     logger.info('Everything done in {} secs.\n'.format(str(end - init)))

@@ -20,6 +20,8 @@ TEST_PATH = os.path.join(DATA_PATH, 'test')
 SMALL_TRAIN_PATH = os.path.join(DATA_PATH, 'train_small')
 TOY_TRAIN_PATH = os.path.join(DATA_PATH, 'train_toy')
 
+RESULTS_PATH = os.path.join(ROOT_PATH, 'results')
+
 # REMOVE THIS LINE!!
 # TRAIN_PATH = os.path.join(DATA_PATH, 'train_toy')
 

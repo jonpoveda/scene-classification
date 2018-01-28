@@ -9,13 +9,15 @@ import matplotlib
 
 # Force matplotlib to not use any Xwindows backend. If you need to import
 # pyplot, do it after setting `Agg` as the backend.
+from source import RESULTS_PATH
+
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
 from data_generator import DataGenerator
 from data_generator_config import DataGeneratorConfig
 from evaluator import Evaluator
-
+RESULTS_DIR = os.path.join(RESULTS_PATH, 'session5')
 
 class CNN(object):
     def __init__(self, logger, train_path, validation_path, test_path,
@@ -138,7 +140,7 @@ class CNN(object):
 
         plot_model(
             self.model,
-            to_file='results/session5/CNN_{}.png'.format(self.model.name),
+            to_file=os.path.join(RESULTS_DIR, 'CNN_{}.png'.format(self.model.name)),
             show_shapes=True,
             show_layer_names=True)
 
