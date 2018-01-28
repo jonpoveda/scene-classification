@@ -51,7 +51,7 @@ cross_validate = True
 # Load pre-trained model or generate from scratch
 load_model = False
 # select number of epochs
-n_epochs = 1
+n_epochs = 20
 
 
 def get_model(model_id, image_size):  # type: (int, int) -> Model
@@ -168,7 +168,7 @@ def do_cross_validation():
     optimizer = BayesianOptimization(f=train_and_validate,
                                      domain=bounds,
                                      verbosity=True)
-    optimizer.run_optimization(max_iter=2,
+    optimizer.run_optimization(max_iter=10,
                                verbosity=True,
                                report_file='optimizer_results.txt')
     logger.info('optimized parameters: {}'.format(optimizer.x_opt))
