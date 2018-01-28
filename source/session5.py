@@ -163,7 +163,8 @@ def do_cross_validation():
         # {'name': 'optimizer_id', 'type': 'discrete',
         #  'domain': (1, 2, 3, 4)},
         {'name': 'lr', 'type': 'discrete',
-         'domain': (0.1, 0.01, 0.001, 0.0001)}]
+         # 'domain': (1, 0.1, 0.01, 0.001, 0.0001)}]
+         'domain': (1, 0.5)}]
 
     optimizer = BayesianOptimization(f=train_and_validate,
                                      domain=bounds,
