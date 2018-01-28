@@ -2,7 +2,7 @@ import matplotlib
 
 # Force matplotlib to not use any Xwindows backend. If you need to import
 # pyplot, do it after setting `Agg` as the backend.
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -14,6 +14,15 @@ cm = np.array([[76, 3, 4, 0, 20, 11, 0, 2],
                [8, 11, 4, 4, 9, 79, 2, 1],
                [0, 2, 1, 8, 7, 1, 58, 3],
                [2, 3, 1, 9, 9, 2, 1, 81]])
+
+cm = np.array([[37, 3, 3, 0, 0, 4, 0, 0],
+               [2, 42, 0, 1, 0, 1, 0, 0],
+               [2, 0, 36, 0, 0, 2, 0, 0],
+               [2, 0, 1, 23, 1, 0, 2, 1],
+               [1, 0, 1, 0, 26, 0, 5, 4],
+               [3, 3, 1, 0, 0, 37, 0, 1],
+               [0, 0, 0, 1, 3, 0, 26, 2],
+               [0, 0, 0, 0, 2, 5, 1, 35]])
 
 # print(np.sum(cm, axis=0))
 print(np.sum(cm, axis=1))

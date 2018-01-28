@@ -220,7 +220,7 @@ class CNN(object):
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['train', 'validation'], loc='upper left')
-        plt.savefig('{}loss.jpg'.format(outpath))
+        plt.savefig('{}_loss.jpg'.format(outpath))
 
     def plot_results(self ,outpath):
         # plot classification results
