@@ -92,6 +92,7 @@ def get_model(model_id, image_size):  # type: (int, int) -> Model
         x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool2')(x)
         x = Flatten()(x)
         x = Dense(256, activation='relu', name='fc1')(x)
+        x = Dropout(0.5)(x)
         x = Dense(128, activation='relu', name='fc2')(x)
         x = Dropout(0.5)(x)
         main_output = Dense(
