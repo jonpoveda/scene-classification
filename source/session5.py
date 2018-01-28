@@ -88,10 +88,8 @@ def get_model(model_id, image_size):  # type: (int, int) -> Model
                            dtype='float32',
                            name='main_input')
         x = Conv2D(32, (3, 3), activation='relu', name='conv1')(main_input)
-        x = Conv2D(32, (3, 3), activation='relu', name='conv2')(x)
-        x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool')(x)
-        x = Conv2D(32, (3, 3), activation='relu', name='conv3')(x)
-        x = Conv2D(32, (3, 3), activation='relu', name='conv4')(x)
+        x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool1')(x)
+        x = Conv2D(16, (3, 3), activation='relu', name='conv2')(x)
         x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool2')(x)
         x = Flatten()(x)
         x = Dense(256, activation='relu', name='fc1')(x)
@@ -103,9 +101,29 @@ def get_model(model_id, image_size):  # type: (int, int) -> Model
         # Compile the model
         return Model(inputs=main_input, outputs=main_output, name='model2')
 
+    def _model3():
+        main_input = Input(shape=(image_size, image_size, 3),
+                           dtype='float32',
+                           name='main_input')
+        x = Conv2D(64, (3, 3), activation='relu', name='conv1')(main_input)
+        x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool1')(x)
+        x = Conv2D(32, (3, 3), activation='relu', name='conv2')(x)
+        x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool2')(x)
+        x = Flatten()(x)
+        x = Dense(256, activation='relu', name='fc1')(x)
+        x = Dense(128, activation='relu', name='fc2')(x)
+        x = Dropout(0.5)(x)
+        main_output = Dense(
+            units=8, activation='softmax', name='predictions')(x)
+
+        # Compile the model
+        return Model(inputs=main_input, outputs=main_output, name='model2')
+
+
     return {
         1: _model1(),
-        2: _model2()
+        2: _model2(),
+        3: _model3()
     }.get(model_id)
 
 
@@ -134,13 +152,17 @@ def do_cross_validation():
     # Random Search
     bounds = [
         {'name': 'model_id', 'type': 'discrete',
-         'domain': (1, 2)},
+         'domain': (1, 2 ,3)},
         {'name': 'image_size', 'type': 'discrete',
          'domain': (32, 64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
-         'domain': (16, 32, 64)},
+         'domain': (64)},
+        # {'name': 'batch_size', 'type': 'discrete',
+        #  'domain': (16, 32, 64)},
         {'name': 'optimizer_id', 'type': 'discrete',
-         'domain': (1, 2, 3, 4)},
+         'domain': (4)},
+        # {'name': 'optimizer_id', 'type': 'discrete',
+        #  'domain': (1, 2, 3, 4)},
         {'name': 'lr', 'type': 'discrete',
          'domain': (0.1, 0.01, 0.001, 0.0001)}]
 

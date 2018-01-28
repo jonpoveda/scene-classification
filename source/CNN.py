@@ -249,7 +249,7 @@ class CNN(object):
         plt.colorbar()
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
-        plt.show()
+        # plt.show()
         plt.savefig('results/session5/cm.jpg')
         self.logger.info(
             'Final accuracy: {}'.format(str(evaluator.accuracy)))
