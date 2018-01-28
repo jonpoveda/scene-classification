@@ -52,7 +52,7 @@ cross_validate = True
 load_model = False
 MODEL_PATH = 'results/session5/my_CNN.h5'
 # select number of epochs
-n_epochs = 40
+n_epochs = 1
 
 
 def get_model(model_id, image_size):  # type: (int, int) -> Model
@@ -147,7 +147,9 @@ def do_cross_validation():
     optimizer = BayesianOptimization(f=train_and_validate,
                                      domain=bounds,
                                      verbosity=True)
-    optimizer.run_optimization(max_iter=25)
+    optimizer.run_optimization(max_iter=25,
+                               verbosity=True,
+                               report_file='optimizer_results.txt')
     logger.info('optimized parameters: {}'.format(optimizer.x_opt))
     logger.info('optimized accuracy: {}'.format(optimizer.fx_opt))
 
