@@ -119,7 +119,6 @@ def get_model(model_id, image_size):  # type: (int, int) -> Model
         # Compile the model
         return Model(inputs=main_input, outputs=main_output, name='model2')
 
-
     return {
         1: _model1(),
         2: _model2(),
@@ -152,15 +151,15 @@ def do_cross_validation():
     # Random Search
     bounds = [
         {'name': 'model_id', 'type': 'discrete',
-         'domain': (1, 2 ,3)},
+         'domain': (1, 2, 3)},
         {'name': 'image_size', 'type': 'discrete',
          'domain': (32, 64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
-         'domain': (64)},
+         'domain': (64,)},
         # {'name': 'batch_size', 'type': 'discrete',
         #  'domain': (16, 32, 64)},
         {'name': 'optimizer_id', 'type': 'discrete',
-         'domain': (4)},
+         'domain': (4,)},
         # {'name': 'optimizer_id', 'type': 'discrete',
         #  'domain': (1, 2, 3, 4)},
         {'name': 'lr', 'type': 'discrete',
