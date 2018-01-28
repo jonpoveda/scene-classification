@@ -51,7 +51,7 @@ cross_validate = True
 # Load pre-trained model or generate from scratch
 load_model = False
 # select number of epochs
-n_epochs = 20
+n_epochs = 50
 
 
 def get_model(model_id, image_size):  # type: (int, int) -> Model
@@ -153,7 +153,7 @@ def do_cross_validation():
     # Note the batch size is going to be multiplied cause of data-augmentation
     bounds = [
         {'name': 'model_id', 'type': 'discrete',
-         'domain': (1, 2, 3)},
+         'domain': (3,)},
         {'name': 'image_size', 'type': 'discrete',
          'domain': (64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',

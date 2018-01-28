@@ -573,3 +573,209 @@ Fscore: 0.818975944238
 2018-01-28 19:39:40,213 INFO Summary: None
 2018-01-28 19:39:40,352 INFO Done in 0.162139177322 secs.
 2018-01-28 19:39:40,353 INFO Start training...
+2018-01-28 20:00:02,309 INFO Done!
+2018-01-28 20:00:02,309 INFO Saving the model into results/session5/CNN_3_1517164760.h5
+2018-01-28 20:00:02,374 INFO Done!
+2018-01-28 20:00:02,375 INFO Done in 1222.02167916 secs.
+2018-01-28 20:00:02,734 INFO Getting classification results...
+2018-01-28 20:00:04,851 INFO Evaluator 
+Acc (model) 0.83125
+Accuracy: 0.83125 
+Precision: 0.84394862897 
+Recall: 0.826788631856 
+Fscore: 0.835280505994
+2018-01-28 20:00:04,852 INFO Evaluator 
+Acc (model) 0.83125
+Accuracy: 0.83125 
+Precision: 0.84394862897 
+Recall: 0.826788631856 
+Fscore: 0.835280505994
+2018-01-28 20:00:04,855 INFO Confusion matrix:
+2018-01-28 20:00:04,855 INFO [[35  3  6  0  1  2  0  0]
+ [ 0 46  0  0  0  0  0  0]
+ [ 0  0 38  0  0  2  0  0]
+ [ 0  2  0 21  3  0  3  1]
+ [ 0  1  1  0 28  0  3  4]
+ [ 3  6  3  0  0 31  0  2]
+ [ 0  0  0  0  4  0 27  1]
+ [ 1  0  0  0  1  1  0 40]]
+2018-01-28 20:00:05,139 INFO Final accuracy: 0.83125
+2018-01-28 20:00:05,140 INFO Done in 2.40548181534 secs.
+2018-01-28 20:00:06,952 INFO Evaluator 
+Acc (model) 0.83125
+Accuracy: 0.83125 
+Precision: 0.84394862897 
+Recall: 0.826788631856 
+Fscore: 0.835280505994
+2018-01-28 20:00:06,953 INFO Bounds in action [[   2.  128.   64.    4.    1.]]
+2018-01-28 20:00:07,052 INFO Creating object
+2018-01-28 20:00:27,409 INFO Compiling MLP model...
+2018-01-28 20:00:27,450 INFO Summary: None
+2018-01-28 20:00:27,685 INFO Done in 0.276321172714 secs.
+2018-01-28 20:00:27,686 INFO Start training...
+2018-01-28 20:36:25,982 INFO Done!
+2018-01-28 20:36:25,983 INFO Saving the model into results/session5/CNN_2_1517166006.h5
+2018-01-28 20:36:26,048 INFO Done!
+2018-01-28 20:36:26,048 INFO Done in 2158.36244678 secs.
+2018-01-28 20:36:26,241 INFO Getting classification results...
+2018-01-28 20:36:28,757 INFO Evaluator 
+Acc (model) 0.821875
+Accuracy: 0.821875 
+Precision: 0.829328172795 
+Recall: 0.818220358472 
+Fscore: 0.82373682105
+2018-01-28 20:36:28,757 INFO Evaluator 
+Acc (model) 0.821875
+Accuracy: 0.821875 
+Precision: 0.829328172795 
+Recall: 0.818220358472 
+Fscore: 0.82373682105
+2018-01-28 20:36:28,760 INFO Confusion matrix:
+2018-01-28 20:36:28,760 INFO [[38  2  3  0  0  4  0  0]
+ [ 2 43  0  0  0  1  0  0]
+ [ 1  0 37  0  0  2  0  0]
+ [ 1  1  0 21  3  0  3  1]
+ [ 0  0  0  0 31  0  3  3]
+ [ 3  3  5  0  0 30  1  3]
+ [ 0  0  0  0  5  0 26  1]
+ [ 0  0  0  0  2  2  2 37]]
+2018-01-28 20:36:29,034 INFO Final accuracy: 0.821875
+2018-01-28 20:36:29,034 INFO Done in 2.7924990654 secs.
+2018-01-28 20:36:31,651 INFO Evaluator 
+Acc (model) 0.821875
+Accuracy: 0.821875 
+Precision: 0.829328172795 
+Recall: 0.818220358472 
+Fscore: 0.82373682105
+2018-01-28 20:36:31,652 INFO Bounds in action [[   1.  256.   64.    4.    1.]]
+2018-01-28 20:36:31,761 INFO Creating object
+2018-01-28 20:36:50,933 INFO Compiling MLP model...
+2018-01-28 20:36:50,968 INFO Summary: None
+2018-01-28 20:36:51,196 INFO Done in 0.262692928314 secs.
+2018-01-28 20:36:51,196 INFO Start training...
+2018-01-28 22:04:28,911 INFO Done!
+2018-01-28 22:04:28,912 INFO Saving the model into results/session5/CNN_1_1517168191.h5
+2018-01-28 22:04:29,168 INFO Done!
+2018-01-28 22:04:29,168 INFO Done in 5257.97202206 secs.
+2018-01-28 22:04:29,363 INFO Getting classification results...
+2018-01-28 22:04:35,834 INFO Evaluator 
+Acc (model) 0.796875
+Accuracy: 0.796875 
+Precision: 0.808849814239 
+Recall: 0.796982471824 
+Fscore: 0.802872292308
+2018-01-28 22:04:35,834 INFO Evaluator 
+Acc (model) 0.796875
+Accuracy: 0.796875 
+Precision: 0.808849814239 
+Recall: 0.796982471824 
+Fscore: 0.802872292308
+2018-01-28 22:04:35,837 INFO Confusion matrix:
+2018-01-28 22:04:35,837 INFO [[38  3  3  0  1  1  1  0]
+ [ 1 44  0  0  0  1  0  0]
+ [ 3  0 34  0  0  2  1  0]
+ [ 1  0  0 23  2  1  2  1]
+ [ 0  0  0  0 32  0  4  1]
+ [ 3  5  1  1  0 31  1  3]
+ [ 0  0  0  0  6  0 26  0]
+ [ 0  1  0  0  9  4  2 27]]
+2018-01-28 22:04:36,117 INFO Final accuracy: 0.796875
+2018-01-28 22:04:36,117 INFO Done in 6.75394487381 secs.
+2018-01-28 22:04:40,662 INFO Evaluator 
+Acc (model) 0.796875
+Accuracy: 0.796875 
+Precision: 0.808849814239 
+Recall: 0.796982471824 
+Fscore: 0.802872292308
+2018-01-28 22:04:40,663 INFO Bounds in action [[   1.  256.   64.    4.    1.]]
+2018-01-28 22:04:40,751 INFO Creating object
+2018-01-28 22:04:59,357 INFO Compiling MLP model...
+2018-01-28 22:04:59,389 INFO Summary: None
+2018-01-28 22:04:59,633 INFO Done in 0.276586055756 secs.
+2018-01-28 22:04:59,634 INFO Start training...
+2018-01-28 23:33:05,108 INFO Done!
+2018-01-28 23:33:05,108 INFO Saving the model into results/session5/CNN_1_1517173480.h5
+2018-01-28 23:33:05,388 INFO Done!
+2018-01-28 23:33:05,388 INFO Done in 5285.75466394 secs.
+2018-01-28 23:33:05,596 INFO Getting classification results...
+2018-01-28 23:33:12,626 INFO Evaluator 
+Acc (model) 0.7875
+Accuracy: 0.7875 
+Precision: 0.797267360387 
+Recall: 0.789827376487 
+Fscore: 0.793529929856
+2018-01-28 23:33:12,626 INFO Evaluator 
+Acc (model) 0.7875
+Accuracy: 0.7875 
+Precision: 0.797267360387 
+Recall: 0.789827376487 
+Fscore: 0.793529929856
+2018-01-28 23:33:12,630 INFO Confusion matrix:
+2018-01-28 23:33:12,630 INFO [[33  1  3  3  3  2  0  2]
+ [ 2 43  0  1  0  0  0  0]
+ [ 1  0 36  0  1  1  1  0]
+ [ 0  0  0 23  2  1  3  1]
+ [ 0  0  0  0 30  0  3  4]
+ [ 2  5  0  1  0 26  1 10]
+ [ 0  0  0  0  5  0 26  1]
+ [ 0  2  0  0  5  0  1 35]]
+2018-01-28 23:33:12,975 INFO Final accuracy: 0.7875
+2018-01-28 23:33:12,976 INFO Done in 7.37932801247 secs.
+2018-01-28 23:33:20,182 INFO Evaluator 
+Acc (model) 0.7875
+Accuracy: 0.7875 
+Precision: 0.797267360387 
+Recall: 0.789827376487 
+Fscore: 0.793529929856
+2018-01-28 23:33:20,183 INFO Bounds in action [[   1.  128.   64.    4.    1.]]
+2018-01-28 23:33:20,284 INFO Creating object
+2018-01-28 23:33:40,710 INFO Compiling MLP model...
+2018-01-28 23:33:40,745 INFO Summary: None
+2018-01-28 23:33:41,009 INFO Done in 0.298918008804 secs.
+2018-01-28 23:33:41,009 INFO Start training...
+2018-01-29 00:08:00,614 INFO Done!
+2018-01-29 00:08:00,615 INFO Saving the model into results/session5/CNN_1_1517178800.h5
+2018-01-29 00:08:00,787 INFO Done!
+2018-01-29 00:08:00,787 INFO Done in 2059.77777004 secs.
+2018-01-29 00:08:00,999 INFO Getting classification results...
+2018-01-29 00:08:03,312 INFO Evaluator 
+Acc (model) 0.80625
+Accuracy: 0.80625 
+Precision: 0.813083735043 
+Recall: 0.803948956994 
+Fscore: 0.808490544385
+2018-01-29 00:08:03,313 INFO Evaluator 
+Acc (model) 0.80625
+Accuracy: 0.80625 
+Precision: 0.813083735043 
+Recall: 0.803948956994 
+Fscore: 0.808490544385
+2018-01-29 00:08:03,316 INFO Confusion matrix:
+2018-01-29 00:08:03,316 INFO [[35  2  4  0  1  5  0  0]
+ [ 3 42  0  1  0  0  0  0]
+ [ 4  0 34  0  0  2  0  0]
+ [ 0  0  0 22  4  1  2  1]
+ [ 1  0  1  0 27  0  5  3]
+ [ 3  5  0  0  0 33  1  3]
+ [ 0  0  0  0  4  0 27  1]
+ [ 0  1  0  0  2  2  0 38]]
+2018-01-29 00:08:03,600 INFO Final accuracy: 0.80625
+2018-01-29 00:08:03,600 INFO Done in 2.60108494759 secs.
+2018-01-29 00:08:06,214 INFO Evaluator 
+Acc (model) 0.80625
+Accuracy: 0.80625 
+Precision: 0.813083735043 
+Recall: 0.803948956994 
+Fscore: 0.808490544385
+2018-01-29 00:08:06,720 INFO Bounds in action [[   1.  256.   64.    4.    1.]]
+2018-01-29 00:08:06,994 INFO Creating object
+2018-01-29 00:08:25,655 INFO Compiling MLP model...
+2018-01-29 00:08:25,690 INFO Summary: None
+2018-01-29 00:08:25,970 INFO Done in 0.3146879673 secs.
+2018-01-29 00:08:25,970 INFO Start training...
+2018-01-29 00:20:41,471 INFO Bounds in action [[   3.  128.   64.    4.    1.]]
+2018-01-29 00:20:41,558 INFO Creating object
+2018-01-29 00:21:00,076 INFO Compiling MLP model...
+2018-01-29 00:21:00,114 INFO Summary: None
+2018-01-29 00:21:00,239 INFO Done in 0.163608074188 secs.
+2018-01-29 00:21:00,240 INFO Start training...
