@@ -153,7 +153,7 @@ def do_cross_validation():
         {'name': 'model_id', 'type': 'discrete',
          'domain': (1, 2, 3)},
         {'name': 'image_size', 'type': 'discrete',
-         'domain': (32, 64, 128, 256)},
+         'domain': (64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
          'domain': (64,)},
         # {'name': 'batch_size', 'type': 'discrete',
@@ -164,7 +164,7 @@ def do_cross_validation():
         #  'domain': (1, 2, 3, 4)},
         {'name': 'lr', 'type': 'discrete',
          # 'domain': (1, 0.1, 0.01, 0.001, 0.0001)}]
-         'domain': (1, 0.5)}]
+         'domain': (1,)}]
 
     optimizer = BayesianOptimization(f=train_and_validate,
                                      domain=bounds,
