@@ -111,13 +111,14 @@ def get_model(model_id, image_size):  # type: (int, int) -> Model
         x = MaxPooling2D(pool_size=(2, 2), padding='valid', name='pool2')(x)
         x = Flatten()(x)
         x = Dense(256, activation='relu', name='fc1')(x)
+        x = Dropout(0.5)(x)
         x = Dense(128, activation='relu', name='fc2')(x)
         x = Dropout(0.5)(x)
         main_output = Dense(
             units=8, activation='softmax', name='predictions')(x)
 
         # Compile the model
-        return Model(inputs=main_input, outputs=main_output, name='model2')
+        return Model(inputs=main_input, outputs=main_output, name='model3')
 
     return {
         1: _model1(),
@@ -141,7 +142,7 @@ def get_optimizer(optimizer_id,
         optimizer = optimizers.RMSprop(lr=learning_rate)
     elif optimizer_id == 3:
         optimizer = optimizers.Adam(lr=learning_rate)
-    elif optimizer_id == 4:
+    else:
         optimizer = optimizers.Adadelta(lr=learning_rate)
 
     return optimizer
@@ -180,6 +181,8 @@ def train_and_validate(bounds):
     model_id, image_size, batch_size, optimizer_id, lr = \
         b[:, 0][0], b[:, 1][0], b[:, 2][0], b[:, 3][0], b[:, 4][0]
     logger.info('Bounds in action {}'.format(bounds))
+
+    MODEL_PATH ='results/session5/my_CNN_test_{}.h5'.format(model_id)
     neural_network = CNN(logger,
                          train_path=TRAIN_PATH,
                          validation_path=VALIDATION_PATH,
