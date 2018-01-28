@@ -20,5 +20,8 @@ TEST_PATH = os.path.join(DATA_PATH, 'test')
 SMALL_TRAIN_PATH = os.path.join(DATA_PATH, 'train_small')
 TOY_TRAIN_PATH = os.path.join(DATA_PATH, 'train_toy')
 
+# REMOVE THIS LINE!!
+TRAIN_PATH = os.path.join(DATA_PATH, 'train_toy')
+
 # Add project path to PYTHONPATH env var
 sys.path.append(ROOT_PATH)
