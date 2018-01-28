@@ -208,8 +208,13 @@ def train_and_validate(bounds):
                                    steps_per_epoch_multiplier=10,
                                    validation_steps_multiplier=1)
 
-    neural_network.plot_history('results/session5/CNN_{}_{}')
-    neural_network.plot_results('results/session5/CNN_{}_{}')
+    neural_network.plot_history(
+        'results/session5/CNN_{}_{}'.format(model_id, timestamp))
+    neural_network.plot_results(
+        'results/session5/CNN_{}_{}'.format(model_id, timestamp))
+
+    score, evaluator = neural_network.get_results()
+    return np.array(evaluator.accuracy, dtype=np.float64)
 
 
 if __name__ == "__main__":
