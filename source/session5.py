@@ -150,13 +150,14 @@ def get_optimizer(optimizer_id,
 
 def do_cross_validation():
     # Random Search
+    # Note the batch size is going to be multiplied cause of data-augmentation
     bounds = [
         {'name': 'model_id', 'type': 'discrete',
          'domain': (1, 2, 3)},
         {'name': 'image_size', 'type': 'discrete',
          'domain': (64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
-         'domain': (64,)},
+         'domain': (16,)},
         # {'name': 'batch_size', 'type': 'discrete',
         #  'domain': (16, 32, 64)},
         {'name': 'optimizer_id', 'type': 'discrete',
@@ -242,7 +243,7 @@ if __name__ == "__main__":
             neural_network.build()
 
             neural_network.train_CNN_model(n_epochs=n_epochs,
-                                           steps_per_epoch_multiplier=20,
+                                           steps_per_epoch_multiplier=8,
                                            validation_steps_multiplier=1)
 
             neural_network.plot_history('results/session5/my_CNN')
