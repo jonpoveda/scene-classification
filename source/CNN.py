@@ -5,6 +5,11 @@ import numpy as np
 from keras import Model, Input, optimizers
 from keras.layers import Dense, Flatten, Dropout, Conv2D, MaxPooling2D
 from keras.utils import plot_model
+import matplotlib
+
+# Force matplotlib to not use any Xwindows backend. If you need to import
+# pyplot, do it after setting `Agg` as the backend.
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
 from data_generator import DataGenerator

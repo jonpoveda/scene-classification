@@ -1,10 +1,15 @@
 import os
 import time
 
+import matplotlib
 from keras.layers import Dense, Input, Reshape, concatenate
 from keras.models import Model, Sequential
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import plot_model
+
+# Force matplotlib to not use any Xwindows backend. If you need to import
+# pyplot, do it after setting `Agg` as the backend.
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn import svm
@@ -407,7 +412,8 @@ class multi_layer_perceptron(object):
 
     def train_classifier_BoVW(self, features, train_labels):
         # Train an BoVW classifier
-        colorprint(Color.BLUE, '[train_classifier_BoVW]: Training the classifier...\n')
+        colorprint(Color.BLUE,
+                   '[train_classifier_BoVW]: Training the classifier...\n')
         init = time.time()
 
         # Create BoVW classifier
@@ -455,7 +461,7 @@ class multi_layer_perceptron(object):
                                                                Keypoints=[])
 
         # Train an SVM classifier
-	print("Problematic code here, the next shapes should match")
+        print("Problematic code here, the next shapes should match")
         print(visual_words.shape)
         print(train_labels.shape)
         self.BoVW_classifier.train_classifier(visual_words, train_labels)
@@ -465,7 +471,8 @@ class multi_layer_perceptron(object):
 
     def evaluate_performance_BoVW(self, features, test_labels, do_plotting):
         # Test the classification accuracy
-        colorprint(Color.BLUE, '[evaluate_performance_BOVW]: Testing the SVM classifier...\n')
+        colorprint(Color.BLUE,
+                   '[evaluate_performance_BOVW]: Testing the SVM classifier...\n')
         init = time.time()
 
         # get train visual word encoding

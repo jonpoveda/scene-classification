@@ -1,3 +1,8 @@
+import matplotlib
+
+# Force matplotlib to not use any Xwindows backend. If you need to import
+# pyplot, do it after setting `Agg` as the backend.
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import numpy as np
 
