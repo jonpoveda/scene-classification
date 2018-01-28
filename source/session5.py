@@ -157,7 +157,7 @@ def do_cross_validation():
         {'name': 'image_size', 'type': 'discrete',
          'domain': (64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
-         'domain': (16,)},
+         'domain': (64,)},
         # {'name': 'batch_size', 'type': 'discrete',
         #  'domain': (16, 32, 64)},
         {'name': 'optimizer_id', 'type': 'discrete',
