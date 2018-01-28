@@ -50,7 +50,6 @@ logger.addHandler(console_handler)
 cross_validate = True
 # Load pre-trained model or generate from scratch
 load_model = False
-MODEL_PATH = 'results/session5/my_CNN.h5'
 # select number of epochs
 n_epochs = 1
 
@@ -219,6 +218,7 @@ if __name__ == "__main__":
 
     # Load the model if exists, train otherwise
     else:
+        MODEL_PATH = 'results/session5/my_CNN.h5'
         neural_network = CNN(logger,
                              train_path=TRAIN_PATH,
                              validation_path=VALIDATION_PATH,
