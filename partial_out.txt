@@ -1,0 +1,274 @@
+Using TensorFlow backend.
+2018-01-28 18:40:05,914 INFO Bounds in action [[   2.  128.   64.    4.    1.]]
+2018-01-28 18:40:06,001 INFO Creating object
+Got data/train images in 1881 for pre-processing
+Got data/validation images in 487 for pre-processing
+Got data/test images in 320 for pre-processing
+Found 1881 images belonging to 8 classes.
+Found 487 images belonging to 8 classes.
+Found 320 images belonging to 8 classes.
+2018-01-28 18:40:25,583 INFO Compiling MLP model...
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+main_input (InputLayer)      (None, 128, 128, 3)       0
+_________________________________________________________________
+conv1 (Conv2D)               (None, 126, 126, 32)      896
+_________________________________________________________________
+pool1 (MaxPooling2D)         (None, 63, 63, 32)        0
+_________________________________________________________________
+conv2 (Conv2D)               (None, 61, 61, 16)        4624
+_________________________________________________________________
+pool2 (MaxPooling2D)         (None, 30, 30, 16)        0
+_________________________________________________________________
+flatten_3 (Flatten)          (None, 14400)             0
+_________________________________________________________________
+fc1 (Dense)                  (None, 256)               3686656
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 256)               0
+_________________________________________________________________
+fc2 (Dense)                  (None, 128)               32896
+_________________________________________________________________
+dropout_4 (Dropout)          (None, 128)               0
+_________________________________________________________________
+predictions (Dense)          (None, 8)                 1032
+=================================================================
+Total params: 3,726,104
+Trainable params: 3,726,104
+Non-trainable params: 0
+_________________________________________________________________
+None
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+main_input (InputLayer)      (None, 128, 128, 3)       0
+_________________________________________________________________
+conv1 (Conv2D)               (None, 126, 126, 32)      896
+_________________________________________________________________
+pool1 (MaxPooling2D)         (None, 63, 63, 32)        0
+_________________________________________________________________
+conv2 (Conv2D)               (None, 61, 61, 16)        4624
+_________________________________________________________________
+pool2 (MaxPooling2D)         (None, 30, 30, 16)        0
+_________________________________________________________________
+flatten_3 (Flatten)          (None, 14400)             0
+_________________________________________________________________
+fc1 (Dense)                  (None, 256)               3686656
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 256)               0
+_________________________________________________________________
+fc2 (Dense)                  (None, 128)               32896
+_________________________________________________________________
+dropout_4 (Dropout)          (None, 128)               0
+_________________________________________________________________
+predictions (Dense)          (None, 8)                 1032
+=================================================================
+Total params: 3,726,104
+Trainable params: 3,726,104
+Non-trainable params: 0
+_________________________________________________________________
+2018-01-28 18:40:25,618 INFO Summary: None
+2018-01-28 18:40:25,745 INFO Done in 0.161702871323 secs.
+2018-01-28 18:40:25,745 INFO Start training...
+Epoch 1/20
+2018-01-28 18:40:26.802783: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2018-01-28 18:40:26.802832: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2018-01-28 18:40:26.802844: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2018-01-28 18:40:26.802854: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2018-01-28 18:40:26.802863: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2018-01-28 18:40:27.775078: I tensorflow/core/common_runtime/gpu/gpu_device.cc:887] Found device 0 with properties:
+name: TITAN Xp
+major: 6 minor: 1 memoryClockRate (GHz) 1.582
+pciBusID 0000:07:00.0
+Total memory: 11.90GiB
+Free memory: 11.75GiB
+2018-01-28 18:40:27.775119: I tensorflow/core/common_runtime/gpu/gpu_device.cc:908] DMA: 0
+2018-01-28 18:40:27.775127: I tensorflow/core/common_runtime/gpu/gpu_device.cc:918] 0:   Y
+2018-01-28 18:40:27.775138: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: TITAN Xp, pci bus id: 0000:07:00.0)
+293/293 [==============================] - 103s 353ms/step - loss: 1.7600 - acc: 0.3336 - val_loss: 1.3644 - val_acc: 0.4875
+Epoch 2/20
+293/293 [==============================] - 95s 326ms/step - loss: 1.4065 - acc: 0.4894 - val_loss: 1.0886 - val_acc: 0.6312
+Epoch 3/20
+293/293 [==============================] - 98s 333ms/step - loss: 1.2408 - acc: 0.5608 - val_loss: 1.0782 - val_acc: 0.6500
+Epoch 4/20
+293/293 [==============================] - 99s 339ms/step - loss: 1.1439 - acc: 0.5976 - val_loss: 0.9626 - val_acc: 0.6719
+Epoch 5/20
+293/293 [==============================] - 101s 346ms/step - loss: 1.0877 - acc: 0.6226 - val_loss: 0.9092 - val_acc: 0.6875
+Epoch 6/20
+293/293 [==============================] - 97s 332ms/step - loss: 1.0306 - acc: 0.6436 - val_loss: 0.8631 - val_acc: 0.7031
+Epoch 7/20
+293/293 [==============================] - 101s 345ms/step - loss: 0.9834 - acc: 0.6615 - val_loss: 0.8259 - val_acc: 0.7000
+Epoch 8/20
+293/293 [==============================] - 99s 336ms/step - loss: 0.9467 - acc: 0.6723 - val_loss: 0.8106 - val_acc: 0.7312
+Epoch 9/20
+293/293 [==============================] - 98s 335ms/step - loss: 0.9057 - acc: 0.6896 - val_loss: 0.7661 - val_acc: 0.7406
+Epoch 10/20
+293/293 [==============================] - 99s 339ms/step - loss: 0.8699 - acc: 0.7022 - val_loss: 0.7094 - val_acc: 0.7562
+Epoch 11/20
+293/293 [==============================] - 95s 326ms/step - loss: 0.8405 - acc: 0.7166 - val_loss: 0.6938 - val_acc: 0.7719
+Epoch 12/20
+293/293 [==============================] - 95s 323ms/step - loss: 0.8155 - acc: 0.7247 - val_loss: 0.6668 - val_acc: 0.7844
+Epoch 13/20
+293/293 [==============================] - 96s 327ms/step - loss: 0.7839 - acc: 0.7321 - val_loss: 0.6731 - val_acc: 0.7812
+Epoch 14/20
+293/293 [==============================] - 101s 345ms/step - loss: 0.7580 - acc: 0.7426 - val_loss: 0.6381 - val_acc: 0.7937
+Epoch 15/20
+293/293 [==============================] - 99s 338ms/step - loss: 0.7401 - acc: 0.7522 - val_loss: 0.6410 - val_acc: 0.7844
+Epoch 16/20
+293/293 [==============================] - 98s 335ms/step - loss: 0.7212 - acc: 0.7608 - val_loss: 0.5890 - val_acc: 0.8125
+Epoch 17/20
+293/293 [==============================] - 103s 350ms/step - loss: 0.7003 - acc: 0.7663 - val_loss: 0.5893 - val_acc: 0.8094
+Epoch 18/20
+293/293 [==============================] - 98s 333ms/step - loss: 0.6800 - acc: 0.7737 - val_loss: 0.5741 - val_acc: 0.8031
+Epoch 19/20
+293/293 [==============================] - 97s 330ms/step - loss: 0.6631 - acc: 0.7780 - val_loss: 0.5628 - val_acc: 0.8094
+Epoch 20/20
+293/293 [==============================] - 95s 323ms/step - loss: 0.6591 - acc: 0.7799 - val_loss: 0.5709 - val_acc: 0.8125
+2018-01-28 19:13:15,150 INFO Done!
+2018-01-28 19:13:15,150 INFO Saving the model into results/session5/CNN_2_1517161205.h5
+2018-01-28 19:13:15,198 INFO Done!
+2018-01-28 19:13:15,199 INFO Done in 1969.45323706 secs.
+2018-01-28 19:13:15,576 INFO Getting classification results...
+2018-01-28 19:13:17,991 INFO Evaluator
+Acc (model) 0.81875
+Accuracy: 0.81875
+Precision: 0.823204788905
+Recall: 0.814790325097
+Fscore: 0.818975944238
+2018-01-28 19:13:17,991 INFO Evaluator
+Acc (model) 0.81875
+Accuracy: 0.81875
+Precision: 0.823204788905
+Recall: 0.814790325097
+Fscore: 0.818975944238
+2018-01-28 19:13:17,994 INFO Confusion matrix:
+2018-01-28 19:13:17,994 INFO [[37  3  3  0  0  4  0  0]
+ [ 2 42  0  1  0  1  0  0]
+ [ 2  0 36  0  0  2  0  0]
+ [ 2  0  1 23  1  0  2  1]
+ [ 1  0  1  0 26  0  5  4]
+ [ 3  3  1  0  0 37  0  1]
+ [ 0  0  0  1  3  0 26  2]
+ [ 0  0  0  0  2  5  1 35]]
+2018-01-28 19:13:18,269 INFO Final accuracy: 0.81875
+2018-01-28 19:13:18,269 INFO Done in 2.69313192368 secs.
+2018-01-28 19:13:18,269 INFO Bounds in action [[   2.  128.   64.    4.    1.]]
+2018-01-28 19:13:18,353 INFO Creating object
+Got data/train images in 1881 for pre-processing
+Got data/validation images in 487 for pre-processing
+Got data/test images in 320 for pre-processing
+Found 1881 images belonging to 8 classes.
+Found 487 images belonging to 8 classes.
+Found 320 images belonging to 8 classes.
+2018-01-28 19:13:38,486 INFO Compiling MLP model...
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+main_input (InputLayer)      (None, 128, 128, 3)       0
+_________________________________________________________________
+conv1 (Conv2D)               (None, 126, 126, 32)      896
+_________________________________________________________________
+pool1 (MaxPooling2D)         (None, 63, 63, 32)        0
+_________________________________________________________________
+conv2 (Conv2D)               (None, 61, 61, 16)        4624
+_________________________________________________________________
+pool2 (MaxPooling2D)         (None, 30, 30, 16)        0
+_________________________________________________________________
+flatten_7 (Flatten)          (None, 14400)             0
+_________________________________________________________________
+fc1 (Dense)                  (None, 256)               3686656
+_________________________________________________________________
+dropout_9 (Dropout)          (None, 256)               0
+_________________________________________________________________
+fc2 (Dense)                  (None, 128)               32896
+_________________________________________________________________
+dropout_10 (Dropout)         (None, 128)               0
+_________________________________________________________________
+predictions (Dense)          (None, 8)                 1032
+=================================================================
+Total params: 3,726,104
+Trainable params: 3,726,104
+Non-trainable params: 0
+_________________________________________________________________
+None
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+main_input (InputLayer)      (None, 128, 128, 3)       0
+_________________________________________________________________
+conv1 (Conv2D)               (None, 126, 126, 32)      896
+_________________________________________________________________
+pool1 (MaxPooling2D)         (None, 63, 63, 32)        0
+_________________________________________________________________
+conv2 (Conv2D)               (None, 61, 61, 16)        4624
+_________________________________________________________________
+pool2 (MaxPooling2D)         (None, 30, 30, 16)        0
+_________________________________________________________________
+flatten_7 (Flatten)          (None, 14400)             0
+_________________________________________________________________
+fc1 (Dense)                  (None, 256)               3686656
+_________________________________________________________________
+dropout_9 (Dropout)          (None, 256)               0
+_________________________________________________________________
+fc2 (Dense)                  (None, 128)               32896
+_________________________________________________________________
+dropout_10 (Dropout)         (None, 128)               0
+_________________________________________________________________
+predictions (Dense)          (None, 8)                 1032
+=================================================================
+Total params: 3,726,104
+Trainable params: 3,726,104
+Non-trainable params: 0
+_________________________________________________________________
+2018-01-28 19:13:38,521 INFO Summary: None
+2018-01-28 19:13:38,770 INFO Done in 0.284611940384 secs.
+2018-01-28 19:13:38,771 INFO Start training...
+Epoch 1/20
+293/293 [==============================] - 96s 328ms/step - loss: 1.7668 - acc: 0.3279 - val_loss: 1.2634 - val_acc: 0.5156
+Epoch 2/20
+293/293 [==============================] - 210s 718ms/step - loss: 1.3853 - acc: 0.5000 - val_loss: 1.0397 - val_acc: 0.6312
+Epoch 3/20
+293/293 [==============================] - 100s 340ms/step - loss: 1.1978 - acc: 0.5855 - val_loss: 0.9260 - val_acc: 0.6594
+Epoch 4/20
+293/293 [==============================] - 99s 339ms/step - loss: 1.1004 - acc: 0.6171 - val_loss: 0.8688 - val_acc: 0.6813
+Epoch 5/20
+293/293 [==============================] - 101s 344ms/step - loss: 1.0301 - acc: 0.6432 - val_loss: 0.8100 - val_acc: 0.7063
+Epoch 6/20
+293/293 [==============================] - 152s 518ms/step - loss: 0.9846 - acc: 0.6571 - val_loss: 0.8004 - val_acc: 0.7188A^[[A^[[B^[[B^[[B^[[B^[[B^[[B
+Epoch 7/20
+293/293 [==============================] - 245s 837ms/step - loss: 0.9290 - acc: 0.6784 - val_loss: 0.8295 - val_acc: 0.7219
+Epoch 8/20
+268^CTraceback (most recent call last):] - ETA: 8s - loss: 0.8991 - acc: 0.6895
+  File "source/session5.py", line 220, in <module>
+    do_cross_validation()
+  File "source/session5.py", line 173, in do_cross_validation
+    verbosity=True)
+  File "/home/master10/.local/lib/python2.7/site-packages/GPyOpt/methods/bayesian_optimization.py", line 117, in __init__
+    self._init_design_chooser()
+  File "/home/master10/.local/lib/python2.7/site-packages/GPyOpt/methods/bayesian_optimization.py", line 192, in _init_design_chooser
+    self.Y, _ = self.objective.evaluate(self.X)
+  File "/home/master10/.local/lib/python2.7/site-packages/GPyOpt/core/task/objective.py", line 50, in evaluate
+    f_evals, cost_evals = self._eval_func(x)
+  File "/home/master10/.local/lib/python2.7/site-packages/GPyOpt/core/task/objective.py", line 74, in _eval_func
+    rlt = self.func(np.atleast_2d(x[i]))
+  File "source/session5.py", line 209, in train_and_validate
+    validation_steps_multiplier=1)
+  File "/home/master10/scene-classificator/source/CNN.py", line 178, in train_CNN_model
+    validation_steps=validation_steps_multiplier * 320 // self.batch_size)
+  File "/home/master10/.local/lib/python2.7/site-packages/keras/legacy/interfaces.py", line 87, in wrapper
+    return func(*args, **kwargs)
+  File "/home/master10/.local/lib/python2.7/site-packages/keras/engine/training.py", line 2169, in fit_generator
+    use_multiprocessing=use_multiprocessing)
+  File "/home/master10/.local/lib/python2.7/site-packages/keras/legacy/interfaces.py", line 87, in wrapper
+    return func(*args, **kwargs)
+  File "/home/master10/.local/lib/python2.7/site-packages/keras/engine/training.py", line 2280, in evaluate_generator
+    generator_output = next(output_generator)
+  File "/home/master10/.local/lib/python2.7/site-packages/keras/utils/data_utils.py", line 551, in get
+    inputs = self.queue.get(block=True).get()
+  File "/usr/lib/python2.7/multiprocessing/pool.py", line 561, in get
+    self.wait(timeout)
+  File "/usr/lib/python2.7/multiprocessing/pool.py", line 556, in wait
+    self._cond.wait(timeout)
+  File "/usr/lib/python2.7/threading.py", line 340, in wait
+    waiter.acquire()
+KeyboardInterrupt
