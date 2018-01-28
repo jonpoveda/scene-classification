@@ -170,7 +170,7 @@ def do_cross_validation():
     optimizer = BayesianOptimization(f=train_and_validate,
                                      domain=bounds,
                                      verbosity=True)
-    optimizer.run_optimization(max_iter=10,
+    optimizer.run_optimization(max_iter=1,
                                verbosity=True,
                                report_file='optimizer_results.txt')
     logger.info('optimized parameters: {}'.format(optimizer.x_opt))
