@@ -180,9 +180,8 @@ def train_and_validate(bounds):
     model_id, image_size, batch_size, optimizer_id, lr = \
         b[:, 0][0], b[:, 1][0], b[:, 2][0], b[:, 3][0], b[:, 4][0]
     logger.info('Bounds in action {}'.format(bounds))
-
-    MODEL_PATH = 'results/session5/CNN_{}_{}.h5'.format(model_id,
-                                                        int(time.time()))
+    timestamp = int(time.time())
+    MODEL_PATH = 'results/session5/CNN_{}_{}.h5'.format(model_id, timestamp)
     neural_network = CNN(logger,
                          train_path=TRAIN_PATH,
                          validation_path=VALIDATION_PATH,
@@ -206,8 +205,8 @@ def train_and_validate(bounds):
                                    steps_per_epoch_multiplier=10,
                                    validation_steps_multiplier=1)
 
-    neural_network.plot_history()
-    neural_network.plot_results()
+    neural_network.plot_history('results/session5/CNN_{}_{}')
+    neural_network.plot_results('results/session5/CNN_{}_{}')
 
 
 if __name__ == "__main__":
@@ -244,9 +243,9 @@ if __name__ == "__main__":
                                            steps_per_epoch_multiplier=20,
                                            validation_steps_multiplier=1)
 
-            neural_network.plot_history()
+            neural_network.plot_history('results/session5/my_CNN')
 
-        neural_network.plot_results()
+        neural_network.plot_results('results/session5/my_CNN')
 
     end = time.time()
     logger.info('Everything done in {} secs.\n'.format(str(end - init)))

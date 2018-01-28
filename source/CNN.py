@@ -202,7 +202,7 @@ class CNN(object):
         end = time.time()
         self.logger.info('Done in {} secs.'.format(str(end - init)))
 
-    def plot_history(self):
+    def plot_history(self, outpath):
         # summarize history for accuracy
         plt.plot(self.history.history['acc'])
         plt.plot(self.history.history['val_acc'])
@@ -210,7 +210,7 @@ class CNN(object):
         plt.ylabel('accuracy')
         plt.xlabel('epoch')
         plt.legend(['train', 'validation'], loc='upper left')
-        plt.savefig('results/session5/accuracy.jpg')
+        plt.savefig('{}_accuracy.jpg'.format(outpath))
         plt.close()
 
         # summarize history for loss
@@ -220,9 +220,9 @@ class CNN(object):
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['train', 'validation'], loc='upper left')
-        plt.savefig('results/session5/loss.jpg')
+        plt.savefig('{}loss.jpg'.format(outpath))
 
-    def plot_results(self):
+    def plot_results(self ,outpath):
         # plot classification results
         self.logger.info('Getting classification results...')
         init = time.time()
@@ -250,7 +250,7 @@ class CNN(object):
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
         # plt.show()
-        plt.savefig('results/session5/cm.jpg')
+        plt.savefig('{}_cm.jpg'.format(outpath))
         self.logger.info(
             'Final accuracy: {}'.format(str(evaluator.accuracy)))
 
