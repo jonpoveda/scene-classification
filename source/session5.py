@@ -181,7 +181,8 @@ def train_and_validate(bounds):
         b[:, 0][0], b[:, 1][0], b[:, 2][0], b[:, 3][0], b[:, 4][0]
     logger.info('Bounds in action {}'.format(bounds))
 
-    MODEL_PATH = 'results/session5/CNN_{}.h5'.format(model_id)
+    MODEL_PATH = 'results/session5/CNN_{}_{}.h5'.format(model_id,
+                                                        int(time.time()))
     neural_network = CNN(logger,
                          train_path=TRAIN_PATH,
                          validation_path=VALIDATION_PATH,
