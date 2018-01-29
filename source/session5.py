@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 # Config to run on one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
+#os.environ["CUDA_VISIBLE_DEVICES"] = '9'
 
 from GPyOpt.methods import BayesianOptimization
 from keras import Input, optimizers
@@ -156,9 +157,15 @@ def do_cross_validation():
         {'name': 'model_id', 'type': 'discrete',
          'domain': (1,23,)},
         {'name': 'image_size', 'type': 'discrete',
+<<<<<<< HEAD
          'domain': (64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
          'domain': (32,64,)},
+=======
+         'domain': (64,)},
+        {'name': 'batch_size', 'type': 'discrete',
+         'domain': (128,)},
+>>>>>>> d9b10da... Add server results
         # {'name': 'batch_size', 'type': 'discrete',
         #  'domain': (16, 32, 64)},
         {'name': 'optimizer_id', 'type': 'discrete',
@@ -172,7 +179,7 @@ def do_cross_validation():
     optimizer = BayesianOptimization(f=train_and_validate,
                                      domain=bounds,
                                      verbosity=True)
-    optimizer.run_optimization(max_iter=1,
+    optimizer.run_optimization(max_iter=5,
                                verbosity=True,
                                report_file='optimizer_results.txt')
     logger.info('optimized parameters: {}'.format(optimizer.x_opt))
