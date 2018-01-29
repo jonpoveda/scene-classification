@@ -158,9 +158,15 @@ def do_cross_validation():
          'domain': (1,23,)},
         {'name': 'image_size', 'type': 'discrete',
 <<<<<<< HEAD
+<<<<<<< HEAD
          'domain': (64, 128, 256)},
         {'name': 'batch_size', 'type': 'discrete',
          'domain': (32,64,)},
+=======
+         'domain': (64,)},
+        {'name': 'batch_size', 'type': 'discrete',
+         'domain': (128,)},
+>>>>>>> d9b10da... Add server results
 =======
          'domain': (64,)},
         {'name': 'batch_size', 'type': 'discrete',
