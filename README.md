@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/113903219.svg)](https://zenodo.org/badge/latestdoi/113903219)
+
 # [Scene classificator](https://github.com/godbhaal/scene-classificator)
 
 This repository contains an implementation of an scene classificator in [Python](https://www.python.org/) using Machine Learning techniques.
